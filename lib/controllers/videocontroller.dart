@@ -9,7 +9,9 @@ class VideoControllerGetX extends GetxController {
   ChewieController? chewieController;
   final videoPosition = Duration.secondsPerDay.obs;
   final GetStorage box = new GetStorage();
-  final videoDuration = "0:00:00.0000".obs;
+  final videoDuration = 0.obs;
+  final isVideoPlaying = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -18,43 +20,52 @@ class VideoControllerGetX extends GetxController {
 
   @override
   void onClose() {
-    videoDuration.value = videoPlayerController.value.position.toString();
     videoPlayerController.dispose();
     chewieController!.dispose();
+  }
+
+  void toggleVideoPlay() {
+    if (isVideoPlaying.value == true) {
+      isVideoPlaying.value = false;
+      videoPlayerController.pause().then((value) {
+        print(videoPlayerController.value.position.inSeconds);
+        box.write('vPosition', videoPlayerController.value.position.inSeconds);
+      });
+    } else if (isVideoPlaying.value == false) {
+      isVideoPlaying.value = true;
+      videoPlayerController.play().then((value) {
+        if (box.read('vPosition') != 0) {
+          videoPlayerController.seekTo(
+            box.read('vPosition'),
+          );
+        }
+      });
+    }
   }
 
   Future<void> initializePlayer() async {
     videoPlayerController =
         VideoPlayerController.asset('assets/VID_20210811_104944.mp4');
     await Future.wait([
-      videoPlayerController.initialize().then((value) {
-        print(videoDuration.value);
-      }),
-    ]);
-    await Future.wait([
-      videoPlayerController.pause().then((value) {
-        videoPlayerController.addListener(() {
-          videoDuration.value = videoPlayerController.position.toString();
-        });
-      })
+      videoPlayerController.initialize(),
     ]);
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
       autoPlay: false,
-      looping: true,
+      looping: false,
       allowFullScreen: true,
       allowMuting: true,
       allowedScreenSleep: false,
       materialProgressColors: ChewieProgressColors(
-        playedColor: Colors.red,
-        backgroundColor: Colors.yellow,
-        bufferedColor: Colors.green.shade100,
-      ),
-      showControlsOnInitialize: true,
-      showOptions: true,
-      showControls: true,
+          // playedColor: Colors.red,
+          // backgroundColor: Colors.yellow,
+          // bufferedColor: Colors.green.shade100,
+          ),
+      showControlsOnInitialize: false,
+      showOptions: false,
+      showControls: false,
       placeholder: Container(
-        color: Colors.greenAccent,
+        color: Colors.black87,
       ),
       autoInitialize: true,
     );

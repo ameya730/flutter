@@ -32,7 +32,7 @@ class CustomTextField extends StatelessWidget {
     this.maxlines,
     this.minlines,
     this.maxlength,
-    this.height = 75,
+    this.height = 40,
     this.enabled,
     this.width,
     this.obscureText = false,
@@ -44,7 +44,12 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+      padding: const EdgeInsets.only(
+        left: 16.0,
+        right: 16.0,
+        top: 8.0,
+        bottom: 8.0,
+      ),
       child: Container(
         height: height,
         width: width,
@@ -63,32 +68,36 @@ class CustomTextField extends StatelessWidget {
           obscureText: obscureText!,
           decoration: InputDecoration(
             suffixIcon: icon,
-            fillColor: Colors.white,
+            fillColor: textBoxBackgroundColor,
             filled: true,
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 10, vertical: vertical!),
-            labelText: cLabelText,
-            labelStyle: TextStyle(
-              color: customHintColor,
+            hintText: cLabelText,
+            hintStyle: TextStyle(
+              color: Colors.black87,
+              fontSize: 10,
             ),
             disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: new BorderSide(color: Theme.of(context).hintColor),
+              borderRadius: BorderRadius.circular(30),
+              borderSide: new BorderSide(color: textBoxBackgroundColor),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: new BorderSide(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(30),
+              borderSide: new BorderSide(color: textBoxBackgroundColor),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: new BorderSide(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(30),
+              borderSide: new BorderSide(color: textBoxBackgroundColor),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: new BorderSide(color: Theme.of(context).primaryColor),
+              borderSide: new BorderSide(color: textBoxBackgroundColor),
             ),
           ),
-          style: TextStyle(color: Theme.of(context).primaryColor),
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: 12,
+          ),
         ),
       ),
     );

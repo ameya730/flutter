@@ -33,6 +33,9 @@ dependencies:
   google_fonts:
   flutter_downloader:
   get_storage:
+  path_provider:
+  permission_handler:
+  dio:
 
 dev_dependencies:
   flutter_test:

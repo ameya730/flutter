@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gshala/screens/homepage.dart';
+import 'package:gshala/screens/offlinevideoslist.dart';
 import 'package:gshala/screens/viewvideopage.dart';
 
 void main() {
@@ -19,15 +20,13 @@ class MyApp extends StatelessWidget {
             color: Color(0xfffcfcfa),
           ),
         ),
-        fontFamily: GoogleFonts.acme().fontFamily,
-        backgroundColor: Color(0xfffcfcfa),
-        primaryColor: Color(0xff3873F7),
-        hintColor: Colors.grey.shade600,
-        buttonColor: Color(0xff3873F7),
+        fontFamily: GoogleFonts.poppins().fontFamily,
+        backgroundColor: Color(0xff1B52CC),
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: OfflineVideosList(),
       routes: {
+        '/offlinevideoslist': (context) => OfflineVideosList(),
         '/viewvideopage': (context) => ViewVideoPage(),
       },
     );
