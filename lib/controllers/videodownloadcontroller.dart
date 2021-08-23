@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:gshala/const.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 
 class VideoDownloadController extends GetxController {
-  final videoName = 'BigBuckBunny.mp4'.obs;
+  final videoName = ''.obs;
   final isdownloading = false.obs;
   final progressString = ''.obs;
   Dio dio = Dio();
@@ -19,13 +20,12 @@ class VideoDownloadController extends GetxController {
     try {
       var dir = await getApplicationDocumentsDirectory();
       print("path ${dir.path}");
-      String imgUrl =
-          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4';
+      String imgUrl = videoUrl;
       isdownloading.value = true;
-      await dio.download(imgUrl, "${appDir.path}/videos/bee.mp4",
+      String videoName = imgUrl.split('/').last;
+      await dio.download(imgUrl, "${appDir.path}/videos/$videoName",
           onReceiveProgress: (rec, total) {
         print("Rec: $rec , Total: $total");
-
         progressString.value = ((rec / total) * 100).toStringAsFixed(0) + "%";
       });
     } catch (e) {

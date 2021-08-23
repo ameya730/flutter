@@ -32,7 +32,7 @@ class CustomTextField extends StatelessWidget {
     this.maxlines,
     this.minlines,
     this.maxlength,
-    this.height = 40,
+    this.height,
     this.enabled,
     this.width,
     this.obscureText = false,
@@ -78,15 +78,15 @@ class CustomTextField extends StatelessWidget {
               fontSize: 10,
             ),
             disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(10),
               borderSide: new BorderSide(color: textBoxBackgroundColor),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(10),
               borderSide: new BorderSide(color: textBoxBackgroundColor),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(10),
               borderSide: new BorderSide(color: textBoxBackgroundColor),
             ),
             border: OutlineInputBorder(

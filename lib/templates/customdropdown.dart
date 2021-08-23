@@ -8,7 +8,7 @@ class CustomDropDownField extends StatelessWidget {
     this.onChanged,
     this.validationtext,
     this.hinttext,
-    this.height = 40,
+    this.height,
     this.width,
     this.left = 16.0,
     this.right = 16.0,
@@ -41,11 +41,11 @@ class CustomDropDownField extends StatelessWidget {
             filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 7, vertical: 10),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(10),
               borderSide: new BorderSide(color: textBoxBackgroundColor),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(10),
               borderSide: new BorderSide(color: textBoxBackgroundColor),
             ),
             hintText: hinttext,

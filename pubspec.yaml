@@ -36,6 +36,8 @@ dependencies:
   path_provider:
   permission_handler:
   dio:
+  connectivity_plus:
+  lottie:
 
 dev_dependencies:
   flutter_test:

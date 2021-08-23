@@ -11,3 +11,8 @@ String saveToInternalStorage =
     'https://stackoverflow.com/questions/60761984/flutter-how-to-download-video-and-save-them-to-internal-storage';
 String videoTestExample =
     'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4';
+String internetconnectivityexample =
+    'https://protocoderspoint.com/getx-flutter-check-internet-connection-connectivity-state-management/';
+
+String videoUrl =
+    'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';

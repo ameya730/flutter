@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoControllerGetX extends GetxController {
@@ -22,6 +25,7 @@ class VideoControllerGetX extends GetxController {
   void onClose() {
     videoPlayerController.dispose();
     chewieController!.dispose();
+    box.remove('videoName');
   }
 
   void toggleVideoPlay() {
@@ -43,9 +47,11 @@ class VideoControllerGetX extends GetxController {
     }
   }
 
-  Future<void> initializePlayer() async {
-    videoPlayerController =
-        VideoPlayerController.asset('assets/VID_20210811_104944.mp4');
+  Future initializePlayer() async {
+    Directory appDir = await getApplicationDocumentsDirectory();
+    print(box.read('videoName'));
+    String appDirPath = appDir.path + '/videos/' + box.read('videoName');
+    videoPlayerController = VideoPlayerController.file(File(appDirPath));
     await Future.wait([
       videoPlayerController.initialize(),
     ]);

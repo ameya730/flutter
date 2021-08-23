@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gshala/controllers/videocontroller.dart';
 import 'package:gshala/controllers/videolistcontroller.dart';
-import 'package:video_player/video_player.dart';
+import 'package:get_storage/get_storage.dart';
 
 class OfflineVideosList extends StatelessWidget {
-  final VideoControllerGetX vController = Get.put(VideoControllerGetX());
   final VideoListController videoListController =
       Get.put(VideoListController());
+  final GetStorage box = new GetStorage();
+
   @override
   Widget build(BuildContext context) {
-    late VideoPlayerController videoPlayerController;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -47,12 +46,24 @@ class OfflineVideosList extends StatelessWidget {
                               ),
                             ),
                             onTap: () {
+                              box.write('i', i);
+                              box.write(
+                                  'videoName',
+                                  videoListController.videoList[i].path
+                                      .toString()
+                                      .split('/')
+                                      .last);
                               Get.toNamed('/viewvideopage');
                             },
                           ),
                         );
                       })
-                  : CircularProgressIndicator();
+                  : Container(
+                      child: Text(
+                        'No videos downloaded...',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
             }),
           ),
         ),

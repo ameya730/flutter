@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:gshala/controllers/videocontroller.dart';
 import 'package:gshala/controllers/videodownloadcontroller.dart';
 import 'package:gshala/templates/custombutton.dart';
@@ -10,6 +11,7 @@ class ViewVideoPage extends StatelessWidget {
   final VideoControllerGetX vController = Get.put(VideoControllerGetX());
   final VideoDownloadController videoDownloadController =
       Get.put(VideoDownloadController());
+  final GetStorage box = GetStorage();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -17,10 +19,13 @@ class ViewVideoPage extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            'G-shala',
+            box.read('videoName'),
             textScaleFactor: 1.2,
           ),
+          backgroundColor: Theme.of(context).backgroundColor,
+          shadowColor: Colors.transparent,
         ),
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -45,33 +50,52 @@ class ViewVideoPage extends StatelessWidget {
                                   vController.videoPlayerController,
                                   allowScrubbing: true),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.fast_rewind),
-                                ),
-                                Obx(() {
-                                  return vController.isVideoPlaying.value
-                                      ? IconButton(
-                                          onPressed: () {
-                                            vController.toggleVideoPlay();
-                                          },
-                                          icon: Icon(Icons.pause),
-                                        )
-                                      : IconButton(
-                                          onPressed: () {
-                                            vController.toggleVideoPlay();
-                                          },
-                                          icon: Icon(Icons.play_arrow),
-                                        );
-                                }),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.fast_forward),
-                                ),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8.0,
+                                bottom: 8.0,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.fast_rewind),
+                                    ),
+                                  ),
+                                  Obx(() {
+                                    return vController.isVideoPlaying.value
+                                        ? CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            child: IconButton(
+                                              onPressed: () {
+                                                vController.toggleVideoPlay();
+                                              },
+                                              icon: Icon(Icons.pause),
+                                            ),
+                                          )
+                                        : CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            child: IconButton(
+                                              onPressed: () {
+                                                vController.toggleVideoPlay();
+                                              },
+                                              icon: Icon(Icons.play_arrow),
+                                            ),
+                                          );
+                                  }),
+                                  CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.fast_forward),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             CElevatedButton(
                                 buttonLabel: 'Download Video',
