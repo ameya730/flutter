@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 Color customHintColor = Colors.blue;
 Color textBoxBackgroundColor = Color(0xffEEEEEE);
 
+// Url Links
+String loginApiUrl = 'loginApiUrl';
+String sendVideoDetailsUrl = 'sendVideoDetailsUrl';
+
 // Information for development
 String persistantInfo = 'https://flutter.dev/docs/cookbook/persistence/sqlite';
 String cacheVideoPath =

@@ -1,0 +1,16 @@
+const Map<String, String> guIn = {
+  'Student': 'વિદ્યાર્થી',
+  'Teacher': 'શિક્ષક',
+  'Welcome to G-Shala': 'G-Shala માં આપનું સ્વાગત છે',
+  'Learning Management System of Gujarat': 'ગુજરાતની લર્નિંગ મેનેજમેન્ટ સિસ્ટમ',
+  'Enter ID/Mobile Number': 'આઈડી/મોબાઈલ નંબર દાખલ કરો',
+  'Please input ID/Mobile number': 'કૃપા કરીને આઈડી/મોબાઇલ નંબર દાખલ કરો',
+  'Enter Password': 'પાસવર્ડ દાખલ કરો',
+  'Please input password': 'કૃપા કરીને પાસવર્ડ દાખલ કરો',
+  'Select Role': 'ભૂમિકા પસંદ કરો',
+  'Please select role': 'કૃપા કરીને ભૂમિકા પસંદ કરો',
+  'Login': 'પ્રવેશ કરો',
+  'Forgot Password?': 'પાસવર્ડ ભૂલી ગયા છો?',
+  'Dont have an account yet ?': 'હજુ સુધી ખાતું નથી?',
+  'Sign Up': 'સાઇન અપ કરો',
+};

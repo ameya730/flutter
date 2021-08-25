@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:gshala/templates/custombutton.dart';
 
 class OfflineMainPage extends StatelessWidget {
+  final GetStorage box = new GetStorage();
   @override
   Widget build(BuildContext context) {
+    String profileName = box.read('profileName');
+    print(profileName);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('You are Offline'),
+          title: Text('Welcome $profileName'),
           backgroundColor: Theme.of(context).backgroundColor,
           shadowColor: Colors.transparent,
         ),

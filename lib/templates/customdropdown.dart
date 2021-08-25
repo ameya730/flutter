@@ -15,7 +15,7 @@ class CustomDropDownField extends StatelessWidget {
   });
 
   final List? dropList;
-  final Function(void)? onSaved;
+  final onSaved;
   final Function(void)? onChanged;
   final String? validationtext;
   final String? hinttext;

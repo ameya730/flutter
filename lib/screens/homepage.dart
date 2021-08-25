@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gshala/controllers/language_controller.dart';
+import 'package:gshala/controllers/login_controller.dart';
 import 'package:gshala/templates/custombutton.dart';
 import 'package:gshala/templates/customdropdown.dart';
 import 'package:gshala/templates/customtextfield.dart';
 
 class HomePage extends StatelessWidget {
-  final List dropList = ['Student', 'Teacher'];
+  final List dropList = ['Student'.tr, 'Teacher'.tr];
   final GlobalKey<FormState> loginFormKey = new GlobalKey<FormState>();
+  final LogInController logInController = Get.put(LogInController());
+  final LanguageController lControl = Get.put(LanguageController());
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,12 +36,18 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
-                    Text(
-                      'English',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
+                    GestureDetector(
+                      child: Text(
+                        'English',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
                       ),
+                      onTap: () {
+                        lControl.selectedLanguage.value = 'English';
+                        lControl.changeLangauge();
+                      },
                     ),
                     SizedBox(width: 2),
                     Text(
@@ -48,8 +58,22 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 2),
+                    GestureDetector(
+                      child: Text(
+                        'ગુજરાતી',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: () {
+                        lControl.selectedLanguage.value = 'ગુજરાતી';
+                        lControl.changeLangauge();
+                      },
+                    ),
+                    SizedBox(width: 2),
                     Text(
-                      'ગુજરાતી',
+                      '|',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.white,
@@ -75,13 +99,13 @@ class HomePage extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Text(
-                                  'Welcome to G-Shala',
+                                  'Welcome to G-Shala'.tr,
                                   textScaleFactor: 2,
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Text(
-                                'Learning Management System of Gujarat',
+                                'Learning Management System of Gujarat'.tr,
                                 textScaleFactor: 1,
                               ),
                             ],
@@ -93,28 +117,40 @@ class HomePage extends StatelessWidget {
                             child: Column(
                               children: [
                                 CustomTextField(
-                                  cLabelText: 'Enter ID/Mobile Number',
+                                  cLabelText: 'Enter ID/Mobile Number'.tr,
                                   validator: (value) {
                                     if (value.isEmpty) {
-                                      return 'Please input ID/Mobile number';
+                                      return 'Please input ID/Mobile number'.tr;
                                     }
                                     return null;
+                                  },
+                                  onSaved: (value) {
+                                    logInController.userId.value = value;
                                   },
                                 ),
                                 CustomTextField(
-                                  cLabelText: 'Enter Password',
+                                  cLabelText: 'Enter Password'.tr,
                                   validator: (value) {
                                     if (value.isEmpty) {
-                                      return 'Please input password';
+                                      return 'Please input password'.tr;
                                     }
                                     return null;
                                   },
+                                  onSaved: (value) {
+                                    logInController.password.value = value;
+                                  },
                                 ),
-                                CustomDropDownField(
-                                  hinttext: 'Select Role',
-                                  dropList: dropList,
-                                  onChanged: (value) {},
-                                  onSaved: (value) {},
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: CustomDropDownField(
+                                    hinttext: 'Select Role'.tr,
+                                    dropList: dropList,
+                                    onChanged: (value) {},
+                                    validationtext: 'Please select role'.tr,
+                                    onSaved: (value) {
+                                      logInController.loginType.value = value;
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
@@ -129,12 +165,13 @@ class HomePage extends StatelessWidget {
                               child: Container(
                                 width: MediaQuery.of(context).size.width,
                                 child: CElevatedButton(
-                                  buttonLabel: 'Login',
+                                  buttonLabel: 'Login'.tr,
                                   icon: Icons.arrow_forward,
                                   avatorColor: Colors.white,
                                   onPressed: () {
                                     if (validateAndSave()) {
-                                      Get.toNamed('/offlinevideoslist');
+                                      logInController.toJson();
+                                      Get.offAndToNamed('profilepage');
                                     }
                                   },
                                 ),
@@ -149,7 +186,7 @@ class HomePage extends StatelessWidget {
                                 child: TextButton(
                                   onPressed: () {},
                                   child: Text(
-                                    'Forgot Password?',
+                                    'Forgot Password?'.tr,
                                     style: TextStyle(
                                       fontSize: 10,
                                     ),
@@ -161,20 +198,19 @@ class HomePage extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                            left: 16.0,
                             bottom: 16.0,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                'Dont have an account yet ?',
+                                'Dont have an account yet ?'.tr,
                                 style: TextStyle(
                                   fontSize: 12,
                                 ),
                               ),
                               CElevatedButton(
-                                buttonLabel: 'Sign Up',
+                                buttonLabel: 'Sign Up'.tr,
                                 buttonColor: 0xffFBAA00,
                                 onPressed: () {},
                               ),
