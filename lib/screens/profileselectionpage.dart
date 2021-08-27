@@ -53,15 +53,21 @@ class ProfileSelectionPage extends StatelessWidget {
           child: Drawer(
             child: Column(
               children: [
-                Card(
-                  borderOnForeground: true,
-                  color: Theme.of(context).backgroundColor,
-                  child: ListTile(
-                    title: Text(
-                      'Log out',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () {
+                    box.remove('userName');
+                    Get.offAndToNamed('/homepage');
+                  },
+                  child: Card(
+                    borderOnForeground: true,
+                    color: Theme.of(context).backgroundColor,
+                    child: ListTile(
+                      title: Text(
+                        'Log out',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

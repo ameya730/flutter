@@ -1,24 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gshala/getxnetworkmanager.dart';
 import 'package:gshala/localization_service.dart';
 import 'package:gshala/networkbindings.dart';
 import 'package:gshala/screens/homepage.dart';
-import 'package:gshala/screens/offlinemainpage.dart';
+import 'package:gshala/screens/landingpage.dart';
+import 'package:gshala/screens/nologinofflinescreen.dart';
+import 'package:gshala/screens/onlineofflineselectionpage.dart';
+import 'package:gshala/screens/postloginofflinemainpage.dart';
 import 'package:gshala/screens/offlinevideoslist.dart';
 import 'package:gshala/screens/profileselectionpage.dart';
 import 'package:gshala/screens/viewvideopage.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  GetStorage box = new GetStorage();
+  final GetXNetworkManager networkManager = Get.put(GetXNetworkManager());
+  print(box.read('userName'));
+  int initialRoute = await networkManager.getConnectionType();
+  String pageToDisplay = '';
+  if (initialRoute == 0) {
+    pageToDisplay = '/nologinofflinescreen';
+  } else if (initialRoute == 1) {
+    pageToDisplay = '/homepage';
+  } else if (initialRoute == 2) {
+    pageToDisplay = '/offlinemainpage';
+  } else if (initialRoute == 3) {
+    pageToDisplay = '/profilepage';
+  }
+  print(pageToDisplay);
+  final MyApp myApp = MyApp(initialRoute: pageToDisplay);
+  runApp(myApp);
 }
 
 class MyApp extends StatelessWidget {
+  final String? initialRoute;
+  MyApp({this.initialRoute});
   @override
   Widget build(BuildContext context) {
-    WidgetsFlutterBinding.ensureInitialized();
-    final GetXNetworkManager _networkManager = Get.put(GetXNetworkManager());
     return GetMaterialApp(
       initialBinding: NetWorkBindings(),
       theme: ThemeData(
@@ -35,17 +56,16 @@ class MyApp extends StatelessWidget {
       translations: LocalizationService(),
       locale: LocalizationService.locale,
       fallbackLocale: LocalizationService.fallbackLocale,
-      home: HomePage(),
-      // Obx(() {
-      //   return _networkManager.connectionType.value == 0
-      //       ? OfflineMainPage()
-      //       : HomePage();
-      // }),
+      initialRoute: initialRoute,
+      home: LandingPage(),
       routes: {
-        '/offlinemainpage': (context) => OfflineMainPage(),
+        '/homepage': (context) => HomePage(),
+        '/nologinofflinescreen': (context) => NoLoginOfflineScreen(),
+        '/offlinemainpage': (context) => PostLoginOfflineMainPage(),
+        'onlineofflineselectionpage': (context) => OnlineOfflineSelectionPage(),
         '/offlinevideoslist': (context) => OfflineVideosList(),
         '/viewvideopage': (context) => ViewVideoPage(),
-        'profilepage': (context) => ProfileSelectionPage(),
+        '/profilepage': (context) => ProfileSelectionPage(),
       },
     );
   }

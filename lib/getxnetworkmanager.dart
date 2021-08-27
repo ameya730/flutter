@@ -1,59 +1,74 @@
-import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class GetXNetworkManager extends GetxController {
-  //this variable 0 = No Internet, 1 = connected to WIFI ,2 = connected to Mobile Data.
+  final validationDone = false.obs;
   final connectionType = 0.obs;
-  //Instance of Flutter Connectivity
+  final isLoggedIn = false.obs;
+  final page = 0.obs;
   final Connectivity _connectivity = Connectivity();
-  //Stream to keep listening to network change state
-  late StreamSubscription _streamSubscription;
-  @override
-  void onInit() {
-    super.onInit();
-    getConnectionType();
-    _streamSubscription =
-        _connectivity.onConnectivityChanged.listen(_updateState);
-  }
+  GetStorage box = new GetStorage();
 
-  // a method to get which connection result, if you we connected to internet or no if yes then which network
-  Future<void> getConnectionType() async {
-    var connectivityResult;
+  getConnectionType() async {
     try {
-      connectivityResult = await (_connectivity.checkConnectivity());
+      ConnectivityResult connectivityResult =
+          await _connectivity.checkConnectivity();
+      print(connectivityResult);
+      if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi ||
+          connectivityResult == ConnectivityResult.ethernet) {
+        connectionType.value = 1;
+      } else {
+        connectionType.value = 0;
+      }
+
+      if (box.read('userName') != null) {
+        isLoggedIn.value = true;
+      } else if (box.read('userName') == null) {
+        isLoggedIn.value = false;
+      }
+
+      if (connectionType.value == 0 && isLoggedIn.value == false) {
+        page.value = 0;
+      } else if (connectionType.value == 1 && isLoggedIn.value == false) {
+        page.value = 1;
+      } else if (connectionType.value == 0 && isLoggedIn.value == true) {
+        page.value = 2;
+      } else if (connectionType.value == 1 && isLoggedIn.value == true) {
+        page.value = 3;
+      }
+      return page.value;
+
+      // checkLogInStatus();
     } on PlatformException catch (e) {
       print(e);
     }
-    return _updateState(connectivityResult);
   }
 
-  // state update, of network, if you are connected to WIFI connectionType will get set to 1,
-  // and update the state to the consumer of that variable.
-  _updateState(ConnectivityResult result) {
-    switch (result) {
-      case ConnectivityResult.wifi:
-        connectionType.value = 1;
-        update();
-        break;
-      case ConnectivityResult.mobile:
-        connectionType.value = 2;
-        update();
-        break;
-      case ConnectivityResult.none:
-        connectionType.value = 0;
-        update();
-        break;
-      default:
-        Get.snackbar('Network Error', 'Failed to get Network Status');
-        break;
-    }
-  }
+  // checkLogInStatus() {
+  //   if (box.read('userName') != null) {
+  //     isLoggedIn.value = true;
+  //   } else if (box.read('userName') == null) {
+  //     isLoggedIn.value = false;
+  //   }
+  //   showPage();
+  // }
 
-  @override
-  void onClose() {
-    //stop listening to network state when app is closed
-    _streamSubscription.cancel();
-  }
+  // showPage() {
+  //   if (connectionType.value == 0 && isLoggedIn.value == false) {
+  //     page.value = 0;
+  //   } else if (connectionType.value == 1 && isLoggedIn.value == false) {
+  //     page.value = 1;
+  //   } else if (connectionType.value == 0 && isLoggedIn.value == true) {
+  //     page.value = 2;
+  //   } else if (connectionType.value == 1 && isLoggedIn.value == true) {
+  //     page.value = 3;
+  //   }
+  //   print('The page to be displayed is :$page.value');
+  //   validationDone.value = true;
+  //   update();
+  //   return page.value;
+  // }
 }

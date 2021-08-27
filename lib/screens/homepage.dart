@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:gshala/controllers/language_controller.dart';
 import 'package:gshala/controllers/login_controller.dart';
 import 'package:gshala/templates/custombutton.dart';
@@ -11,6 +12,7 @@ class HomePage extends StatelessWidget {
   final GlobalKey<FormState> loginFormKey = new GlobalKey<FormState>();
   final LogInController logInController = Get.put(LogInController());
   final LanguageController lControl = Get.put(LanguageController());
+  final GetStorage box = new GetStorage();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -171,7 +173,10 @@ class HomePage extends StatelessWidget {
                                   onPressed: () {
                                     if (validateAndSave()) {
                                       logInController.toJson();
-                                      Get.offAndToNamed('profilepage');
+                                      box.write('userName',
+                                          logInController.userId.value);
+                                      print(box.read('userName'));
+                                      Get.offAndToNamed('/profilepage');
                                     }
                                   },
                                 ),

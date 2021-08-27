@@ -2,7 +2,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:gshala/controllers/videocontroller.dart';
+import 'package:gshala/controllers/videoviewcontroller.dart';
 import 'package:gshala/controllers/videodownloadcontroller.dart';
 import 'package:gshala/templates/custombutton.dart';
 import 'package:video_player/video_player.dart';

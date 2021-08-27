@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/templates/custombutton.dart';
 
-class OfflineMainPage extends StatelessWidget {
+class PostLoginOfflineMainPage extends StatelessWidget {
   final GetStorage box = new GetStorage();
   @override
   Widget build(BuildContext context) {
