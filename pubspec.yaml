@@ -38,6 +38,8 @@ dependencies:
   dio:
   connectivity_plus:
   lottie:
+  sqflite:
+  path:
 
 dev_dependencies:
   flutter_test:

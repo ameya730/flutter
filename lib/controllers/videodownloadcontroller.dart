@@ -8,6 +8,7 @@ class VideoDownloadController extends GetxController {
   final videoName = ''.obs;
   final isdownloading = false.obs;
   final progressString = ''.obs;
+  final progressPercentage = 0.0.obs;
   Dio dio = Dio();
 
   @override
@@ -25,7 +26,9 @@ class VideoDownloadController extends GetxController {
       String videoName = imgUrl.split('/').last;
       await dio.download(imgUrl, "${appDir.path}/videos/$videoName",
           onReceiveProgress: (rec, total) {
-        print("Rec: $rec , Total: $total");
+        // print("Rec: $rec , Total: $total");
+        progressPercentage.value = (rec / total);
+        // print(progressPercentage.value);
         progressString.value = ((rec / total) * 100).toStringAsFixed(0) + "%";
       });
     } catch (e) {

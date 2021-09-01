@@ -41,6 +41,11 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                   ),
                 ),
                 CElevatedButton(
+                    buttonLabel: 'Download Video',
+                    onPressed: () {
+                      Get.toNamed('/downloadvideopage');
+                    }),
+                CElevatedButton(
                     buttonLabel: 'Offline Videos',
                     onPressed: () {
                       Get.toNamed('/offlinevideoslist');

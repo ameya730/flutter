@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:gshala/database/video_db.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -17,7 +18,9 @@ class VideoListController extends GetxController {
   Future getVideosList() async {
     try {
       var dir = await getApplicationDocumentsDirectory();
+      final videoDetails = await DatabaseProvider.db.getVideos();
       final videoDir = new Directory(dir.path + '/videos/');
+      print(videoDetails);
       videoList = videoDir
           .listSync(
             recursive: false,

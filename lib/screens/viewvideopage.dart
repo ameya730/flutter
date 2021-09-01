@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/controllers/videoviewcontroller.dart';
 import 'package:gshala/controllers/videodownloadcontroller.dart';
-import 'package:gshala/templates/custombutton.dart';
 import 'package:video_player/video_player.dart';
 
 class ViewVideoPage extends StatelessWidget {
@@ -97,24 +96,6 @@ class ViewVideoPage extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            CElevatedButton(
-                                buttonLabel: 'Download Video',
-                                onPressed: () {
-                                  videoDownloadController.downloadFile();
-                                }),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Obx(() {
-                                return videoDownloadController
-                                        .isdownloading.value
-                                    ? Text(videoDownloadController
-                                        .progressString.value)
-                                    : Container(
-                                        height: 0,
-                                        width: 0,
-                                      );
-                              }),
-                            )
                           ],
                         ),
                       )
