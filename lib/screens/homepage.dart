@@ -13,6 +13,7 @@ class HomePage extends StatelessWidget {
   final LogInController logInController = Get.put(LogInController());
   final LanguageController lControl = Get.put(LanguageController());
   final GetStorage box = new GetStorage();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -176,7 +177,9 @@ class HomePage extends StatelessWidget {
                                       box.write('userName',
                                           logInController.userId.value);
                                       print(box.read('userName'));
-                                      Get.offAndToNamed('/profilepage');
+                                      logInController.login().then((value) {
+                                        Get.offAndToNamed('/profilepage');
+                                      });
                                     }
                                   },
                                 ),

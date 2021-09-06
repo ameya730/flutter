@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
@@ -50,7 +51,6 @@ class PlayVideoController extends GetxController {
     vName.value = vInfo[0].videoName!;
     vViewCounter.value = vInfo[0].videoViewCounter!;
     vLastPosition.value = vInfo[0].videoLastPosition!;
-    vTotalViewDuration.value = vInfo[0].videoTotalViewDuration!;
     Directory appDir = await getApplicationDocumentsDirectory();
     String appDirPath = appDir.path + '/videos/' + vName.value;
     print(appDirPath);
@@ -81,19 +81,22 @@ class PlayVideoController extends GetxController {
   void toggleVideoPlay() {
     if (isVideoPlaying.value == true) {
       isVideoPlaying.value = false;
+      print('Video Paused');
       videoPlayerController.pause().then((value) {
-        print(videoPlayerController.value.position.inSeconds);
+        print('Video Duration is $videoDuration.value');
         box.write('vPosition', videoPlayerController.value.position.inSeconds);
       });
     } else if (isVideoPlaying.value == false) {
       isVideoPlaying.value = true;
+      print('Video Playing');
       videoPlayerController.play().then((value) {
         if (videoPlayed.value == false) {
           videoPlayed.value = true;
         }
         if (box.read('vPosition') != 0) {
+          print(box.read('vPosition'));
           videoPlayerController.seekTo(
-            box.read('vPosition'),
+            Duration(seconds: box.read('vPosition')),
           );
         }
       });

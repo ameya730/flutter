@@ -40,6 +40,7 @@ dependencies:
   lottie:
   sqflite:
   path:
+  encrypt:
 
 dev_dependencies:
   flutter_test:

@@ -4,7 +4,7 @@ Color customHintColor = Colors.blue;
 Color textBoxBackgroundColor = Color(0xffEEEEEE);
 
 // Url Links
-String kloginapiurl = 'loginApiUrl';
+String kloginapiurl = 'http://gshala.ecocentricbw.in/';
 String sendVideoDetailsUrl = 'sendVideoDetailsUrl';
 
 // Information for development
