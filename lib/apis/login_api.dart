@@ -8,7 +8,7 @@ class LoginApiService {
   final LogInController logInController = Get.put(LogInController());
 
   Future login() async {
-    var url = Uri.parse(loginApiUrl);
+    var url = Uri.parse(kloginapiurl);
     var response =
         await http.post(url, body: logInController.toJson(), headers: {
       "Accept": "application/json",

@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:gshala/const.dart';
+import 'package:gshala/database/video_db.dart';
+import 'package:gshala/models/videodetails_sqflite_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 
@@ -9,31 +11,36 @@ class VideoDownloadController extends GetxController {
   final isdownloading = false.obs;
   final progressString = ''.obs;
   final progressPercentage = 0.0.obs;
+  final downloadComplete = false.obs;
   Dio dio = Dio();
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
   Future<void> downloadFile() async {
-    Directory appDir = await getApplicationDocumentsDirectory();
     try {
-      var dir = await getApplicationDocumentsDirectory();
-      print("path ${dir.path}");
+      Directory appDir = await getApplicationDocumentsDirectory();
       String imgUrl = videoUrl;
+      print(appDir);
+      print(imgUrl);
       isdownloading.value = true;
       String videoName = imgUrl.split('/').last;
+      print(videoName);
+      final videoDetails = VideoDetails(
+        videoName: videoName,
+        videoLastPosition: 0,
+        videoViewCounter: 0,
+        videoTotalViewDuration: 0,
+        videoDataUpdated: 0,
+        videoDeleted: 0,
+      );
+      print(videoDetails);
+      DatabaseProvider.db.insert(videoDetails);
       await dio.download(imgUrl, "${appDir.path}/videos/$videoName",
           onReceiveProgress: (rec, total) {
-        // print("Rec: $rec , Total: $total");
         progressPercentage.value = (rec / total);
-        // print(progressPercentage.value);
         progressString.value = ((rec / total) * 100).toStringAsFixed(0) + "%";
       });
+      downloadComplete.value = true;
     } catch (e) {
       print(e);
     }
-    print(appDir.listSync());
   }
 }

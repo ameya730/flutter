@@ -25,7 +25,7 @@ class VideoDetails {
         videoDataUpdated = res['videoDataUpdated'],
         videoDeleted = res['videoDeleted'];
 
-  Map<String, Object?> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'videoName': videoName,

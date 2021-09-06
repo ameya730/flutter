@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gshala/database/video_db.dart';
 import 'package:gshala/getxnetworkmanager.dart';
 import 'package:gshala/localization_service.dart';
+import 'package:gshala/models/lifecycle_model.dart';
 import 'package:gshala/networkbindings.dart';
 import 'package:gshala/screens/downloadvideopage.dart';
 import 'package:gshala/screens/homepage.dart';
@@ -42,35 +42,37 @@ class MyApp extends StatelessWidget {
   MyApp({this.initialRoute});
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      initialBinding: NetWorkBindings(),
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          centerTitle: true,
-          iconTheme: IconThemeData(
-            color: Color(0xfffcfcfa),
+    return LifeCycleManager(
+      child: GetMaterialApp(
+        initialBinding: NetWorkBindings(),
+        theme: ThemeData(
+          appBarTheme: AppBarTheme(
+            centerTitle: true,
+            iconTheme: IconThemeData(
+              color: Color(0xfffcfcfa),
+            ),
           ),
+          fontFamily: GoogleFonts.poppins().fontFamily,
+          backgroundColor: Color(0xff1B52CC),
         ),
-        fontFamily: GoogleFonts.poppins().fontFamily,
-        backgroundColor: Color(0xff1B52CC),
+        debugShowCheckedModeBanner: false,
+        translations: LocalizationService(),
+        locale: LocalizationService.locale,
+        fallbackLocale: LocalizationService.fallbackLocale,
+        initialRoute: initialRoute,
+        home: LandingPage(),
+        routes: {
+          '/homepage': (context) => HomePage(),
+          '/nologinofflinescreen': (context) => NoLoginOfflineScreen(),
+          '/offlinemainpage': (context) => PostLoginOfflineMainPage(),
+          '/downloadvideopage': (context) => DownloadVideoPage(),
+          '/onlineofflineselectionpage': (context) =>
+              OnlineOfflineSelectionPage(),
+          '/offlinevideoslist': (context) => OfflineVideosList(),
+          '/viewvideopage': (context) => ViewVideoPage(),
+          '/profilepage': (context) => ProfileSelectionPage(),
+        },
       ),
-      debugShowCheckedModeBanner: false,
-      translations: LocalizationService(),
-      locale: LocalizationService.locale,
-      fallbackLocale: LocalizationService.fallbackLocale,
-      initialRoute: initialRoute,
-      home: LandingPage(),
-      routes: {
-        '/homepage': (context) => HomePage(),
-        '/nologinofflinescreen': (context) => NoLoginOfflineScreen(),
-        '/offlinemainpage': (context) => PostLoginOfflineMainPage(),
-        '/downloadvideopage': (context) => DownloadVideoPage(),
-        '/onlineofflineselectionpage': (context) =>
-            OnlineOfflineSelectionPage(),
-        '/offlinevideoslist': (context) => OfflineVideosList(),
-        '/viewvideopage': (context) => ViewVideoPage(),
-        '/profilepage': (context) => ProfileSelectionPage(),
-      },
     );
   }
 }

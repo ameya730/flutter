@@ -2,23 +2,30 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:gshala/controllers/videoviewcontroller.dart';
-import 'package:gshala/controllers/videodownloadcontroller.dart';
+import 'package:gshala/controllers/videoview_controller.dart';
+import 'package:gshala/database/video_db.dart';
 import 'package:video_player/video_player.dart';
 
 class ViewVideoPage extends StatelessWidget {
-  final VideoControllerGetX vController = Get.put(VideoControllerGetX());
-  final VideoDownloadController videoDownloadController =
-      Get.put(VideoDownloadController());
+  final PlayVideoController vController = Get.put(PlayVideoController());
   final GetStorage box = GetStorage();
+  final dbHelper = DatabaseProvider.db;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              vController.videoUpdate();
+              box.remove('i');
+              Get.back();
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
           centerTitle: true,
           title: Text(
-            box.read('videoName'),
+            'Test',
             textScaleFactor: 1.2,
           ),
           backgroundColor: Theme.of(context).backgroundColor,
@@ -29,8 +36,8 @@ class ViewVideoPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              GetBuilder<VideoControllerGetX>(
-                init: VideoControllerGetX(),
+              GetBuilder<PlayVideoController>(
+                init: PlayVideoController(),
                 builder: (vcontrol) => vcontrol.chewieController != null &&
                         vcontrol.chewieController!.videoPlayerController.value
                             .isInitialized
@@ -61,7 +68,9 @@ class ViewVideoPage extends StatelessWidget {
                                   CircleAvatar(
                                     backgroundColor: Colors.white,
                                     child: IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        vController.rewindVideo();
+                                      },
                                       icon: Icon(Icons.fast_rewind),
                                     ),
                                   ),
@@ -89,7 +98,9 @@ class ViewVideoPage extends StatelessWidget {
                                   CircleAvatar(
                                     backgroundColor: Colors.white,
                                     child: IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        vController.forwardVideo();
+                                      },
                                       icon: Icon(Icons.fast_forward),
                                     ),
                                   ),

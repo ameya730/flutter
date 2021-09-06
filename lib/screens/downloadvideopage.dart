@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gshala/controllers/videodownloadcontroller.dart';
+import 'package:gshala/controllers/videodownload_controller.dart';
 import 'package:gshala/database/video_db.dart';
-import 'package:gshala/models/videodetails_sqflite_model.dart';
 import 'package:gshala/templates/custombutton.dart';
 
 class DownloadVideoPage extends StatelessWidget {
@@ -31,15 +30,6 @@ class DownloadVideoPage extends StatelessWidget {
                 child: CElevatedButton(
                     buttonLabel: 'Download Video',
                     onPressed: () {
-                      final videoDetails = VideoDetails(
-                        videoName: videoDownloadController.videoName.value,
-                        videoLastPosition: 0,
-                        videoViewCounter: 0,
-                        videoTotalViewDuration: 0,
-                        videoDataUpdated: 0,
-                        videoDeleted: 0,
-                      );
-                      DatabaseProvider.db.insert(videoDetails);
                       videoDownloadController.downloadFile();
                     }),
               ),
@@ -70,7 +60,7 @@ class DownloadVideoPage extends StatelessWidget {
                               style: TextStyle(
                                 color: Colors.white,
                               ),
-                            )
+                            ),
                           ],
                         )
                       : Container(
@@ -79,6 +69,21 @@ class DownloadVideoPage extends StatelessWidget {
                         );
                 }),
               ),
+              Obx(() {
+                return videoDownloadController.downloadComplete.value
+                    ? AlertDialog(
+                        title: Text('Video Download'),
+                        content: Text('Your video has been downloaded'),
+                        actions: [
+                          CElevatedButton(
+                              buttonLabel: 'Ok',
+                              onPressed: () {
+                                Get.offNamed('/offlinevideoslist');
+                              })
+                        ],
+                      )
+                    : Container();
+              }),
             ],
           ),
         ),

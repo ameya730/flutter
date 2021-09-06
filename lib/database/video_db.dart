@@ -35,7 +35,7 @@ class DatabaseProvider {
         await database.execute(
           "CREATE TABLE $VIDEO_DETAILS ("
           "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$COLUMN_VIDEO_NAME STRING,"
+          "$COLUMN_VIDEO_NAME TEXT NOT NULL,"
           "$COLUMN_VIDEO_VIEW_COUNT INT,"
           "$COLUMN_TOTAL_VIEW_DURATION INT,"
           "$COLUMN_LAST_POSITION INT,"
@@ -49,7 +49,14 @@ class DatabaseProvider {
 
   Future<List<VideoDetails>> getVideos() async {
     final db = await database;
-    final List<Map<String, Object?>> vDetails = await db.query(VIDEO_DETAILS);
+    final List<Map<String, dynamic>> vDetails = await db.query(VIDEO_DETAILS);
+    return vDetails.map((e) => VideoDetails.fromMap(e)).toList();
+  }
+
+  Future<List<VideoDetails>> getSingleVideo(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> vDetails =
+        await db.query(VIDEO_DETAILS, where: "id=?", whereArgs: [id]);
     return vDetails.map((e) => VideoDetails.fromMap(e)).toList();
   }
 
@@ -74,8 +81,10 @@ class DatabaseProvider {
     );
   }
 
-  Future<int> delete(int id) async {
+  Future delete(VideoDetails videoDetails) async {
     final db = await database;
-    return await db.delete(VIDEO_DETAILS, where: "id = ?", whereArgs: [id]);
+    print(videoDetails.id);
+    return await db.delete(VIDEO_DETAILS,
+        where: "$COLUMN_ID = ?", whereArgs: [videoDetails.id]);
   }
 }

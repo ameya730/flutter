@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:gshala/controllers/videolist_controller.dart';
 import 'package:gshala/templates/custombutton.dart';
 
 class PostLoginOfflineMainPage extends StatelessWidget {
@@ -48,6 +49,9 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                 CElevatedButton(
                     buttonLabel: 'Offline Videos',
                     onPressed: () {
+                      final VideoListController videoListController =
+                          Get.put(VideoListController());
+                      videoListController.getVideosList();
                       Get.toNamed('/offlinevideoslist');
                     })
               ],

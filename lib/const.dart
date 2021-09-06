@@ -4,7 +4,7 @@ Color customHintColor = Colors.blue;
 Color textBoxBackgroundColor = Color(0xffEEEEEE);
 
 // Url Links
-String loginApiUrl = 'loginApiUrl';
+String kloginapiurl = 'loginApiUrl';
 String sendVideoDetailsUrl = 'sendVideoDetailsUrl';
 
 // Information for development
@@ -20,3 +20,6 @@ String internetconnectivityexample =
 
 String videoUrl =
     'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
+
+String minimizeAppTutorial =
+    'https://medium.com/flutter-community/build-a-lifecycle-manager-to-manage-your-services-b9c928d3aed7';
