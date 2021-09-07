@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/controllers/videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
+import 'package:gshala/templates/custombutton.dart';
 import 'package:video_player/video_player.dart';
 
 class ViewVideoPage extends StatelessWidget {
@@ -115,6 +116,11 @@ class ViewVideoPage extends StatelessWidget {
                                   ],
                                 ),
                               ),
+                              CElevatedButton(
+                                  buttonLabel: 'Full Screen',
+                                  onPressed: () {
+                                    vController.fullScreenMode();
+                                  }),
                             ],
                           ),
                         )

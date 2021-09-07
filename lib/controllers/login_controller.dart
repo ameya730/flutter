@@ -36,6 +36,7 @@ class LogInController extends GetxController {
         },
         body: json.encode(toJson()));
     if (response.statusCode == 200 || response.statusCode == 400) {
+      print(response.body);
       return json.decode(response.body);
     } else {
       throw Exception('Failed to signin');

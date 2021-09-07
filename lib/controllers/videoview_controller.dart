@@ -20,6 +20,7 @@ class PlayVideoController extends GetxController {
   final dbHelper = DatabaseProvider.db;
   final currentViewDuration = 0.obs;
   final videoPlayed = false.obs;
+  final isFullScreen = false.obs;
 
   final vId = 0.obs;
   final vName = ''.obs;
@@ -100,6 +101,16 @@ class PlayVideoController extends GetxController {
           );
         }
       });
+    }
+  }
+
+  void fullScreenMode() {
+    if (isFullScreen.value == false) {
+      isFullScreen.value = true;
+      chewieController!.enterFullScreen();
+    } else if (isFullScreen.value == true) {
+      isFullScreen.value = false;
+      chewieController!.exitFullScreen();
     }
   }
 
