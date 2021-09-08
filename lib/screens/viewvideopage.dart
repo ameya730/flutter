@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/controllers/videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
-import 'package:gshala/templates/custombutton.dart';
-import 'package:video_player/video_player.dart';
 
 class ViewVideoPage extends StatelessWidget {
   final PlayVideoController vController = Get.put(PlayVideoController());
@@ -53,74 +51,12 @@ class ViewVideoPage extends StatelessWidget {
                           child: Column(
                             children: [
                               Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.7,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  child: Chewie(
-                                      controller: vcontrol.chewieController!)),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                child: VideoProgressIndicator(
-                                    vController.videoPlayerController,
-                                    allowScrubbing: true),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.5,
+                                width: MediaQuery.of(context).size.width,
+                                child: Chewie(
+                                    controller: vcontrol.chewieController!),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 8.0,
-                                  bottom: 8.0,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          vController.rewindVideo();
-                                        },
-                                        icon: Icon(Icons.fast_rewind),
-                                      ),
-                                    ),
-                                    Obx(() {
-                                      return vController.isVideoPlaying.value
-                                          ? CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  vController.toggleVideoPlay();
-                                                },
-                                                icon: Icon(Icons.pause),
-                                              ),
-                                            )
-                                          : CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  vController.toggleVideoPlay();
-                                                },
-                                                icon: Icon(Icons.play_arrow),
-                                              ),
-                                            );
-                                    }),
-                                    CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          vController.forwardVideo();
-                                        },
-                                        icon: Icon(Icons.fast_forward),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              CElevatedButton(
-                                  buttonLabel: 'Full Screen',
-                                  onPressed: () {
-                                    vController.fullScreenMode();
-                                  }),
                             ],
                           ),
                         )

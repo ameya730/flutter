@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:gshala/const.dart';
 import 'package:http/http.dart' as http;
@@ -9,37 +8,24 @@ class LogInController extends GetxController {
   final password = ''.obs;
   final loginType = ''.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> map = {
+  Future login() async {
+    var headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'APIKey': 'G12SHA98IZ82938KPP'
+    };
+    var request = http.Request('POST', Uri.parse(kloginapiurl));
+    request.bodyFields = {
       'username': myEncryptionDecryption(userId.value),
       'password': myEncryptionDecryption(password.value),
       'grant_type': 'password',
-      'scope': myEncryptionDecryption(loginType.value),
+      'scope': myEncryptionDecryption(loginType.value)
     };
-    print(map);
-    return map;
-  }
-
-  Future login() async {
-    var url = Uri.parse(kloginapiurl);
-    final response = await http.post(url,
-        headers: {
-          "Accept": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/x-www-form-urlencoded",
-          "APIKey": "G12SHA98IZ82938KPP",
-        },
-        body: json.encode(toJson()));
-    if (response.statusCode == 200 || response.statusCode == 400) {
-      print(response.body);
-      return json.decode(response.body);
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
     } else {
-      throw Exception('Failed to signin');
+      print(response.reasonPhrase);
     }
   }
 }

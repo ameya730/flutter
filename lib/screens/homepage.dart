@@ -173,7 +173,6 @@ class HomePage extends StatelessWidget {
                                   avatorColor: Colors.white,
                                   onPressed: () {
                                     if (validateAndSave()) {
-                                      logInController.toJson();
                                       box.write('userName',
                                           logInController.userId.value);
                                       print(box.read('userName'));

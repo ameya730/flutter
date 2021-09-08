@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,22 +59,30 @@ class PlayVideoController extends GetxController {
       videoPlayerController.initialize(),
     ]);
     chewieController = ChewieController(
-      videoPlayerController: videoPlayerController,
-      autoPlay: false,
-      looping: false,
-      allowFullScreen: true,
-      allowMuting: true,
-      allowedScreenSleep: false,
-      materialProgressColors: ChewieProgressColors(),
-      showControlsOnInitialize: false,
-      showOptions: false,
-      showControls: false,
-      placeholder: Container(
-        color: Colors.black87,
-      ),
-      autoInitialize: true,
-    );
+        videoPlayerController: videoPlayerController,
+        autoPlay: false,
+        looping: false,
+        allowFullScreen: true,
+        allowMuting: true,
+        allowedScreenSleep: false,
+        materialProgressColors: ChewieProgressColors(),
+        showControlsOnInitialize: true,
+        showOptions: true,
+        showControls: true,
+        placeholder: Container(
+          color: Colors.black87,
+        ),
+        autoInitialize: true,
+        additionalOptions: (context) {
+          return <OptionItem>[];
+        });
     update();
+  }
+
+  videoStatus() {
+    if (videoPlayerController.value.isPlaying == true) {
+      print('Video Playing');
+    }
   }
 
 // This function plays and pauses the video
@@ -90,6 +97,10 @@ class PlayVideoController extends GetxController {
     } else if (isVideoPlaying.value == false) {
       isVideoPlaying.value = true;
       print('Video Playing');
+      Timer.periodic(Duration(seconds: 1), (timer) {
+        videoDuration.value = videoDuration.value + 1;
+      });
+      print(videoDuration.value);
       videoPlayerController.play().then((value) {
         if (videoPlayed.value == false) {
           videoPlayed.value = true;
@@ -104,25 +115,25 @@ class PlayVideoController extends GetxController {
     }
   }
 
-  void fullScreenMode() {
-    if (isFullScreen.value == false) {
-      isFullScreen.value = true;
-      chewieController!.enterFullScreen();
-    } else if (isFullScreen.value == true) {
-      isFullScreen.value = false;
-      chewieController!.exitFullScreen();
-    }
-  }
+  // void fullScreenMode() {
+  //   if (isFullScreen.value == false) {
+  //     isFullScreen.value = true;
+  //     chewieController!.enterFullScreen();
+  //   } else if (isFullScreen.value == true) {
+  //     isFullScreen.value = false;
+  //     chewieController!.exitFullScreen();
+  //   }
+  // }
 
-  void rewindVideo() {
-    int rewindPosition = videoPlayerController.value.position.inSeconds - 5;
-    videoPlayerController.seekTo(Duration(seconds: rewindPosition));
-  }
+  // void rewindVideo() {
+  //   int rewindPosition = videoPlayerController.value.position.inSeconds - 5;
+  //   videoPlayerController.seekTo(Duration(seconds: rewindPosition));
+  // }
 
-  void forwardVideo() {
-    int forwardPosition = videoPlayerController.value.position.inSeconds + 5;
-    videoPlayerController.seekTo(Duration(seconds: forwardPosition));
-  }
+  // void forwardVideo() {
+  //   int forwardPosition = videoPlayerController.value.position.inSeconds + 5;
+  //   videoPlayerController.seekTo(Duration(seconds: forwardPosition));
+  // }
 
   // This function updates the SQL database with the latest values
   videoUpdate() {
