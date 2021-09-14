@@ -5,6 +5,7 @@ import 'package:gshala/database/video_db.dart';
 import 'package:gshala/models/videodetails_sqflite_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class VideoDownloadController extends GetxController {
   final videoName = ''.obs;
@@ -17,7 +18,7 @@ class VideoDownloadController extends GetxController {
   Future<void> downloadFile() async {
     try {
       Directory appDir = await getApplicationDocumentsDirectory();
-      String imgUrl = videoUrl;
+      String imgUrl = videoTestExample;
       print(appDir);
       print(imgUrl);
       isdownloading.value = true;
@@ -38,6 +39,12 @@ class VideoDownloadController extends GetxController {
         progressPercentage.value = (rec / total);
         progressString.value = ((rec / total) * 100).toStringAsFixed(0) + "%";
       });
+      await VideoThumbnail.thumbnailFile(
+        video: '${appDir.path}/videos/$videoName',
+        imageFormat: ImageFormat.JPEG,
+        maxWidth: 0,
+        quality: 50,
+      );
       downloadComplete.value = true;
     } catch (e) {
       print(e);

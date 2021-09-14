@@ -30,6 +30,8 @@ class GetXNetworkManager extends GetxController {
         isLoggedIn.value = false;
       }
 
+      print('Is user logged in : $isLoggedIn.value');
+
       if (connectionType.value == 0 && isLoggedIn.value == false) {
         page.value = 0;
       } else if (connectionType.value == 1 && isLoggedIn.value == false) {
@@ -46,29 +48,4 @@ class GetXNetworkManager extends GetxController {
       print(e);
     }
   }
-
-  // checkLogInStatus() {
-  //   if (box.read('userName') != null) {
-  //     isLoggedIn.value = true;
-  //   } else if (box.read('userName') == null) {
-  //     isLoggedIn.value = false;
-  //   }
-  //   showPage();
-  // }
-
-  // showPage() {
-  //   if (connectionType.value == 0 && isLoggedIn.value == false) {
-  //     page.value = 0;
-  //   } else if (connectionType.value == 1 && isLoggedIn.value == false) {
-  //     page.value = 1;
-  //   } else if (connectionType.value == 0 && isLoggedIn.value == true) {
-  //     page.value = 2;
-  //   } else if (connectionType.value == 1 && isLoggedIn.value == true) {
-  //     page.value = 3;
-  //   }
-  //   print('The page to be displayed is :$page.value');
-  //   validationDone.value = true;
-  //   update();
-  //   return page.value;
-  // }
 }

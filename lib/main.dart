@@ -15,6 +15,7 @@ import 'package:gshala/screens/postloginofflinemainpage.dart';
 import 'package:gshala/screens/offlinevideoslist.dart';
 import 'package:gshala/screens/profileselectionpage.dart';
 import 'package:gshala/screens/viewvideopage.dart';
+import 'package:gshala/screens/webviewpage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +31,7 @@ void main() async {
   } else if (initialRoute == 2) {
     pageToDisplay = '/offlinemainpage';
   } else if (initialRoute == 3) {
-    pageToDisplay = '/profilepage';
+    pageToDisplay = '/webviewpage';
   }
   final MyApp myApp = MyApp(initialRoute: pageToDisplay);
 
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
               color: Color(0xfffcfcfa),
             ),
           ),
-          fontFamily: GoogleFonts.poppins().fontFamily,
+          fontFamily: GoogleFonts.firaSans().fontFamily,
           backgroundColor: Color(0xff1B52CC),
         ),
         debugShowCheckedModeBanner: false,
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
           '/offlinevideoslist': (context) => OfflineVideosList(),
           '/viewvideopage': (context) => ViewVideoPage(),
           '/profilepage': (context) => ProfileSelectionPage(),
+          '/webviewpage': (context) => WebViewPage(),
         },
       ),
     );

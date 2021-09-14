@@ -78,7 +78,7 @@ class DownloadVideoPage extends StatelessWidget {
                           CElevatedButton(
                               buttonLabel: 'Ok',
                               onPressed: () {
-                                Get.offNamed('/offlinevideoslist');
+                                Get.offNamed('/offlinemainpage');
                               })
                         ],
                       )

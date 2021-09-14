@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:gshala/models/videodetails_sqflite_model.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoListController extends GetxController {
@@ -10,6 +13,8 @@ class VideoListController extends GetxController {
   late VideoPlayerController videoPlayerController;
   final videoList = <VideoDetails>[].obs;
   final deleteVideo = false.obs;
+  final thumbNailList = [].obs;
+
   @override
   void onInit() {
     getVideosList();
@@ -23,6 +28,15 @@ class VideoListController extends GetxController {
   }
 
   Future getVideosList() async {
+    Directory appDir = await getApplicationDocumentsDirectory();
+    Directory vDir = Directory(appDir.path + '/videos');
+    List list = [];
+    vDir.list(recursive: false).forEach((element) {
+      print(element);
+      list.add(element.path);
+    });
+    print('List of files are');
+    print(list);
     try {
       final videoDetails = await DatabaseProvider.db.getVideos();
       print(videoDetails.length);
@@ -30,7 +44,14 @@ class VideoListController extends GetxController {
         videoList.value = videoDetails;
         listObtained.value = true;
       }
-      print(videoList.length);
+      videoList.forEach((element) {
+        String thumbName =
+            element.videoName.toString().split('.').first + '.jpg';
+
+        String thumbPath = appDir.path + '/videos/' + thumbName;
+        print(thumbPath);
+        thumbNailList.add(thumbPath);
+      });
       return videoList;
     } catch (e) {
       print(e);

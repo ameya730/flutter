@@ -17,7 +17,7 @@ class PlayVideoController extends GetxController {
   final videoDuration = 0.obs;
   final isVideoPlaying = false.obs;
   final dbHelper = DatabaseProvider.db;
-  final currentViewDuration = 0.obs;
+  var currentViewDuration = 0.obs;
   final videoPlayed = false.obs;
   final isFullScreen = false.obs;
 
@@ -79,32 +79,24 @@ class PlayVideoController extends GetxController {
     update();
   }
 
-  videoStatus() {
-    if (videoPlayerController.value.isPlaying == true) {
-      print('Video Playing');
-    }
-  }
-
 // This function plays and pauses the video
   void toggleVideoPlay() {
-    if (isVideoPlaying.value == true) {
+    if (chewieController!.isPlaying == true) {
       isVideoPlaying.value = false;
       print('Video Paused');
+      print(currentViewDuration.value);
       videoPlayerController.pause().then((value) {
         print('Video Duration is $videoDuration.value');
         box.write('vPosition', videoPlayerController.value.position.inSeconds);
       });
-    } else if (isVideoPlaying.value == false) {
+    } else if (chewieController!.isPlaying == false) {
       isVideoPlaying.value = true;
       print('Video Playing');
-      Timer.periodic(Duration(seconds: 1), (timer) {
-        videoDuration.value = videoDuration.value + 1;
-      });
-      print(videoDuration.value);
       videoPlayerController.play().then((value) {
         if (videoPlayed.value == false) {
           videoPlayed.value = true;
         }
+        print(videoDuration.value);
         if (box.read('vPosition') != 0) {
           print(box.read('vPosition'));
           videoPlayerController.seekTo(

@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:gshala/controllers/videolist_controller.dart';
+import 'package:gshala/templates/custombutton.dart';
 
 class ProfileSelectionPage extends StatelessWidget {
   final List profiles = ['Profile A', 'Profile B', 'Profile C'];
@@ -19,37 +21,50 @@ class ProfileSelectionPage extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: Center(
-          child: GridView.builder(
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
-              childAspectRatio: 3,
-            ),
-            itemCount: profiles.length,
-            itemBuilder: (context, i) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    box.write(
-                      'profileName',
-                      profiles[i],
-                    );
-                    Get.toNamed('/offlinemainpage');
-                  },
-                  child: Card(
-                    child: ListTile(
-                      title: Text(profiles[i]),
-                    ),
-                  ),
+          child: Column(
+            children: [
+              GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  childAspectRatio: 3,
                 ),
-              );
-            },
+                itemCount: profiles.length,
+                itemBuilder: (context, i) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        box.write(
+                          'profileName',
+                          profiles[i],
+                        );
+                        final VideoListController videoListController =
+                            Get.put(VideoListController());
+                        videoListController.getVideosList();
+                        Get.toNamed('/offlinemainpage');
+                      },
+                      child: Card(
+                        child: ListTile(
+                          title: Text(profiles[i]),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              CElevatedButton(
+                  buttonLabel: 'Download Video',
+                  onPressed: () {
+                    Get.toNamed('/downloadvideopage');
+                  }),
+            ],
           ),
         ),
         drawer: Container(
-          width: 100,
+          width: 130,
           height: 65,
+          color: Colors.black,
           child: Drawer(
             child: Column(
               children: [

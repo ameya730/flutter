@@ -41,6 +41,8 @@ dependencies:
   sqflite:
   path:
   encrypt:
+  webview_flutter:
+  video_thumbnail: ^0.4.3
 
 dev_dependencies:
   flutter_test:
