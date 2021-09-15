@@ -17,7 +17,11 @@ class PlayVideoController extends GetxController {
   final videoDuration = 0.obs;
   final isVideoPlaying = false.obs;
   final dbHelper = DatabaseProvider.db;
-  var currentViewDuration = 0.obs;
+
+  final currentStartPosition = 0.obs;
+  final currentEndPosition = 0.obs;
+  final currentTotalDuration = 0.obs;
+
   final videoPlayed = false.obs;
   final isFullScreen = false.obs;
 
@@ -56,7 +60,11 @@ class PlayVideoController extends GetxController {
     print(appDirPath);
     videoPlayerController = VideoPlayerController.file(File(appDirPath));
     await Future.wait([
-      videoPlayerController.initialize(),
+      videoPlayerController.initialize().then((value) {
+        videoPlayerController.seekTo(
+          Duration(seconds: vLastPosition.value),
+        );
+      }),
     ]);
     chewieController = ChewieController(
         videoPlayerController: videoPlayerController,
@@ -76,58 +84,19 @@ class PlayVideoController extends GetxController {
         additionalOptions: (context) {
           return <OptionItem>[];
         });
+    trackVideoUpdate();
     update();
   }
 
-// This function plays and pauses the video
-  void toggleVideoPlay() {
-    if (chewieController!.isPlaying == true) {
-      isVideoPlaying.value = false;
-      print('Video Paused');
-      print(currentViewDuration.value);
-      videoPlayerController.pause().then((value) {
-        print('Video Duration is $videoDuration.value');
-        box.write('vPosition', videoPlayerController.value.position.inSeconds);
-      });
-    } else if (chewieController!.isPlaying == false) {
-      isVideoPlaying.value = true;
-      print('Video Playing');
-      videoPlayerController.play().then((value) {
-        if (videoPlayed.value == false) {
-          videoPlayed.value = true;
-        }
-        print(videoDuration.value);
-        if (box.read('vPosition') != 0) {
-          print(box.read('vPosition'));
-          videoPlayerController.seekTo(
-            Duration(seconds: box.read('vPosition')),
-          );
-        }
-      });
-    }
+  trackVideoUpdate() {
+    videoPlayerController.addListener(() {
+      if (chewieController!.isPlaying == false) {
+        vTotalViewDuration.value =
+            videoPlayerController.value.position.inSeconds;
+      }
+    });
   }
 
-  // void fullScreenMode() {
-  //   if (isFullScreen.value == false) {
-  //     isFullScreen.value = true;
-  //     chewieController!.enterFullScreen();
-  //   } else if (isFullScreen.value == true) {
-  //     isFullScreen.value = false;
-  //     chewieController!.exitFullScreen();
-  //   }
-  // }
-
-  // void rewindVideo() {
-  //   int rewindPosition = videoPlayerController.value.position.inSeconds - 5;
-  //   videoPlayerController.seekTo(Duration(seconds: rewindPosition));
-  // }
-
-  // void forwardVideo() {
-  //   int forwardPosition = videoPlayerController.value.position.inSeconds + 5;
-  //   videoPlayerController.seekTo(Duration(seconds: forwardPosition));
-  // }
-
-  // This function updates the SQL database with the latest values
   videoUpdate() {
     videoPlayerController.play().then((value) {
       videoPlayerController.pause();

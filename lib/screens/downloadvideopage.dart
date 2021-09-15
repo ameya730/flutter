@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gshala/controllers/videodownload_controller.dart';
+import 'package:gshala/controllers/videolist_controller.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:gshala/templates/custombutton.dart';
 
@@ -78,6 +79,13 @@ class DownloadVideoPage extends StatelessWidget {
                           CElevatedButton(
                               buttonLabel: 'Ok',
                               onPressed: () {
+                                final VideoListController videoListController =
+                                    Get.put(VideoListController());
+                                videoListController.getVideosList();
+                                videoDownloadController.downloadComplete.value =
+                                    false;
+                                videoDownloadController.isdownloading.value =
+                                    false;
                                 Get.offNamed('/offlinemainpage');
                               })
                         ],

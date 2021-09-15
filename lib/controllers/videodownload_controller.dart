@@ -19,11 +19,8 @@ class VideoDownloadController extends GetxController {
     try {
       Directory appDir = await getApplicationDocumentsDirectory();
       String imgUrl = videoTestExample;
-      print(appDir);
-      print(imgUrl);
       isdownloading.value = true;
       String videoName = imgUrl.split('/').last;
-      print(videoName);
       final videoDetails = VideoDetails(
         videoName: videoName,
         videoLastPosition: 0,
@@ -32,7 +29,6 @@ class VideoDownloadController extends GetxController {
         videoDataUpdated: 0,
         videoDeleted: 0,
       );
-      print(videoDetails);
       DatabaseProvider.db.insert(videoDetails);
       await dio.download(imgUrl, "${appDir.path}/videos/$videoName",
           onReceiveProgress: (rec, total) {

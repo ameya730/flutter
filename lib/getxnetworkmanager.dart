@@ -23,7 +23,7 @@ class GetXNetworkManager extends GetxController {
       } else {
         connectionType.value = 0;
       }
-
+      print(box.read('userName'));
       if (box.read('userName') != null) {
         isLoggedIn.value = true;
       } else if (box.read('userName') == null) {

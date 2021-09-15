@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/controllers/videolist_controller.dart';
+import 'package:gshala/controllers/videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
 
 class PostLoginOfflineMainPage extends StatelessWidget {
@@ -26,50 +26,61 @@ class PostLoginOfflineMainPage extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                TopWidget(),
-                ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: videoListController.videoList.length,
-                    itemBuilder: (context, i) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10),
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Image(
-                                image: FileImage(
-                                  File(
-                                    videoListController.thumbNailList[i],
+          child: Column(
+            children: [
+              TopWidget(),
+              Obx(() {
+                return videoListController.listObtained.value
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: videoListController.videoList.length,
+                        itemBuilder: (context, i) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10),
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                    child: Image(
+                                      image: FileImage(
+                                        File(
+                                          videoListController.thumbNailList[i],
+                                        ),
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      box.write('i',
+                                          videoListController.videoList[i].id);
+                                      print(box.read('i'));
+                                      PlayVideoController playVideoController =
+                                          Get.put(PlayVideoController());
+                                      playVideoController.initializePlayer();
+                                      Get.toNamed('/viewvideopage');
+                                    },
                                   ),
-                                ),
+                                  ListTile(
+                                    title: Text(
+                                      videoListController.videoList[i].videoName
+                                          .toString()
+                                          .split('.')
+                                          .first,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              ListTile(
-                                title: Text(
-                                  videoListController.videoList[i].videoName
-                                      .toString()
-                                      .split('.')
-                                      .first,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-              ],
-            ),
+                            ),
+                          );
+                        })
+                    : Center(child: CircularProgressIndicator());
+              }),
+            ],
           ),
         ),
       ),

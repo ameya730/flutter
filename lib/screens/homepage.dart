@@ -175,7 +175,6 @@ class HomePage extends StatelessWidget {
                                     if (validateAndSave()) {
                                       box.write('userName',
                                           logInController.userId.value);
-                                      print(box.read('userName'));
                                       logInController.login().then((value) {
                                         Get.offAndToNamed('/profilepage');
                                       });

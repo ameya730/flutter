@@ -12,14 +12,14 @@ import 'package:gshala/screens/landingpage.dart';
 import 'package:gshala/screens/nologinofflinescreen.dart';
 import 'package:gshala/screens/onlineofflineselectionpage.dart';
 import 'package:gshala/screens/postloginofflinemainpage.dart';
-import 'package:gshala/screens/offlinevideoslist.dart';
 import 'package:gshala/screens/profileselectionpage.dart';
 import 'package:gshala/screens/viewvideopage.dart';
 import 'package:gshala/screens/webviewpage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  GetStorage box = new GetStorage();
+  await GetStorage.init();
+  final box = new GetStorage();
   final GetXNetworkManager networkManager = Get.put(GetXNetworkManager());
   print(box.read('userName'));
   int initialRoute = await networkManager.getConnectionType();
@@ -31,7 +31,7 @@ void main() async {
   } else if (initialRoute == 2) {
     pageToDisplay = '/offlinemainpage';
   } else if (initialRoute == 3) {
-    pageToDisplay = '/webviewpage';
+    pageToDisplay = '/profilepage';
   }
   final MyApp myApp = MyApp(initialRoute: pageToDisplay);
 
@@ -69,7 +69,6 @@ class MyApp extends StatelessWidget {
           '/downloadvideopage': (context) => DownloadVideoPage(),
           '/onlineofflineselectionpage': (context) =>
               OnlineOfflineSelectionPage(),
-          '/offlinevideoslist': (context) => OfflineVideosList(),
           '/viewvideopage': (context) => ViewVideoPage(),
           '/profilepage': (context) => ProfileSelectionPage(),
           '/webviewpage': (context) => WebViewPage(),
