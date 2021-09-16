@@ -78,15 +78,15 @@ class DownloadVideoPage extends StatelessWidget {
                         actions: [
                           CElevatedButton(
                               buttonLabel: 'Ok',
-                              onPressed: () {
+                              onPressed: () async {
                                 final VideoListController videoListController =
                                     Get.put(VideoListController());
-                                videoListController.getVideosList();
+                                await videoListController.getVideosList();
                                 videoDownloadController.downloadComplete.value =
                                     false;
                                 videoDownloadController.isdownloading.value =
                                     false;
-                                Get.offNamed('/offlinemainpage');
+                                Get.offAndToNamed('/offlinemainpage');
                               })
                         ],
                       )

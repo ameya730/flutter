@@ -18,7 +18,7 @@ class VideoDownloadController extends GetxController {
   Future<void> downloadFile() async {
     try {
       Directory appDir = await getApplicationDocumentsDirectory();
-      String imgUrl = videoTestExample;
+      String imgUrl = videoUrl;
       isdownloading.value = true;
       String videoName = imgUrl.split('/').last;
       final videoDownload = VideoDownload(

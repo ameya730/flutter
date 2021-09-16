@@ -15,12 +15,11 @@ class PostLoginOfflineMainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String profileName = box.read('profileName');
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Welcome $profileName'),
+          title: Text('Welcome'),
           backgroundColor: Theme.of(context).backgroundColor,
           shadowColor: Colors.transparent,
         ),

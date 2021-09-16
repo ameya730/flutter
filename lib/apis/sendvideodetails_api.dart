@@ -1,14 +1,10 @@
 import 'dart:convert';
-import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
-import 'package:gshala/controllers/0.0_sendvideodetails_controller.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:http/http.dart' as http;
 
 class SendVideoDetailsApiService {
-  final SendVideoDetailsController sendVideoDetailsController =
-      Get.put(SendVideoDetailsController());
   GetStorage box = new GetStorage();
   Future sendVideoDetails() async {
     var sendBody = await getDetails();
