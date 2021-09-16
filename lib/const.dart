@@ -6,8 +6,9 @@ Color customHintColor = Colors.blue;
 Color textBoxBackgroundColor = Color(0xffEEEEEE);
 
 // Url Links
-String kloginapiurl = 'http://gshala.ecocentricbw.in/login/';
-String sendVideoDetailsUrl = 'sendVideoDetailsUrl';
+String kloginapiurl = 'https://gshala.ecocentricbw.in/login';
+String sendVideoDetailsUrl =
+    'https://gshala.ecocentricbw.in/api/data/setvideostatistics?jsonIn=';
 String videoUrl =
     'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
 String videoTestExample =

@@ -79,6 +79,14 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                           .split('.')
                                           .first,
                                     ),
+                                    trailing: IconButton(
+                                        onPressed: () async {
+                                          await dbHelper.updateDeleteVideoFlat(
+                                              videoListController
+                                                  .videoList[i].videoName
+                                                  .toString());
+                                        },
+                                        icon: Icon(Icons.delete)),
                                   ),
                                 ],
                               ),

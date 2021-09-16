@@ -77,7 +77,6 @@ class VideoDetails {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
-      'id': id,
       'UserId': userId,
       'LessonPlanId': lessonPlanId,
       'ResourceNodeId': resourceNodeId,
@@ -90,9 +89,6 @@ class VideoDetails {
       'IsCompleted': videoViewCompleted,
       'CompletedDate': videoViewCompletedDate,
       'TotalTimeSpent': videoTotalViewDuration,
-      'videoName': videoName,
-      'videoDataUpdated': videoDataUpdated,
-      'videoDeleted': videoDeleted,
     };
     return map;
   }

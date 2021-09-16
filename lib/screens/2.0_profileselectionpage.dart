@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/apis/sendvideodetails_api.dart';
 import 'package:gshala/controllers/2.1_videolist_controller.dart';
-import 'package:gshala/database/video_db.dart';
-import 'package:gshala/models/2.0_videodetails_sqflite_model.dart';
 import 'package:gshala/templates/custombutton.dart';
 
 class ProfileSelectionPage extends StatelessWidget {
@@ -63,7 +61,6 @@ class ProfileSelectionPage extends StatelessWidget {
               CElevatedButton(
                   buttonLabel: 'Send Video Statistics',
                   onPressed: () {
-                    print('kaychallay');
                     SendVideoDetailsApiService sendVideoDetailsApiService =
                         new SendVideoDetailsApiService();
                     sendVideoDetailsApiService.sendVideoDetails().then((value) {

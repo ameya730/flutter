@@ -30,7 +30,7 @@ class VideoListController extends GetxController {
   Future getVideosList() async {
     Directory appDir = await getApplicationDocumentsDirectory();
     try {
-      final videoDetails = await DatabaseProvider.db.getVideos();
+      final videoDetails = await DatabaseProvider.db.getAllVideos();
       print(videoDetails.length);
       if (index.value != videoDetails.length) {
         videoList.value = videoDetails;

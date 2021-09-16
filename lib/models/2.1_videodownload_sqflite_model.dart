@@ -4,6 +4,7 @@ class VideoDownload {
   int? resourceNodeId;
   String? videoName;
   int? videoLastViewPosition;
+  int? videoDeleted;
 
   VideoDownload({
     this.id,
@@ -11,6 +12,7 @@ class VideoDownload {
     this.resourceNodeId,
     this.videoName,
     this.videoLastViewPosition,
+    this.videoDeleted,
   });
 
   VideoDownload.fromMap(Map<String, dynamic> res)
@@ -18,7 +20,8 @@ class VideoDownload {
         userId = res['UserId'],
         resourceNodeId = res['ResourceNodeId'],
         videoName = res['videoName'],
-        videoLastViewPosition = res['videoLastViewPosition'];
+        videoLastViewPosition = res['videoLastViewPosition'],
+        videoDeleted = res['videoDeleted'];
 
   Map<String, dynamic> toMap() {
     return {
@@ -27,6 +30,7 @@ class VideoDownload {
       'resourceNodeid': resourceNodeId,
       'videoName': videoName,
       'videoLastViewPosition': videoLastViewPosition,
+      'videoDeleted': videoDeleted,
     };
   }
 }

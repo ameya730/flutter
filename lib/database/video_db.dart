@@ -55,7 +55,8 @@ class DatabaseProvider {
           "$COLUMN_USER_ID INT NOT NULL,"
           "$COLUMN_VIDEO_ID INT NOT NULL,"
           "$COLUMN_LAST_POSTION INT NOT NULL,"
-          "$COLUMN_VIDEO_NAME TEXT NOT NULL"
+          "$COLUMN_VIDEO_NAME TEXT NOT NULL,"
+          "$COLUMN_VIDEO_DELETED INT NOT NULL"
           ")",
         );
         await database.execute(
@@ -115,6 +116,20 @@ class DatabaseProvider {
     return vDownload.map((e) => VideoDownload.fromMap(e)).toList();
   }
 
+  getAllVideos() async {
+    final db = await database;
+    List<Map<String, dynamic>> vList = await db.query(
+      VIDEO_DOWNLOAD,
+      where: '$COLUMN_VIDEO_DELETED = ?',
+      whereArgs: [0],
+    );
+    print(vList.length);
+    vList.forEach((element) {
+      print('Element is $element');
+    });
+    return vList.map((e) => VideoDownload.fromMap(e)).toList();
+  }
+
   //Get single video value
   Future<List<VideoDownload>> getSingleVideo(String vName) async {
     final db = await database;
@@ -136,10 +151,22 @@ class DatabaseProvider {
 
   updateVideoDetails() async {
     final db = await database;
-    return db.rawUpdate(
+    return await db.rawUpdate(
       'UPDATE videoDetails SET videoDataUpdated = ? WHERE videoDataUpdated = ?',
       [1, 0],
     );
+  }
+
+  Future<int> updateDeleteVideoFlat(String videoName) async {
+    final db = await database;
+    print('Video deleted');
+    print(videoName);
+    int count = await db.rawUpdate(
+      'UPDATE $VIDEO_DOWNLOAD SET $COLUMN_VIDEO_DELETED = ? WHERE $COLUMN_VIDEO_NAME = ?',
+      [1, videoName],
+    );
+    print(count);
+    return count;
   }
 
   //Close database

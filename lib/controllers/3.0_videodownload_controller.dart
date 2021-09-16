@@ -18,7 +18,7 @@ class VideoDownloadController extends GetxController {
   Future<void> downloadFile() async {
     try {
       Directory appDir = await getApplicationDocumentsDirectory();
-      String imgUrl = videoUrl;
+      String imgUrl = videoTestExample;
       isdownloading.value = true;
       String videoName = imgUrl.split('/').last;
       final videoDownload = VideoDownload(
@@ -26,6 +26,7 @@ class VideoDownloadController extends GetxController {
         resourceNodeId: 0,
         videoName: videoName,
         videoLastViewPosition: 0,
+        videoDeleted: 0,
       );
       DatabaseProvider.db.insertNewVideo(videoDownload);
       await dio.download(imgUrl, "${appDir.path}/videos/$videoName",

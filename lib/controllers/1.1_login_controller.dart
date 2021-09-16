@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
+import 'package:gshala/models/1_user_sqlite_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:gshala/encryption.dart';
 
 class LogInController extends GetxController {
+  GetStorage box = new GetStorage();
   final userId = ''.obs;
   final password = ''.obs;
   final loginType = ''.obs;
@@ -35,11 +40,17 @@ class LogInController extends GetxController {
       'grant_type': 'password',
       'scope': myEncryptionDecryption(loginType.value)
     };
+    print(request.bodyFields);
     request.headers.addAll(headers);
+    print(request);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      var res = await response.stream.bytesToString();
+      var data = UserResponse.fromJson(json.decode(res));
+      box.write('accessToken', data.accessToken);
+      print(box.read('accessToken'));
     } else {
+      print(response.statusCode);
       print(response.reasonPhrase);
     }
   }
