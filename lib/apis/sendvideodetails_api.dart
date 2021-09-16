@@ -22,6 +22,7 @@ class SendVideoDetailsApiService {
 
     print(response.body);
     if (response.statusCode == 200 || response.statusCode == 400) {
+      updateDatabase();
       return json.decode(response.body);
     } else {
       throw Exception('Failed to signin');
@@ -33,5 +34,11 @@ class SendVideoDetailsApiService {
     var data = await dbHelper.getVideoStatistics();
     print(jsonEncode(data));
     return data;
+  }
+
+  updateDatabase() async {
+    final dbHelper = DatabaseProvider.db;
+    await dbHelper.updateVideoDetails();
+    return print('Success');
   }
 }

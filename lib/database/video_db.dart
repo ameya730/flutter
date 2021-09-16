@@ -134,6 +134,14 @@ class DatabaseProvider {
     return videoJsonFile.toList();
   }
 
+  updateVideoDetails() async {
+    final db = await database;
+    return db.rawUpdate(
+      'UPDATE videoDetails SET videoDataUpdated = ? WHERE videoDataUpdated = ?',
+      [1, 0],
+    );
+  }
+
   //Close database
   Future closeDB() async {
     final db = await database;
