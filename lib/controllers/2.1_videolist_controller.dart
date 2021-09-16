@@ -39,7 +39,6 @@ class VideoListController extends GetxController {
       videoList.forEach((element) {
         String thumbName =
             element.videoName.toString().split('.').first + '.jpg';
-
         String thumbPath = appDir.path + '/videos/' + thumbName;
         print(thumbPath);
         thumbNailList.add(thumbPath);

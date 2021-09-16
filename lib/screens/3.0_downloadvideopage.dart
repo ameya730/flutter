@@ -81,6 +81,8 @@ class DownloadVideoPage extends StatelessWidget {
                               onPressed: () async {
                                 final VideoListController videoListController =
                                     Get.put(VideoListController());
+                                videoListController.thumbNailList.clear();
+                                videoListController.videoList.clear();
                                 await videoListController.getVideosList();
                                 videoDownloadController.downloadComplete.value =
                                     false;
