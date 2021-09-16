@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:gshala/database/video_db.dart';
-import 'package:gshala/models/videodetails_sqflite_model.dart';
+import 'package:gshala/models/2.1_videodownload_sqflite_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -11,7 +11,7 @@ class VideoListController extends GetxController {
   final videoLink = ''.obs;
   final index = 0.obs;
   late VideoPlayerController videoPlayerController;
-  final videoList = <VideoDetails>[].obs;
+  final videoList = <VideoDownload>[].obs;
   final deleteVideo = false.obs;
   final thumbNailList = [].obs;
 
@@ -29,14 +29,6 @@ class VideoListController extends GetxController {
 
   Future getVideosList() async {
     Directory appDir = await getApplicationDocumentsDirectory();
-    Directory vDir = Directory(appDir.path + '/videos');
-    List list = [];
-    vDir.list(recursive: false).forEach((element) {
-      print(element);
-      list.add(element.path);
-    });
-    print('List of files are');
-    print(list);
     try {
       final videoDetails = await DatabaseProvider.db.getVideos();
       print(videoDetails.length);

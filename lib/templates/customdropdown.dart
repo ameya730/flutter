@@ -6,7 +6,7 @@ class CustomDropDownField extends StatelessWidget {
     @required this.dropList,
     this.onSaved,
     this.onChanged,
-    this.validationtext,
+    this.validator,
     this.hinttext,
     this.height,
     this.width,
@@ -17,7 +17,7 @@ class CustomDropDownField extends StatelessWidget {
   final List? dropList;
   final onSaved;
   final Function(void)? onChanged;
-  final String? validationtext;
+  final validator;
   final String? hinttext;
   final double? height;
   final double? width;
@@ -62,12 +62,7 @@ class CustomDropDownField extends StatelessWidget {
           }).toList(),
           onChanged: onChanged,
           onSaved: onSaved,
-          validator: (value) {
-            if (value == null) {
-              return validationtext;
-            }
-            return null;
-          },
+          validator: validator,
         ),
       ),
     );

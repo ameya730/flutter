@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gshala/controllers/videodownload_controller.dart';
-import 'package:gshala/controllers/videolist_controller.dart';
+import 'package:gshala/controllers/3.0_videodownload_controller.dart';
+import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:gshala/templates/custombutton.dart';
 

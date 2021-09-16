@@ -7,6 +7,21 @@ class LogInController extends GetxController {
   final userId = ''.obs;
   final password = ''.obs;
   final loginType = ''.obs;
+  final userControl = ''.obs;
+  final userLength = 0.obs;
+  final userToggle = false.obs;
+  final outOfFocus = false.obs;
+
+  @override
+  onInit() {
+    userControl.listen((value) {
+      if (userControl.value.length == 18) {
+        userLength.value = 1;
+        userToggle.value = true;
+      }
+    });
+    super.onInit();
+  }
 
   Future login() async {
     var headers = {

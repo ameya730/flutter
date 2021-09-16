@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/database/video_db.dart';
-import 'package:gshala/models/videodetails_sqflite_model.dart';
+import 'package:gshala/models/2.1_videodownload_sqflite_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -21,15 +21,13 @@ class VideoDownloadController extends GetxController {
       String imgUrl = videoTestExample;
       isdownloading.value = true;
       String videoName = imgUrl.split('/').last;
-      final videoDetails = VideoDetails(
+      final videoDownload = VideoDownload(
+        userId: 0,
+        resourceNodeId: 0,
         videoName: videoName,
-        videoLastPosition: 0,
-        videoViewCounter: 0,
-        videoTotalViewDuration: 0,
-        videoDataUpdated: 0,
-        videoDeleted: 0,
+        videoLastViewPosition: 0,
       );
-      DatabaseProvider.db.insert(videoDetails);
+      DatabaseProvider.db.insertNewVideo(videoDownload);
       await dio.download(imgUrl, "${appDir.path}/videos/$videoName",
           onReceiveProgress: (rec, total) {
         progressPercentage.value = (rec / total);

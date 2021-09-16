@@ -2,7 +2,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:gshala/controllers/videoview_controller.dart';
+import 'package:gshala/controllers/4.0_videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
 
 class ViewVideoPage extends StatelessWidget {

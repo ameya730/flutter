@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gshala/const.dart';
 
 class CustomTextField extends StatelessWidget {
-  final Function(String?)? onChanged;
+  final onChanged;
   final onSaved;
   final String? cLabelText;
   final validator;

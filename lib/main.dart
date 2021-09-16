@@ -4,17 +4,16 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gshala/getxnetworkmanager.dart';
 import 'package:gshala/localization_service.dart';
-import 'package:gshala/models/lifecycle_model.dart';
+import 'package:gshala/models/0_lifecycle_model.dart';
 import 'package:gshala/networkbindings.dart';
-import 'package:gshala/screens/downloadvideopage.dart';
-import 'package:gshala/screens/homepage.dart';
-import 'package:gshala/screens/landingpage.dart';
-import 'package:gshala/screens/nologinofflinescreen.dart';
-import 'package:gshala/screens/onlineofflineselectionpage.dart';
-import 'package:gshala/screens/postloginofflinemainpage.dart';
-import 'package:gshala/screens/profileselectionpage.dart';
-import 'package:gshala/screens/viewvideopage.dart';
-import 'package:gshala/screens/webviewpage.dart';
+import 'package:gshala/screens/3.0_downloadvideopage.dart';
+import 'package:gshala/screens/1_homepage.dart';
+import 'package:gshala/screens/0_landingpage.dart';
+import 'package:gshala/screens/0.1_nologinofflinescreen.dart';
+import 'package:gshala/screens/2.2_offlinemainpage.dart';
+import 'package:gshala/screens/2.0_profileselectionpage.dart';
+import 'package:gshala/screens/4.0_viewvideopage.dart';
+import 'package:gshala/screens/2.1_webviewpage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,8 +66,6 @@ class MyApp extends StatelessWidget {
           '/nologinofflinescreen': (context) => NoLoginOfflineScreen(),
           '/offlinemainpage': (context) => PostLoginOfflineMainPage(),
           '/downloadvideopage': (context) => DownloadVideoPage(),
-          '/onlineofflineselectionpage': (context) =>
-              OnlineOfflineSelectionPage(),
           '/viewvideopage': (context) => ViewVideoPage(),
           '/profilepage': (context) => ProfileSelectionPage(),
           '/webviewpage': (context) => WebViewPage(),

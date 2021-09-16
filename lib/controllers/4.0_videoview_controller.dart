@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/database/video_db.dart';
-import 'package:gshala/models/videodetails_sqflite_model.dart';
+import 'package:gshala/models/2.0_videodetails_sqflite_model.dart';
+import 'package:gshala/models/2.1_videodownload_sqflite_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -18,6 +19,7 @@ class PlayVideoController extends GetxController {
   final isVideoPlaying = false.obs;
   final dbHelper = DatabaseProvider.db;
 
+  final vName = ''.obs;
   final currentStartPosition = 0.obs;
   final currentEndPosition = 0.obs;
   final currentTotalDuration = 0.obs;
@@ -26,10 +28,6 @@ class PlayVideoController extends GetxController {
   final isFullScreen = false.obs;
 
   final vId = 0.obs;
-  final vName = ''.obs;
-  final vViewCounter = 0.obs;
-  final vLastPosition = 0.obs;
-  final vTotalViewDuration = 0.obs;
 
   @override
   void onInit() {
@@ -39,7 +37,6 @@ class PlayVideoController extends GetxController {
 
   @override
   void onClose() {
-    print('test');
     videoPlayerController.dispose();
     chewieController!.dispose();
     box.remove('videoName');
@@ -47,22 +44,19 @@ class PlayVideoController extends GetxController {
 
   // Initialize the player
   Future initializePlayer() async {
-    final vInfo = await dbHelper.getSingleVideo(
-      box.read('i'),
+    List<VideoDownload> vidDetails = await dbHelper.getSingleVideo(
+      box.read('videoName'),
     );
-    print(vInfo);
-    vId.value = vInfo[0].id!;
-    vName.value = vInfo[0].videoName!;
-    vViewCounter.value = vInfo[0].videoViewCounter!;
-    vLastPosition.value = vInfo[0].videoLastPosition!;
+    print(vidDetails[0].videoLastViewPosition);
+    vName.value = box.read('videoName');
+    currentStartPosition.value = vidDetails[0].videoLastViewPosition!;
     Directory appDir = await getApplicationDocumentsDirectory();
     String appDirPath = appDir.path + '/videos/' + vName.value;
-    print(appDirPath);
     videoPlayerController = VideoPlayerController.file(File(appDirPath));
     await Future.wait([
       videoPlayerController.initialize().then((value) {
         videoPlayerController.seekTo(
-          Duration(seconds: vLastPosition.value),
+          Duration(seconds: currentStartPosition.value),
         );
       }),
     ]);
@@ -91,33 +85,40 @@ class PlayVideoController extends GetxController {
   trackVideoUpdate() {
     videoPlayerController.addListener(() {
       if (chewieController!.isPlaying == false) {
-        vTotalViewDuration.value =
+        currentEndPosition.value =
             videoPlayerController.value.position.inSeconds;
       }
     });
   }
 
   videoUpdate() {
-    videoPlayerController.play().then((value) {
+    if (chewieController!.isPlaying == true) {
       videoPlayerController.pause();
-      isVideoPlaying.value = false;
-    });
-    if (videoPlayed.value == true) {
-      vViewCounter.value = vViewCounter.value + 1;
-      videoPlayed.value = false;
     }
-    vLastPosition.value = videoPlayerController.value.position.inSeconds;
-    vTotalViewDuration.value = vTotalViewDuration.value +
-        videoPlayerController.value.position.inSeconds;
-    final rowUpdate = VideoDetails(
-      id: vId.value,
-      videoName: vName.value,
-      videoViewCounter: vViewCounter.value,
-      videoLastPosition: vLastPosition.value,
-      videoTotalViewDuration: vTotalViewDuration.value,
+    currentTotalDuration.value =
+        currentEndPosition.value - currentStartPosition.value;
+    dbHelper.updateVideoLastPosition(
+      videoPlayerController.value.position.inSeconds,
+      box.read('videoName'),
+    );
+
+    final row = VideoDetails(
+      userId: 0,
+      lessonPlanId: 0,
+      resourceNodeId: 0,
+      docType: 'video',
+      videoInitializeDate: DateTime.now().toString(),
+      videoDuration: videoPlayerController.value.duration.inSeconds,
+      videoStartTime: currentStartPosition.value,
+      videoEndTime: currentEndPosition.value,
+      videoViewDate: DateTime.now().toString(),
+      videoViewCompleted: 0,
+      videoViewCompletedDate: DateTime.now().toString(),
+      videoTotalViewDuration: currentTotalDuration.value,
+      videoName: box.read('videoName'),
       videoDataUpdated: 0,
       videoDeleted: 0,
     );
-    dbHelper.update(rowUpdate);
+    dbHelper.insertVideoStatistics(row);
   }
 }

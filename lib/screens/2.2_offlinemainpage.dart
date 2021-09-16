@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
-import 'package:gshala/controllers/videolist_controller.dart';
-import 'package:gshala/controllers/videoview_controller.dart';
+import 'package:gshala/controllers/2.1_videolist_controller.dart';
+import 'package:gshala/controllers/4.0_videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
 
 class PostLoginOfflineMainPage extends StatelessWidget {
@@ -56,9 +56,16 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                       ),
                                     ),
                                     onTap: () {
-                                      box.write('i',
-                                          videoListController.videoList[i].id);
+                                      box.write('i', i);
                                       print(box.read('i'));
+                                      box.write(
+                                          'videoName',
+                                          videoListController
+                                              .videoList[i].videoName);
+                                      box.write(
+                                          'videoLastPosition',
+                                          videoListController.videoList[i]
+                                              .videoLastViewPosition);
                                       PlayVideoController playVideoController =
                                           Get.put(PlayVideoController());
                                       playVideoController.initializePlayer();

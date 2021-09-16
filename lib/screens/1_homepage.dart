@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:gshala/controllers/language_controller.dart';
-import 'package:gshala/controllers/login_controller.dart';
+import 'package:gshala/controllers/1.0_language_controller.dart';
+import 'package:gshala/controllers/1.1_login_controller.dart';
 import 'package:gshala/templates/custombutton.dart';
 import 'package:gshala/templates/customdropdown.dart';
 import 'package:gshala/templates/customtextfield.dart';
@@ -127,6 +127,9 @@ class HomePage extends StatelessWidget {
                                     }
                                     return null;
                                   },
+                                  onChanged: (String value) {
+                                    logInController.userControl.value = value;
+                                  },
                                   onSaved: (value) {
                                     logInController.userId.value = value;
                                   },
@@ -149,7 +152,24 @@ class HomePage extends StatelessWidget {
                                     hinttext: 'Select Role'.tr,
                                     dropList: dropList,
                                     onChanged: (value) {},
-                                    validationtext: 'Please select role'.tr,
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return 'Please select role'.tr;
+                                      }
+                                      if (logInController
+                                                  .userControl.value.length ==
+                                              18 &&
+                                          value != 'Student') {
+                                        return 'Please select Student role';
+                                      }
+                                      if (logInController
+                                                  .userControl.value.length ==
+                                              8 &&
+                                          value != 'Teacher') {
+                                        return 'Please select Teacher role';
+                                      }
+                                      return null;
+                                    },
                                     onSaved: (value) {
                                       logInController.loginType.value = value;
                                     },
