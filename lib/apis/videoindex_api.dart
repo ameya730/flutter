@@ -27,14 +27,8 @@ class GetVideoIndexAPI {
 
     print(response.body);
     if (response.statusCode == 200 || response.statusCode == 400) {
-      String data = response.body.toString();
-      var dtype = data.replaceAll('\\"', '"');
-      print(dtype);
-      var finalIndexData = VideoIndex.fromJson(
-        json.decode(dtype),
-      );
-      print(finalIndexData);
-      return dtype;
+      var data = videoIndexFromJson(json.decode(response.body));
+      return data;
     } else {
       print(response.statusCode);
       throw Exception('Failed to signin');

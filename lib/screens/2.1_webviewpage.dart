@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/encryption.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:crypto/crypto.dart';
 
 class WebViewPage extends StatefulWidget {
   @override

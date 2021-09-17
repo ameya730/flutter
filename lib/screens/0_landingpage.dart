@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:new_version/new_version.dart';
 
 class LandingPage extends StatefulWidget {
