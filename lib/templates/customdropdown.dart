@@ -12,6 +12,7 @@ class CustomDropDownField extends StatelessWidget {
     this.width,
     this.left = 16.0,
     this.right = 16.0,
+    this.dropDownValue,
   });
 
   final List? dropList;
@@ -23,6 +24,7 @@ class CustomDropDownField extends StatelessWidget {
   final double? width;
   final double left;
   final double right;
+  final String? dropDownValue;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,7 @@ class CustomDropDownField extends StatelessWidget {
               fontSize: 12,
             ),
           ),
+          value: dropDownValue,
           items: dropList!.map((e) {
             return DropdownMenuItem(
               child: Text(e),

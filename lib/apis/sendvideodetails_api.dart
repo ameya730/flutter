@@ -8,6 +8,9 @@ class SendVideoDetailsApiService {
   GetStorage box = new GetStorage();
   Future sendVideoDetails() async {
     var sendBody = await getDetails();
+    String autho =
+        'bearer Er73xqM9nxaM_1aUhjpO9CzCNGZsBGTH6djPjahWs4ylR5IAovWFebmrYamLY9P7o9mnUxffBQMooweMV1y_cBSAO9NRLGSXoNtE7JXPSvjpj4QSkMD29IlSKZohKVFUWYkjA--3hAp87FUAPRFTvFK3aYXzAdqevx7qKRiE1TkUVewq1Xbm5JcUrdOQAZjbD53E5XQQhEU8jq2ZY8ndaDd8OrfH7BvFh9_h9Nu5ye4s3SQXEvsnov0DyKwc-D4qRQ4zfJx_RiA9mh4zz0eQz7wNhRaLXGXeiKpkZgC8UgQ'; // + box.read('accessToken');
+    print(autho);
     print(jsonEncode(sendBody));
     var url = Uri.parse(sendVideoDetailsUrl);
     final response = await http.post(
@@ -16,8 +19,7 @@ class SendVideoDetailsApiService {
         "Accept": "application/json",
         "Access-Control-Allow-Origin": "*",
         "APIKey": "G12SHA98IZ82938KPP",
-        'Content-Type': 'application/x-www-form-urlencoded',
-        "Authorization": box.read('accessToken'),
+        "Authorization": autho,
       },
       body: jsonEncode(sendBody),
     );

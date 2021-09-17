@@ -20,6 +20,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? icon;
   final Function? onTap;
   final double? vertical;
+  final onFieldSubmitted;
 
   CustomTextField({
     this.onChanged,
@@ -39,6 +40,7 @@ class CustomTextField extends StatelessWidget {
     this.icon,
     this.onTap,
     this.vertical = 0.0,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -57,6 +59,7 @@ class CustomTextField extends StatelessWidget {
           initialValue: initialvalue,
           onSaved: onSaved,
           onChanged: onChanged,
+          onFieldSubmitted: onFieldSubmitted,
           validator: validator,
           keyboardType: keyboardtype,
           controller: controller,
@@ -65,6 +68,7 @@ class CustomTextField extends StatelessWidget {
           maxLength: maxlength,
           maxLengthEnforcement: MaxLengthEnforcement.enforced,
           enabled: enabled,
+          textInputAction: TextInputAction.next,
           obscureText: obscureText!,
           decoration: InputDecoration(
             suffixIcon: icon,

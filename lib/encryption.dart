@@ -9,3 +9,12 @@ String myEncryptionDecryption(String text) {
   final encrypted = encrypter.encrypt(text, iv: iv);
   return encrypted.base64;
 }
+
+String userEncryption(String text) {
+  final key = encrypt.Key.fromUtf8('0000000000000');
+  final iv = encrypt.IV.fromUtf8('0000000000000');
+  final encrypter = encrypt.Encrypter(
+      encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
+  final encrypted = encrypter.encrypt(text, iv: iv);
+  return encrypted.base64;
+}

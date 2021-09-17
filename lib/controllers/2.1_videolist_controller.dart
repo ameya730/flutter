@@ -29,12 +29,13 @@ class VideoListController extends GetxController {
 
   Future getVideosList() async {
     Directory appDir = await getApplicationDocumentsDirectory();
+    final videoDetails = await DatabaseProvider.db.getAllVideos();
     try {
-      final videoDetails = await DatabaseProvider.db.getAllVideos();
-      print(videoDetails.length);
-      if (index.value != videoDetails.length) {
-        videoList.value = videoDetails;
+      videoList.value = videoDetails;
+      if (videoList.length > 0) {
         listObtained.value = true;
+      } else {
+        listObtained.value = false;
       }
       videoList.forEach((element) {
         String thumbName =

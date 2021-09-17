@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:gshala/models/2.0_videodetails_sqflite_model.dart';
 import 'package:gshala/models/2.1_videodownload_sqflite_model.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseProvider {
@@ -114,7 +117,7 @@ class DatabaseProvider {
     return vDownload.map((e) => VideoDownload.fromMap(e)).toList();
   }
 
-  getAllVideos() async {
+  Future getAllVideos() async {
     final db = await database;
     List<Map<String, dynamic>> vList = await db.query(
       VIDEO_DOWNLOAD,
@@ -173,11 +176,16 @@ class DatabaseProvider {
     db.close();
   }
 
-  // To be updated
-  Future delete(VideoDetails videoDetails) async {
+  // If file has been deleted from the database and details of usage have been uploaded on server then the file can be deleted from local path
+  Future delete(String videoName) async {
     final db = await database;
-    print(videoDetails.id);
-    return await db.delete(VIDEO_DETAILS,
-        where: "$COLUMN_ID = ?", whereArgs: [videoDetails.id]);
+    Directory appDir = await getApplicationDocumentsDirectory();
+    File file = File(appDir.path + '/videos/' + videoName);
+    file.exists().then((value) {
+      file.delete();
+    });
+    return await db.delete(VIDEO_DOWNLOAD,
+        where: "$COLUMN_VIDEO_DELETED = ?,$COLUMN_VIDEO_DATA_UPLOADED=?",
+        whereArgs: [1, 1]);
   }
 }

@@ -84,6 +84,8 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                               videoListController
                                                   .videoList[i].videoName
                                                   .toString());
+                                          await videoListController
+                                              .getVideosList();
                                         },
                                         icon: Icon(Icons.delete)),
                                   ),
@@ -92,7 +94,26 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                             ),
                           );
                         })
-                    : Center(child: CircularProgressIndicator());
+                    : Center(
+                        child: Column(
+                          children: [
+                            Image(
+                              image: AssetImage('assets/offlineimageone.gif'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                'No videos have been downloaded for offline viewing',
+                                textAlign: TextAlign.center,
+                                textScaleFactor: 1.5,
+                                style: TextStyle(
+                                  color: normalWhiteText,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
               }),
             ],
           ),
