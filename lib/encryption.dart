@@ -11,10 +11,13 @@ String myEncryptionDecryption(String text) {
 }
 
 String userEncryption(String text) {
-  final key = encrypt.Key.fromUtf8('0000000000000');
-  final iv = encrypt.IV.fromUtf8('0000000000000');
+  final key = encrypt.Key.fromUtf8('0000000000000000');
+  final iv = encrypt.IV.fromLength(8);
   final encrypter = encrypt.Encrypter(
-      encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
+    encrypt.AES(
+      key,
+    ),
+  );
   final encrypted = encrypter.encrypt(text, iv: iv);
   return encrypted.base64;
 }

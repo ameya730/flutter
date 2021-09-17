@@ -17,6 +17,7 @@ import 'package:gshala/screens/2.1_webviewpage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await GetStorage.init();
   final box = new GetStorage();
   final GetXNetworkManager networkManager = Get.put(GetXNetworkManager());
@@ -30,7 +31,7 @@ void main() async {
   } else if (initialRoute == 2) {
     pageToDisplay = '/offlinemainpage';
   } else if (initialRoute == 3) {
-    pageToDisplay = '/profilepage';
+    pageToDisplay = '/webviewpage';
   }
   final MyApp myApp = MyApp(initialRoute: pageToDisplay);
 

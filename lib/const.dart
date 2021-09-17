@@ -7,8 +7,8 @@ Color textBoxBackgroundColor = Color(0xffEEEEEE);
 
 // Url Links
 String kloginapiurl = 'https://gshala.ecocentricbw.in/login';
-String webViewLoginIn =
-    'https://gshala.schoolnetindia.com/Login/MainLoginSL?uname=';
+String webViewLoginIn = 'testing.schoolnetindia.com/gujratlms_uat?uname=';
+// 'https://gshala.schoolnetindia.com/Login/MainLoginSL?uname=';
 String sendVideoDetailsUrl =
     'https://gshala.ecocentricbw.in/api/data/setvideostatistics';
 String getIndexUrl = 'https://gshala.ecocentricbw.in/api/data/getindex?std=';

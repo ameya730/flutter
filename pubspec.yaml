@@ -41,13 +41,11 @@ dependencies:
   sqflite:
   path:
   encrypt:
-  webview_flutter:
   video_thumbnail: ^0.4.3
   package_info: ^2.0.2
   new_version:
   flutter_svg:
-  crypto:
-  tuple:
+  webview_flutter:
 
 dev_dependencies:
   flutter_test:
