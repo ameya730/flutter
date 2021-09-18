@@ -46,6 +46,7 @@ dependencies:
   new_version:
   flutter_svg:
   webview_flutter:
+  fab_circular_menu:
 
 dev_dependencies:
   flutter_test:

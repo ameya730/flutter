@@ -31,7 +31,7 @@ void main() async {
   } else if (initialRoute == 2) {
     pageToDisplay = '/offlinemainpage';
   } else if (initialRoute == 3) {
-    pageToDisplay = '/webviewpage';
+    pageToDisplay = '/profilepage';
   }
   final MyApp myApp = MyApp(initialRoute: pageToDisplay);
 

@@ -10,6 +10,15 @@ class GetXNetworkManager extends GetxController {
   final page = 0.obs;
   final Connectivity _connectivity = Connectivity();
   GetStorage box = new GetStorage();
+  var internetStatus;
+
+  @override
+  void onInit() {
+    internetStatus = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) { 
+      print(result);
+    });
+    super.onInit();
+  }  
 
   getConnectionType() async {
     try {

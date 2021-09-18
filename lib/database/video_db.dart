@@ -145,7 +145,22 @@ class DatabaseProvider {
   getVideoStatistics() async {
     final db = await database;
     List<Map<String, dynamic>> videoJsonFile = await db.query(VIDEO_DETAILS,
-        where: '$COLUMN_VIDEO_DATA_UPLOADED=?', whereArgs: [0]);
+        columns: [
+          COLUMN_USER_ID,
+          COLUMN_LESSONPLANID,
+          COLUMN_VIDEO_ID,
+          COLUMN_DOC_TYPE,
+          COLUMN_VIDEO_INITIALIZE_DATE,
+          COLUMN_VIDEO_VIEW_TIME,
+          COLUMN_VIEW_START_TIME,
+          COLUMN_VIEW_END_TIME,
+          COLUMN_CURRENT_VIEW_DATE,
+          COLUMN_VIEW_ISCOMPLETED,
+          COLUMN_VIEW_COMPLETED_DATE,
+          COLUMN_TOTAL_VIEW_DURATION
+        ],
+        where: '$COLUMN_VIDEO_DATA_UPLOADED=?',
+        whereArgs: [0]);
 
     return videoJsonFile.toList();
   }
