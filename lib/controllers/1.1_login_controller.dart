@@ -34,6 +34,11 @@ class LogInController extends GetxController {
     super.onInit();
   }
 
+  updateUserName(updatedValue) {
+    userControl.value = updatedValue;
+    update();
+  }
+
   Future login() async {
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',

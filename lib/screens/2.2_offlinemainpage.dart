@@ -22,6 +22,23 @@ class PostLoginOfflineMainPage extends StatelessWidget {
           title: Text('Welcome'),
           backgroundColor: Theme.of(context).backgroundColor,
           shadowColor: Colors.transparent,
+          actions: [
+            TextButton.icon(
+              onPressed: () {
+                Get.offAndToNamed('/webviewpage');
+              },
+              icon: Icon(
+                Icons.web_stories,
+                color: normalWhiteText,
+              ),
+              label: Text(
+                'Online \nPage',
+                style: TextStyle(
+                  color: normalWhiteText,
+                ),
+              ),
+            ),
+          ],
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: Center(

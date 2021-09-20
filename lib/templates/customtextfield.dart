@@ -21,6 +21,7 @@ class CustomTextField extends StatelessWidget {
   final Function? onTap;
   final double? vertical;
   final onFieldSubmitted;
+  final onTTap;
 
   CustomTextField({
     this.onChanged,
@@ -41,6 +42,7 @@ class CustomTextField extends StatelessWidget {
     this.onTap,
     this.vertical = 0.0,
     this.onFieldSubmitted,
+    this.onTTap,
   });
 
   @override
@@ -56,6 +58,7 @@ class CustomTextField extends StatelessWidget {
         height: height,
         width: width,
         child: TextFormField(
+          onTap: onTTap,
           initialValue: initialvalue,
           onSaved: onSaved,
           onChanged: onChanged,

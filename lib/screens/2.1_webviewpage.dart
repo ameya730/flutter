@@ -44,14 +44,17 @@ class _WebViewPageState extends State<WebViewPage> {
                 padding: const EdgeInsets.all(4.0),
                 child: TextButton.icon(
                   onPressed: () {
-                    Navigator.popAndPushNamed(context, '/offlinemainpage');
+                    Navigator.popAndPushNamed(
+                      context,
+                      '/offlinemainpage',
+                    );
                   },
                   icon: Icon(
-                    Icons.logout,
+                    Icons.wifi_off_outlined,
                     color: normalWhiteText,
                   ),
                   label: Text(
-                    'Log Out',
+                    'Offline \nVideos',
                     style: TextStyle(
                       color: normalWhiteText,
                     ),
@@ -68,6 +71,28 @@ class _WebViewPageState extends State<WebViewPage> {
                   ),
                   label: Text(
                     'New \nUser \nLogin',
+                    style: TextStyle(
+                      color: normalWhiteText,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: TextButton.icon(
+                  onPressed: () async {
+                    box.remove('userName');
+                    await Navigator.popAndPushNamed(
+                      context,
+                      '/homepage',
+                    );
+                  },
+                  icon: Icon(
+                    Icons.logout,
+                    color: normalWhiteText,
+                  ),
+                  label: Text(
+                    'Log \nOut',
                     style: TextStyle(
                       color: normalWhiteText,
                     ),

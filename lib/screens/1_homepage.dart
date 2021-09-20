@@ -14,6 +14,7 @@ class HomePage extends StatelessWidget {
   final LogInController logInController = Get.put(LogInController());
   final LanguageController lControl = Get.put(LanguageController());
   final GetStorage box = new GetStorage();
+  final GlobalKey<ScaffoldState> _homePageKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,7 @@ class HomePage extends StatelessWidget {
           //FocusScope.of(context).requestFocus(new FocusNode());
         },
         child: Scaffold(
+          key: _homePageKey,
           backgroundColor: Theme.of(context).backgroundColor,
           resizeToAvoidBottomInset: false,
           body: Center(
@@ -135,18 +137,18 @@ class HomePage extends StatelessWidget {
                                       }
                                       return null;
                                     },
-                                    onFieldSubmitted: (value) {
-                                      logInController.userControl.value = value;
-                                      FocusScope.of(context).unfocus();
-                                    },
                                     onChanged: (String value) {
-                                      logInController.userControl.value = value;
+                                      logInController.updateUserName(value);
+                                      // logInController.userControl.value = value;
                                     },
                                     onSaved: (value) {
                                       logInController.userId.value = value;
                                     },
                                   ),
                                   CustomTextField(
+                                    onTTap: () {
+                                      FocusScope.of(context).unfocus();
+                                    },
                                     cLabelText: 'Enter Password'.tr,
                                     validator: (value) {
                                       if (value.isEmpty) {
