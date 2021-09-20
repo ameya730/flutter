@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/encryption.dart';
@@ -14,6 +12,7 @@ class WebViewPage extends StatefulWidget {
 }
 
 class _WebViewPageState extends State<WebViewPage> {
+  // ignore: unused_field
   late WebViewController _controller;
   final GlobalKey<ScaffoldState> _webViewScaffoldKey =
       new GlobalKey<ScaffoldState>();

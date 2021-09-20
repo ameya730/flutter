@@ -2,6 +2,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:gshala/screens/1_homepage.dart';
+import 'package:gshala/screens/2.1_webviewpage.dart';
+import 'package:gshala/screens/2.2_offlinemainpage.dart';
 
 class GetXNetworkManager extends GetxController {
   final validationDone = false.obs;
@@ -14,11 +17,42 @@ class GetXNetworkManager extends GetxController {
 
   @override
   void onInit() {
-    internetStatus = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) { 
-      print(result);
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      print('The internet connection is : $result');
+      if (result == ConnectivityResult.none) {
+        if (box.read('userName') == null) {
+          showOfflinePage();
+        } else if (box.read('userName') != null) {
+          showPostLoginOfflinePage();
+        }
+      } else if (result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi) {
+        if (box.read('userName') == null) {
+          showHomePage();
+        } else if (box.read('userName') != null) {
+          showWebViewPage();
+        }
+      }
     });
     super.onInit();
-  }  
+  }
+
+  showOfflinePage() async {
+    print('success');
+    await Get.offAndToNamed('/nologinofflinescreen');
+  }
+
+  showPostLoginOfflinePage() async {
+    await Get.offAndToNamed('/offlinemainpage');
+  }
+
+  showHomePage() async {
+    await Get.offAndToNamed('/homepage');
+  }
+
+  showWebViewPage() async {
+    await Get.offAndToNamed('/webviewpage');
+  }
 
   getConnectionType() async {
     try {

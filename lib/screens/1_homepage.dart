@@ -212,7 +212,7 @@ class HomePage extends StatelessWidget {
                                         box.write('uType',
                                             logInController.loginType.value);
                                         logInController.login().then((value) {
-                                          Get.offAndToNamed('/profilepage');
+                                          Get.offAndToNamed('/webviewpage');
                                         });
                                       }
                                     },

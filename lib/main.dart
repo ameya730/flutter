@@ -9,7 +9,7 @@ import 'package:gshala/networkbindings.dart';
 import 'package:gshala/screens/3.0_downloadvideopage.dart';
 import 'package:gshala/screens/1_homepage.dart';
 import 'package:gshala/screens/0_landingpage.dart';
-import 'package:gshala/screens/0.1_nologinofflinescreen.dart';
+import 'package:gshala/screens/0.1_nointernet.dart';
 import 'package:gshala/screens/2.2_offlinemainpage.dart';
 import 'package:gshala/screens/2.0_profileselectionpage.dart';
 import 'package:gshala/screens/4.0_viewvideopage.dart';
@@ -31,7 +31,7 @@ void main() async {
   } else if (initialRoute == 2) {
     pageToDisplay = '/offlinemainpage';
   } else if (initialRoute == 3) {
-    pageToDisplay = '/profilepage';
+    pageToDisplay = '/webviewpage';
   }
   final MyApp myApp = MyApp(initialRoute: pageToDisplay);
 
@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
         home: LandingPage(),
         routes: {
           '/homepage': (context) => HomePage(),
-          '/nologinofflinescreen': (context) => NoLoginOfflineScreen(),
+          '/nologinofflinescreen': (context) => NoInternetPage(),
           '/offlinemainpage': (context) => PostLoginOfflineMainPage(),
           '/downloadvideopage': (context) => DownloadVideoPage(),
           '/viewvideopage': (context) => ViewVideoPage(),

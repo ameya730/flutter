@@ -9,6 +9,7 @@ import 'package:gshala/models/2.0_videodetails_sqflite_model.dart';
 import 'package:gshala/models/2.1_videodownload_sqflite_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class PlayVideoController extends GetxController {
   late VideoPlayerController videoPlayerController;
@@ -28,7 +29,12 @@ class PlayVideoController extends GetxController {
   final isFullScreen = false.obs;
 
   final vId = 0.obs;
-
+  final StopWatchTimer _stopWatchTimer = StopWatchTimer(
+    mode: StopWatchMode.countUp,
+    onChangeRawSecond: (value) {
+      print('onChangeRawSecond $value');
+    },
+  );
   @override
   void onInit() {
     super.onInit();
@@ -39,14 +45,17 @@ class PlayVideoController extends GetxController {
   void onClose() {
     videoPlayerController.dispose();
     chewieController!.dispose();
+    _stopWatchTimer.dispose();
     box.remove('videoName');
   }
 
   // Initialize the player
   Future initializePlayer() async {
+    _stopWatchTimer.onExecute.add(StopWatchExecute.reset);
     List<VideoDownload> vidDetails = await dbHelper.getSingleVideo(
       box.read('videoName'),
     );
+
     print(vidDetails[0].videoLastViewPosition);
     vName.value = box.read('videoName');
     currentStartPosition.value = vidDetails[0].videoLastViewPosition!;
@@ -85,8 +94,18 @@ class PlayVideoController extends GetxController {
   trackVideoUpdate() {
     videoPlayerController.addListener(() {
       if (chewieController!.isPlaying == false) {
+        _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
+        currentTotalDuration.value =
+            StopWatchTimer.getRawSecond(_stopWatchTimer.rawTime.value);
+        print('Total Duration is : $currentTotalDuration.value');
         currentEndPosition.value =
             videoPlayerController.value.position.inSeconds;
+      }
+      if (chewieController!.isPlaying == true) {
+        _stopWatchTimer.onExecute.add(StopWatchExecute.start);
+        _stopWatchTimer.secondTime.listen((value) {
+          print('Current time is $value');
+        });
       }
     });
   }
@@ -95,8 +114,6 @@ class PlayVideoController extends GetxController {
     if (chewieController!.isPlaying == true) {
       videoPlayerController.pause();
     }
-    currentTotalDuration.value =
-        currentEndPosition.value - currentStartPosition.value;
     dbHelper.updateVideoLastPosition(
       videoPlayerController.value.position.inSeconds,
       box.read('videoName'),

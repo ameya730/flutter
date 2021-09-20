@@ -47,6 +47,7 @@ dependencies:
   flutter_svg:
   webview_flutter:
   fab_circular_menu:
+  stop_watch_timer:
 
 dev_dependencies:
   flutter_test:
