@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/1.1_login_controller.dart';
+import 'package:gshala/controllers/password_controller.dart';
 import 'package:gshala/templates/custombutton.dart';
 import 'package:gshala/templates/customdropdown.dart';
+import 'package:gshala/templates/custompasswordtextfield.dart';
 import 'package:gshala/templates/customtextfield.dart';
 
 class HomePage extends StatelessWidget {
-  final List dropList = ['Select Role'.tr, 'Student'.tr, 'Teacher'.tr];
+  final List dropList = ['Student'.tr, 'Teacher'.tr];
   final GlobalKey<FormState> loginFormKey = new GlobalKey<FormState>();
   final LogInController logInController = Get.put(LogInController());
   final LanguageController lControl = Get.put(LanguageController());
   final GetStorage box = new GetStorage();
   final GlobalKey<ScaffoldState> _homePageKey = new GlobalKey<ScaffoldState>();
+  final PasswordController passwordController = Get.put(PasswordController());
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class HomePage extends StatelessWidget {
                   child: Image.asset(
                     'assets/gshalaicon.png',
                     fit: BoxFit.scaleDown,
-                    height: 100,
+                    height: 80,
                   ),
                 ),
                 Padding(
@@ -145,11 +147,26 @@ class HomePage extends StatelessWidget {
                                       logInController.userId.value = value;
                                     },
                                   ),
-                                  CustomTextField(
+                                  CustomPasswordTextField(
                                     onTTap: () {
                                       FocusScope.of(context).unfocus();
                                     },
                                     cLabelText: 'Enter Password'.tr,
+                                    icon: IconButton(
+                                      onPressed: () {
+                                        passwordController.togglePassword();
+                                      },
+                                      icon: Obx(
+                                        () {
+                                          return passwordController
+                                                  .showPassword.value
+                                              ? Icon(Icons.visibility)
+                                              : Icon(Icons.visibility_off);
+                                        },
+                                      ),
+                                    ),
+                                    obscureText:
+                                        passwordController.showPassword.value,
                                     validator: (value) {
                                       if (value.isEmpty) {
                                         return 'Please input password'.tr;
@@ -166,7 +183,10 @@ class HomePage extends StatelessWidget {
                                       hinttext: 'Select Role'.tr,
                                       dropList: dropList,
                                       dropDownValue:
-                                          logInController.dropValue.value,
+                                          logInController.dropValue.value != ''
+                                              ? logInController
+                                                  .dropValue.value.tr
+                                              : null,
                                       onChanged: (value) {},
                                       validator: (value) {
                                         if (value == null) {
@@ -228,7 +248,9 @@ class HomePage extends StatelessWidget {
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      await showNotification(context);
+                                    },
                                     child: Text(
                                       'Forgot Password?'.tr,
                                       style: TextStyle(
@@ -256,7 +278,9 @@ class HomePage extends StatelessWidget {
                                 CElevatedButton(
                                   buttonLabel: 'Sign Up'.tr,
                                   buttonColor: 0xffFBAA00,
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await showNotification(context);
+                                  },
                                 ),
                               ],
                             ),
@@ -266,9 +290,18 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 8.0),
+                //   child: SvgPicture.asset('assets/logo-ssa.svg'),
+                // ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: SvgPicture.asset('assets/logo-ssa.svg'),
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  child: Container(
+                    height: 140,
+                    child: Image.asset(
+                      'assets/getlogo.png',
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -276,6 +309,26 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<dynamic> showNotification(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Sign-up'),
+            content: Text(
+                'This functionality is not yet available in the mobile application.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Ok'),
+              ),
+            ],
+          );
+        });
   }
 
   bool validateAndSave() {

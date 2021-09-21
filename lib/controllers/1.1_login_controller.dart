@@ -16,19 +16,21 @@ class LogInController extends GetxController {
   final userLength = 0.obs;
   final userToggle = false.obs;
   final outOfFocus = false.obs;
-  final dropValue = 'Select Role'.tr.obs;
+  final dropValue = ''.tr.obs;
 
   @override
   onInit() {
     userControl.listen((value) {
       if (userControl.value.length == 18) {
-        dropValue.value = 'Student';
+        dropValue.value = 'Student'.tr;
+        print(dropValue.value);
         userToggle.value = true;
       } else if (userControl.value.length == 8) {
-        dropValue.value = 'Teacher';
+        dropValue.value = 'Teacher'.tr;
+        print(dropValue.value);
         userToggle.value = true;
       } else {
-        dropValue.value = 'Select Role';
+        dropValue.value = '';
       }
     });
     super.onInit();
