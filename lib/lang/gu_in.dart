@@ -13,4 +13,11 @@ const Map<String, String> guIn = {
   'Forgot Password?': 'પાસવર્ડ ભૂલી ગયા છો?',
   'Dont have an account yet ?': 'હજુ સુધી ખાતું નથી?',
   'Sign Up': 'સાઇન અપ કરો',
+  'Log Out': 'લૉગ \nઆઉટ',
+  'Language': 'English',
+  'Offline Videos': 'ઑફલાઇન \nવીડિયો',
+  'Change Profile': 'પ્રોફાઇલ \nબદલો',
+  'Welcome': 'સ્વાગત છે',
+  'OfflineMessage':
+      'તમે .ફલાઇન છો. નીચે તમે offlineફલાઇન જોઈ શકો છો તે વિડિઓઝની સૂચિ છે',
 };

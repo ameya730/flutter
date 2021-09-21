@@ -60,6 +60,11 @@ class LogInController extends GetxController {
       var data = UserResponse.fromJson(json.decode(res));
       box.write('accessToken', data.accessToken);
       print(box.read('accessToken'));
+      box.write(
+        'accessTokenTimeStamp',
+        DateTime.now().toString(),
+      );
+      print(box.read('accessTokenTimeStamp'));
     } else {
       print(response.statusCode);
       print(response.reasonPhrase);

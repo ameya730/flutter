@@ -48,6 +48,7 @@ dependencies:
   webview_flutter:
   fab_circular_menu:
   stop_watch_timer:
+  flutter_windowmanager:
 
 dev_dependencies:
   flutter_test:

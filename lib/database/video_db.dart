@@ -29,6 +29,13 @@ class DatabaseProvider {
   static const String COLUMN_VIDEO_DELETED = "videoDeleted";
   static const String COLUMN_VIDEO_NAME = "videoName";
   static const String COLUMN_LAST_POSTION = "videoLastViewPosition";
+  static const String COLUMN_VIDEO_ID_DOWNLOAD = "nodeid";
+  static const String COLUMN_VID_URL = "vid_url";
+  static const String COLUMN_NODE_NAME = "nodename";
+  static const String COLUMN_TOPIC = "Topic";
+  static const String COLUMN_CHAPTER = "chapter";
+  static const String COLUMN_CLASS = "Class";
+  static const String COLUMN_SUBJECT_NAME = "SubjectName";
 
   static final DatabaseProvider db = DatabaseProvider._init();
   static Database? _database;
@@ -57,9 +64,17 @@ class DatabaseProvider {
           "$COLUMN_VIDEO_ID INT NOT NULL,"
           "$COLUMN_LAST_POSTION INT NOT NULL,"
           "$COLUMN_VIDEO_NAME TEXT NOT NULL,"
-          "$COLUMN_VIDEO_DELETED INT NOT NULL"
+          "$COLUMN_VIDEO_DELETED INT NOT NULL,"
+          "$COLUMN_VIDEO_ID_DOWNLOAD INT NOT NULL,"
+          "$COLUMN_VID_URL TEXT NOT NULL,"
+          "$COLUMN_NODE_NAME TEXT NOT NULL,"
+          "$COLUMN_TOPIC TEXT NOT NULL,"
+          "$COLUMN_CHAPTER TEXT NOT NULL,"
+          "$COLUMN_CLASS INT NOT NULL,"
+          "$COLUMN_SUBJECT_NAME TEXT NOT NULL"
           ")",
         );
+
         await database.execute(
           "CREATE TABLE $VIDEO_DETAILS ("
           "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,"

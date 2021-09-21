@@ -19,7 +19,7 @@ class PostLoginOfflineMainPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Welcome'),
+          title: Text('Welcome'.tr),
           backgroundColor: Theme.of(context).backgroundColor,
           shadowColor: Colors.transparent,
           actions: [
@@ -37,6 +37,18 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                   color: normalWhiteText,
                 ),
               ),
+            ),
+            IconButton(
+              onPressed: () {
+                Get.offAndToNamed('/downloadvideopage');
+              },
+              icon: Icon(Icons.download),
+            ),
+            IconButton(
+              onPressed: () {
+                Get.offAndToNamed('/profilepage');
+              },
+              icon: Icon(Icons.person),
             ),
           ],
         ),
@@ -176,7 +188,7 @@ class TopWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  'You are offline. Below are the list of videos that you can view offline',
+                  'OfflineMessage'.tr,
                   textAlign: TextAlign.justify,
                   style: TextStyle(
                     color: normalWhiteText,

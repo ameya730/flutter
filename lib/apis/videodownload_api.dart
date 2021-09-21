@@ -6,10 +6,9 @@ import 'package:gshala/controllers/1.1_login_controller.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:http/http.dart' as http;
 
-class SendVideoDetailsApiService {
+class DownloadVideoAPIService {
   GetStorage box = new GetStorage();
   Future sendVideoDetails() async {
-    print(box.read('accessTokenTimeStamp'));
     DateTime tokenStartTime = DateTime.parse(
       box.read('accessTokenTimeStamp'),
     );

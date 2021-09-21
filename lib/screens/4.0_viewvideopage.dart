@@ -1,14 +1,33 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/controllers/4.0_videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
 
-class ViewVideoPage extends StatelessWidget {
+class ViewVideoPage extends StatefulWidget {
+  Future<void> secureScreen() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
+  @override
+  _ViewVideoPageState createState() => _ViewVideoPageState();
+}
+
+class _ViewVideoPageState extends State<ViewVideoPage> {
+  @override
+  void dispose() async {
+    super.dispose();
+    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
   final PlayVideoController vController = Get.put(PlayVideoController());
+
   final GetStorage box = GetStorage();
+
   final dbHelper = DatabaseProvider.db;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

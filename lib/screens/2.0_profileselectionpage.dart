@@ -76,6 +76,11 @@ class ProfileSelectionPage extends StatelessWidget {
                       print('got video index');
                     });
                   }),
+              CElevatedButton(
+                  buttonLabel: 'Offline Page',
+                  onPressed: () {
+                    Get.toNamed('/offlinemainpage');
+                  }),
             ],
           ),
         ),

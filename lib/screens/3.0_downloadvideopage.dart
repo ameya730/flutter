@@ -29,10 +29,7 @@ class DownloadVideoPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: CElevatedButton(
-                    buttonLabel: 'Download Video',
-                    onPressed: () {
-                      videoDownloadController.downloadFile();
-                    }),
+                    buttonLabel: 'Download Video', onPressed: () {}),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),

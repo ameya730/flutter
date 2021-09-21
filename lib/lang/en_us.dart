@@ -14,4 +14,11 @@ const Map<String, String> enUs = {
   'Forgot Password?': 'Forgot Password?',
   'Dont have an account yet ?': 'Dont have an account yet ?',
   'Sign Up': 'Sign Up',
+  'Log Out': 'Log \nOut',
+  'Language': 'ગુજરાતી',
+  'Offline Videos': 'Offline \nVideos',
+  'Change Profile': 'Change \nProfile',
+  'Welcome': 'Welcome',
+  'OfflineMessage':
+      'You are offline. Below are the list of videos that you can view offline',
 };

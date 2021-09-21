@@ -2,9 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:gshala/screens/1_homepage.dart';
-import 'package:gshala/screens/2.1_webviewpage.dart';
-import 'package:gshala/screens/2.2_offlinemainpage.dart';
 
 class GetXNetworkManager extends GetxController {
   final validationDone = false.obs;
