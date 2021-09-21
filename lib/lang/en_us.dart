@@ -21,4 +21,7 @@ const Map<String, String> enUs = {
   'Welcome': 'Welcome',
   'OfflineMessage':
       'You are offline. Below are the list of videos that you can view offline',
+  'Class': 'Class',
+  'Subject': 'Subject',
+  'Video': 'Video',
 };

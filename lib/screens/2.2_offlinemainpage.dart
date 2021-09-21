@@ -18,26 +18,6 @@ class PostLoginOfflineMainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Welcome'.tr),
-          backgroundColor: Theme.of(context).backgroundColor,
-          shadowColor: Colors.transparent,
-          actions: [
-            IconButton(
-              onPressed: () {
-                Get.offAndToNamed('/downloadvideopage');
-              },
-              icon: Icon(Icons.download),
-            ),
-            IconButton(
-              onPressed: () {
-                Get.offAndToNamed('/profilepage');
-              },
-              icon: Icon(Icons.person),
-            ),
-          ],
-        ),
         backgroundColor: Theme.of(context).backgroundColor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -94,11 +74,12 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                   ),
                                   ListTile(
                                     title: Text(
-                                      videoListController.videoList[i].videoName
-                                          .toString()
-                                          .split('.')
-                                          .first,
+                                      videoListController.videoList[i].topic
+                                          .toString(),
                                     ),
+                                    subtitle: Text(videoListController
+                                        .videoList[i].subjectName
+                                        .toString()),
                                     trailing: IconButton(
                                         onPressed: () async {
                                           await dbHelper.updateDeleteVideoFlat(

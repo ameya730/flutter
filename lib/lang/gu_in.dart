@@ -20,4 +20,7 @@ const Map<String, String> guIn = {
   'Welcome': 'સ્વાગત છે',
   'OfflineMessage':
       'તમે .ફલાઇન છો. નીચે તમે offlineફલાઇન જોઈ શકો છો તે વિડિઓઝની સૂચિ છે',
+  'Class': 'વર્ગ',
+  'Subject': 'વિષય',
+  'Video': 'વિડીયો',
 };

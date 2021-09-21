@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:gshala/const.dart';
+import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/controllers/4.0_videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
 
@@ -23,6 +25,8 @@ class _ViewVideoPageState extends State<ViewVideoPage> {
   }
 
   final PlayVideoController vController = Get.put(PlayVideoController());
+  final VideoListController videoListController =
+      Get.put(VideoListController());
 
   final GetStorage box = GetStorage();
 
@@ -30,6 +34,7 @@ class _ViewVideoPageState extends State<ViewVideoPage> {
 
   @override
   Widget build(BuildContext context) {
+    int i = box.read('i');
     return SafeArea(
       child: WillPopScope(
         onWillPop: () {
@@ -50,13 +55,14 @@ class _ViewVideoPageState extends State<ViewVideoPage> {
             ),
             centerTitle: true,
             title: Text(
-              'Test',
+              videoListController.videoList[i].topic.toString(),
               textScaleFactor: 1.2,
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             backgroundColor: Theme.of(context).backgroundColor,
             shadowColor: Colors.transparent,
           ),
-          backgroundColor: Theme.of(context).backgroundColor,
+          backgroundColor: normalDarkText,
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -68,6 +74,7 @@ class _ViewVideoPageState extends State<ViewVideoPage> {
                               .isInitialized
                       ? Center(
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Container(
                                 height:
@@ -75,6 +82,80 @@ class _ViewVideoPageState extends State<ViewVideoPage> {
                                 width: MediaQuery.of(context).size.width,
                                 child: Chewie(
                                     controller: vcontrol.chewieController!),
+                              ),
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.35,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Card(
+                                      child: ListTile(
+                                        title: Text(
+                                          'Video'.tr,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          videoListController.videoList[i].topic
+                                              .toString(),
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.5,
+                                          child: Card(
+                                            child: ListTile(
+                                              title: Text(
+                                                'Subject'.tr,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              subtitle: Text(
+                                                videoListController
+                                                    .videoList[i].subjectName
+                                                    .toString(),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.5,
+                                          child: Card(
+                                            child: ListTile(
+                                              title: Text(
+                                                'Class'.tr,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              subtitle: Text(
+                                                videoListController
+                                                    .videoList[i].videoClass
+                                                    .toString(),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
