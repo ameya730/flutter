@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -23,21 +24,6 @@ class PostLoginOfflineMainPage extends StatelessWidget {
           backgroundColor: Theme.of(context).backgroundColor,
           shadowColor: Colors.transparent,
           actions: [
-            TextButton.icon(
-              onPressed: () {
-                Get.offAndToNamed('/webviewpage');
-              },
-              icon: Icon(
-                Icons.web_stories,
-                color: normalWhiteText,
-              ),
-              label: Text(
-                'Online \nPage',
-                style: TextStyle(
-                  color: normalWhiteText,
-                ),
-              ),
-            ),
             IconButton(
               onPressed: () {
                 Get.offAndToNamed('/downloadvideopage');
@@ -53,6 +39,12 @@ class PostLoginOfflineMainPage extends StatelessWidget {
           ],
         ),
         backgroundColor: Theme.of(context).backgroundColor,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Get.offAndToNamed('/webviewpage');
+          },
+          child: Icon(Icons.web_stories),
+        ),
         body: Center(
           child: Column(
             children: [

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/1.1_login_controller.dart';
-import 'package:gshala/controllers/password_controller.dart';
+import 'package:gshala/controllers/1.2_password_controller.dart';
 import 'package:gshala/templates/custombutton.dart';
 import 'package:gshala/templates/customdropdown.dart';
 import 'package:gshala/templates/custompasswordtextfield.dart';
@@ -160,8 +160,8 @@ class HomePage extends StatelessWidget {
                                         () {
                                           return passwordController
                                                   .showPassword.value
-                                              ? Icon(Icons.visibility)
-                                              : Icon(Icons.visibility_off);
+                                              ? Icon(Icons.visibility_off)
+                                              : Icon(Icons.visibility);
                                         },
                                       ),
                                     ),

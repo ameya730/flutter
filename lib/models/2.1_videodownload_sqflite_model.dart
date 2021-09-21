@@ -5,12 +5,12 @@ class VideoDownload {
   int? videoLastViewPosition;
   String? videoName;
   int? videoDeleted;
-  String? videoId;
+  int? videoId;
   String? videoURL;
   String? nodeName;
   String? topic;
   String? chapter;
-  String? videoClass;
+  int? videoClass;
   String? subjectName;
 
   VideoDownload({

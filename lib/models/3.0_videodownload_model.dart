@@ -21,22 +21,22 @@ class VideoDownloaded {
     this.subjectName,
   });
 
-  String? nodeid;
+  int? nodeid;
   String? vidUrl;
   String? nodename;
   String? topic;
   String? chapter;
-  String? videoDownloadedClass;
+  int? videoDownloadedClass;
   String? subjectName;
 
   factory VideoDownloaded.fromJson(Map<String, dynamic> json) =>
       VideoDownloaded(
-        nodeid: json["nodeid"],
+        nodeid: int.parse(json["nodeid"]),
         vidUrl: json["vid_url"],
         nodename: json["nodename"],
         topic: json["Topic"],
         chapter: json["chapter"],
-        videoDownloadedClass: json["Class"],
+        videoDownloadedClass: int.parse(json["Class"]),
         subjectName: json["SubjectName"],
       );
 

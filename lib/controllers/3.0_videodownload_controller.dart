@@ -48,7 +48,7 @@ class VideoDownloadController extends GetxController {
       print(imgUrl);
 
       //Set-up authorization
-      String autho = 'bearer ' + box.read('accessToken');
+      String autho = 'Bearer ' + box.read('accessToken');
       isdownloading.value = true;
 
       //Insert data in the database
@@ -69,13 +69,40 @@ class VideoDownloadController extends GetxController {
       );
       await DatabaseProvider.db.insertNewVideo(videoDownload);
 
-      //Download the video
-      await dio.download(imgUrl, "${appDir.path}/videos/$videoName",
+      // var headers = {
+      //   'Authorization':
+      //       'Bearer HVL0WtzSoJBXE2wMCH0JQQnRfUXQ1dzxV6xtInimRhX2CV4E4aqeqadmAl1n16-KOnNu7YOFZYVzULdBbSwabLvMsnyd60kztJxRjP1bpSqTFFY9jczcASFlwoh1BgqOMaqcOPQVzpC2AkF6lBbPVwLIXhYObeLmFIaJWtwu27-nGklgvdFN0EKJAy4KP0IwGdCMIoClYvstgBpLjo18_eoulTM3KO-lq8BuN7WY--SUlDX6mFzIqSNpyoE8KYnv0FXNtyEc-vTJRPZ-DL0eLU9yNPIyxeui_KGKGutbV0o',
+      //   'Content-Type': 'application/x-www-form-urlencoded',
+      //   // 'APIKey': 'G12SHA98IZ82938KPP'
+      // };
+      // var request = http.Request(
+      //     'GET',
+      //     Uri.parse(
+      //         'http://65.0.225.102/kyanlms_api/api/data/viddownload?vid_url=https://bbb-schoolnet-dev.s3.ap-south-1.amazonaws.com/6/mp4/science/6Ngsci11_1.mp4'));
+
+      // request.headers.addAll(headers);
+
+      // http.StreamedResponse response = await request.send();
+
+      // if (response.statusCode == 200) {
+      //   print('success');
+      //   print(await response.stream.bytesToString());
+      // } else {
+      //   downloadComplete.value = true;
+      //   print('Not a success');
+      //   print(response.reasonPhrase);
+      // }
+
+      // Download the video
+      await dio.download(
+          'http://65.0.225.102/kyanlms_api/api/data/viddownload?vid_url=https://bbb-schoolnet-dev.s3.ap-south-1.amazonaws.com/6/mp4/science/6Ngsci11_1.mp4',
+          "${appDir.path}/videos/$videoName",
           options: Options(headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            "Access-Control-Allow-Origin": "*",
-            "APIKey": "G12SHA98IZ82938KPP",
-            "Authorization": autho,
+            // "Access-Control-Allow-Origin": "*",
+            // "APIKey": "G12SHA98IZ82938KPP",
+            'Authorization':
+                'Bearer HVL0WtzSoJBXE2wMCH0JQQnRfUXQ1dzxV6xtInimRhX2CV4E4aqeqadmAl1n16-KOnNu7YOFZYVzULdBbSwabLvMsnyd60kztJxRjP1bpSqTFFY9jczcASFlwoh1BgqOMaqcOPQVzpC2AkF6lBbPVwLIXhYObeLmFIaJWtwu27-nGklgvdFN0EKJAy4KP0IwGdCMIoClYvstgBpLjo18_eoulTM3KO-lq8BuN7WY--SUlDX6mFzIqSNpyoE8KYnv0FXNtyEc-vTJRPZ-DL0eLU9yNPIyxeui_KGKGutbV0o'
           }), onReceiveProgress: (rec, total) {
         progressPercentage.value = (rec / total);
         progressString.value = ((rec / total) * 100).toStringAsFixed(0) + "%";

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class PasswordController extends GetxController {
-  final showPassword = false.obs;
+  final showPassword = true.obs;
 
   togglePassword() {
     if (showPassword.value == false) {
