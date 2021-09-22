@@ -24,4 +24,5 @@ const Map<String, String> enUs = {
   'Class': 'Class',
   'Subject': 'Subject',
   'Video': 'Video',
+  'Go Online': 'Go Online',
 };

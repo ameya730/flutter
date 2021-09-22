@@ -147,22 +147,6 @@ class _WebViewPageState extends State<WebViewPage> {
         Padding(
           padding: const EdgeInsets.all(4.0),
           child: TextButton.icon(
-            onPressed: () {},
-            icon: Icon(
-              Icons.login,
-              color: normalWhiteText,
-            ),
-            label: Text(
-              'Change Profile'.tr,
-              style: TextStyle(
-                color: normalWhiteText,
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: TextButton.icon(
             onPressed: () {
               SchedulerBinding.instance!.addPostFrameCallback((_) async {
                 box.remove('userName');
@@ -209,7 +193,6 @@ class _WebViewPageState extends State<WebViewPage> {
           ),
         ),
       ],
-      animationDuration: Duration(milliseconds: 10),
     );
   }
 }

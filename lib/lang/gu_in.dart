@@ -23,4 +23,5 @@ const Map<String, String> guIn = {
   'Class': 'વર્ગ',
   'Subject': 'વિષય',
   'Video': 'વિડીયો',
+  'Go Online': 'ઓનલાઇન જાઓ',
 };
