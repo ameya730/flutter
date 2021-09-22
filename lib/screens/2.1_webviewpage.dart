@@ -8,7 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/3.0_videodownload_controller.dart';
-import 'package:gshala/encryption.dart';
+import 'package:gshala/cryptojs_aes_encryption_helper.dart';
 import 'package:gshala/models/3.0_videodownload_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
@@ -35,11 +35,14 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    var encuname = userEncryption(box.read('userName'));
+    // var encuname = userEncryption(box.read('userName'));
+    var encuname = encryptAESCryptoJS(box.read('userName'), "0000000000000");
+    print(encuname);
+    print(box.read('uType'));
     var url = webViewLoginIn +
         encuname +
         "&utype=" +
-        box.read('uType') +
+        box.read('uType').toString().toLowerCase() +
         "&mob=1234567891";
     print(url);
     return SafeArea(
@@ -51,8 +54,8 @@ class _WebViewPageState extends State<WebViewPage> {
           body: Stack(
             children: [
               WebView(
-                initialUrl:
-                    'https://lms.schoolnetindia.com/gujaratlms/Login/MainLoginSL?uname=U2FsdGVkX19OSbRuyg6l+yHDUhG2wdd/CnCqZR4+0u4=&utype=student&mob=1234567891',
+                initialUrl: url,
+                // 'https://lms.schoolnetindia.com/gujaratlms/Login/MainLoginSL?uname=U2FsdGVkX19OSbRuyg6l+yHDUhG2wdd/CnCqZR4+0u4=&utype=student&mob=1234567891',
                 javascriptMode: JavascriptMode.unrestricted,
                 onWebViewCreated: (WebViewController webViewController) {
                   _controller = webViewController;
@@ -81,28 +84,33 @@ class _WebViewPageState extends State<WebViewPage> {
               Obx(
                 () {
                   return videoDownloadController.isdownloading.value
-                      ? AlertDialog(
-                          title: Text('Downloading Video...'),
-                          content: Text(
-                            videoDownloadController.progressPercentage
-                                .toString(),
+                      ? GestureDetector(
+                          onTap: () {
+                            videoDownloadController.isdownloading.value = false;
+                          },
+                          child: AlertDialog(
+                            title: Text('Downloading Video...'),
+                            content: Text(
+                              videoDownloadController.progressPercentage
+                                  .toString(),
+                            ),
+                            actions: [
+                              Obx(() {
+                                return videoDownloadController
+                                        .downloadComplete.value
+                                    ? TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('Ok'),
+                                      )
+                                    : Container(
+                                        width: 0,
+                                        height: 0,
+                                      );
+                              })
+                            ],
                           ),
-                          actions: [
-                            Obx(() {
-                              return videoDownloadController
-                                      .downloadComplete.value
-                                  ? TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Ok'),
-                                    )
-                                  : Container(
-                                      width: 0,
-                                      height: 0,
-                                    );
-                            })
-                          ],
                         )
                       : Container(
                           height: 0,

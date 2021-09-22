@@ -49,6 +49,7 @@ dependencies:
   fab_circular_menu:
   stop_watch_timer:
   flutter_windowmanager:
+  tuple:
 
 dev_dependencies:
   flutter_test:

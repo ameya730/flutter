@@ -82,7 +82,6 @@ class CustomTextField extends StatelessWidget {
             hintText: cLabelText,
             hintStyle: TextStyle(
               color: Colors.black87,
-              fontSize: 10,
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

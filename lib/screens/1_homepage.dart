@@ -53,7 +53,14 @@ class HomePage extends StatelessWidget {
                         child: Text(
                           'English',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize:
+                                lControl.selectedLanguage.value == 'English'
+                                    ? 16
+                                    : 10,
+                            fontWeight:
+                                lControl.selectedLanguage.value == 'English'
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
                             color: Colors.white,
                           ),
                         ),
@@ -66,7 +73,7 @@ class HomePage extends StatelessWidget {
                       Text(
                         '|',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           color: Colors.white,
                         ),
                       ),
@@ -75,7 +82,14 @@ class HomePage extends StatelessWidget {
                         child: Text(
                           'ગુજરાતી',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize:
+                                lControl.selectedLanguage.value == 'ગુજરાતી'
+                                    ? 16
+                                    : 10,
+                            fontWeight:
+                                lControl.selectedLanguage.value == 'ગુજરાતી'
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
                             color: Colors.white,
                           ),
                         ),
@@ -85,13 +99,6 @@ class HomePage extends StatelessWidget {
                         },
                       ),
                       SizedBox(width: 2),
-                      Text(
-                        '|',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white,
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -297,7 +304,7 @@ class HomePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                   child: Container(
-                    height: 140,
+                    height: 100,
                     child: Image.asset(
                       'assets/getlogo.png',
                     ),
