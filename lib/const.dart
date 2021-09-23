@@ -18,3 +18,8 @@ String getIndexUrl = 'https://gshala.ecocentricbw.in/api/data/getindex?std=';
 // 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
 String videoTestExample =
     'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4';
+
+String signUpURL =
+    "https://gshala.schoolnetindia.com/Login/StudentRegistration";
+
+String forgotPassword = "https://gshala.schoolnetindia.com/Login/ForgotPass";

@@ -49,13 +49,6 @@ class VideoDownloadController extends GetxController {
       // videoDownloadURL + videoURL.value;
       print('The video path is');
       print(imgUrl);
-
-      //Set-up authorization
-      String autho = 'Bearer ' + box.read('accessToken');
-      print(autho);
-      isdownloading.value = true;
-
-      //Insert data in the database
       String videoName = imgUrl.split('/').last;
       final videoDownload = VideoDownload(
         userId: 0,
@@ -71,8 +64,12 @@ class VideoDownloadController extends GetxController {
         subjectName: videoDetails.subjectName,
         topic: videoDetails.topic,
       );
-      await DatabaseProvider.db.insertNewVideo(videoDownload);
 
+      //Set-up authorization
+
+      String autho = 'Bearer ' + box.read('accessToken');
+      print(autho);
+      isdownloading.value = true;
       // Download the video
       await dio.download(imgUrl, "${appDir.path}/videos/$videoName",
           options: Options(headers: {
@@ -83,14 +80,17 @@ class VideoDownloadController extends GetxController {
           }), onReceiveProgress: (rec, total) {
         progressPercentage.value = (rec / total);
         progressString.value = ((rec / total) * 100).toStringAsFixed(0) + "%";
+      }).then((value) {
+        VideoThumbnail.thumbnailFile(
+          video: '${appDir.path}/videos/$videoName',
+          imageFormat: ImageFormat.JPEG,
+          maxWidth: 0,
+          quality: 50,
+        );
+        //Insert data in the database
+        DatabaseProvider.db.insertNewVideo(videoDownload);
+        downloadComplete.value = true;
       });
-      await VideoThumbnail.thumbnailFile(
-        video: '${appDir.path}/videos/$videoName',
-        imageFormat: ImageFormat.JPEG,
-        maxWidth: 0,
-        quality: 50,
-      );
-      downloadComplete.value = true;
     } catch (e) {
       print(e);
     }

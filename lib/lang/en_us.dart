@@ -19,10 +19,14 @@ const Map<String, String> enUs = {
   'Offline Videos': 'Offline \nVideos',
   'Change Profile': 'Change \nProfile',
   'Welcome': 'Welcome',
-  'OfflineMessage':
+  'ActualOfflineMessage':
       'You are offline. Below are the list of videos that you can view offline',
+  'OnlineOfflineMessage':
+      'Find below the videos you downloaded to watch offline flight',
   'Class': 'Class',
   'Subject': 'Subject',
   'Video': 'Video',
   'Go Online': 'Go Online',
+  'No videos have been downloaded for offline viewing':
+      'No videos have been downloaded for offline viewing',
 };

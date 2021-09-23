@@ -14,6 +14,8 @@ import 'package:gshala/screens/2.2_offlinemainpage.dart';
 import 'package:gshala/screens/2.0_profileselectionpage.dart';
 import 'package:gshala/screens/4.0_viewvideopage.dart';
 import 'package:gshala/screens/2.1_webviewpage.dart';
+import 'package:gshala/screens/forgotpassword.dart';
+import 'package:gshala/screens/signup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,6 +72,8 @@ class MyApp extends StatelessWidget {
           '/viewvideopage': (context) => ViewVideoPage(),
           '/profilepage': (context) => ProfileSelectionPage(),
           '/webviewpage': (context) => WebViewPage(),
+          '/signuppage': (context) => SignUpPage(),
+          '/forgotpassword': (context) => ForgotPassword(),
         },
       ),
     );

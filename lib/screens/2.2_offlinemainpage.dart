@@ -9,6 +9,7 @@ import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/controllers/4.0_videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
+import 'package:gshala/getxnetworkmanager.dart';
 
 class PostLoginOfflineMainPage extends StatelessWidget {
   final VideoListController videoListController =
@@ -181,7 +182,8 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Text(
-                                  'No videos have been downloaded for offline viewing',
+                                  'No videos have been downloaded for offline viewing'
+                                      .tr,
                                   textAlign: TextAlign.center,
                                   textScaleFactor: 1.5,
                                   style: TextStyle(
@@ -203,10 +205,7 @@ class PostLoginOfflineMainPage extends StatelessWidget {
 }
 
 class TopWidget extends StatelessWidget {
-  const TopWidget({
-    Key? key,
-  }) : super(key: key);
-
+  final GetXNetworkManager networkManager = Get.put(GetXNetworkManager());
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -238,7 +237,9 @@ class TopWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  'OfflineMessage'.tr,
+                  networkManager.connectionPresent.value
+                      ? 'OnlineOfflineMessage'.tr
+                      : 'ActualOfflineMessage'.tr,
                   textAlign: TextAlign.justify,
                   style: TextStyle(
                     color: normalWhiteText,

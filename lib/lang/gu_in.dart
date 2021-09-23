@@ -18,10 +18,14 @@ const Map<String, String> guIn = {
   'Offline Videos': 'ઑફલાઇન \nવીડિયો',
   'Change Profile': 'પ્રોફાઇલ \nબદલો',
   'Welcome': 'સ્વાગત છે',
-  'OfflineMessage':
+  'ActualOfflineMessage':
       'તમે .ફલાઇન છો. નીચે તમે offlineફલાઇન જોઈ શકો છો તે વિડિઓઝની સૂચિ છે',
+  'OnlineOfflineMessage':
+      'Offlineફલાઇન ફ્લાઇટ જોવા માટે તમે ડાઉનલોડ કરેલા વીડિયો નીચે શોધો',
   'Class': 'વર્ગ',
   'Subject': 'વિષય',
   'Video': 'વિડીયો',
   'Go Online': 'ઓનલાઇન જાઓ',
+  'No videos have been downloaded for offline viewing':
+      'Offlineફલાઇન જોવા માટે કોઈ વિડિઓ ડાઉનલોડ કરવામાં આવી નથી',
 };

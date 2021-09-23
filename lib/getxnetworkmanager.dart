@@ -11,12 +11,14 @@ class GetXNetworkManager extends GetxController {
   final Connectivity _connectivity = Connectivity();
   GetStorage box = new GetStorage();
   var internetStatus;
+  final connectionPresent = false.obs;
 
   @override
   void onInit() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       print('The internet connection is : $result');
       if (result == ConnectivityResult.none) {
+        connectionPresent.value = false;
         if (box.read('userName') == null) {
           showOfflinePage();
         } else if (box.read('userName') != null) {
@@ -24,6 +26,7 @@ class GetXNetworkManager extends GetxController {
         }
       } else if (result == ConnectivityResult.mobile ||
           result == ConnectivityResult.wifi) {
+        connectionPresent.value = true;
         if (box.read('userName') == null) {
           showHomePage();
         } else if (box.read('userName') != null) {

@@ -42,6 +42,8 @@ class LogInController extends GetxController {
   }
 
   Future login() async {
+    print('scope is');
+    print(loginType.value);
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       'APIKey': 'G12SHA98IZ82938KPP'
@@ -51,8 +53,9 @@ class LogInController extends GetxController {
       'username': myEncryptionDecryption(userId.value),
       'password': myEncryptionDecryption(password.value),
       'grant_type': 'password',
-      'scope': myEncryptionDecryption(loginType.value)
+      'scope': myEncryptionDecryption('Student')
     };
+    //loginType.value
     print(request.bodyFields);
     request.headers.addAll(headers);
     print(request);

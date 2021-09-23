@@ -214,7 +214,15 @@ class HomePage extends StatelessWidget {
                                         return null;
                                       },
                                       onSaved: (value) {
-                                        logInController.loginType.value = value;
+                                        if (value == 'વિદ્યાર્થી' ||
+                                            value == 'Student') {
+                                          logInController.loginType.value =
+                                              'student';
+                                        } else if (value == 'શિક્ષક' ||
+                                            value == 'Teacher') {
+                                          logInController.loginType.value =
+                                              'teacher';
+                                        }
                                       },
                                     ),
                                   ),
@@ -255,8 +263,8 @@ class HomePage extends StatelessWidget {
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: TextButton(
-                                    onPressed: () async {
-                                      await showNotification(context);
+                                    onPressed: () {
+                                      Get.offAndToNamed('/forgotpassword');
                                     },
                                     child: Text(
                                       'Forgot Password?'.tr,
@@ -285,8 +293,8 @@ class HomePage extends StatelessWidget {
                                 CElevatedButton(
                                   buttonLabel: 'Sign Up'.tr,
                                   buttonColor: 0xffFBAA00,
-                                  onPressed: () async {
-                                    await showNotification(context);
+                                  onPressed: () {
+                                    Get.offAndToNamed('/signuppage');
                                   },
                                 ),
                               ],
@@ -316,26 +324,6 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<dynamic> showNotification(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Sign-up'),
-            content: Text(
-                'This functionality is not yet available in the mobile application.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Ok'),
-              ),
-            ],
-          );
-        });
   }
 
   bool validateAndSave() {
