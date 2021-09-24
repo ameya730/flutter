@@ -15,8 +15,8 @@ class LogInController extends GetxController {
   final userControl = ''.obs;
   final userLength = 0.obs;
   final userToggle = false.obs;
-  final outOfFocus = false.obs;
   final dropValue = ''.tr.obs;
+  final isLoginSuccessful = false.obs;
 
   @override
   onInit() {
@@ -61,6 +61,7 @@ class LogInController extends GetxController {
     print(request);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
+      isLoginSuccessful.value = true;
       var res = await response.stream.bytesToString();
       var data = UserResponse.fromJson(json.decode(res));
       box.write('accessToken', data.accessToken);

@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:get/get.dart';
+import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/models/2.0_videodetails_sqflite_model.dart';
 import 'package:gshala/models/2.1_videodownload_sqflite_model.dart';
 import 'package:path/path.dart';
@@ -144,6 +145,18 @@ class DatabaseProvider {
       print('Element is $element');
     });
     return vList.map((e) => VideoDownload.fromMap(e)).toList();
+  }
+
+  Future videoDownloadControl(int nodeId) async {
+    final db = await database;
+    final VideoDownloadController videoDownloadController =
+        Get.put(VideoDownloadController());
+    var count = await db.query(VIDEO_DOWNLOAD,
+        where: '$COLUMN_VIDEO_ID_DOWNLOAD = ?', whereArgs: [nodeId]);
+    if (count.length > 0) {
+      videoDownloadController.duplicateCount.value = true;
+    }
+    return count;
   }
 
   //Get single video value

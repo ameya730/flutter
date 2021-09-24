@@ -11,6 +11,7 @@ import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/controllers/2.3_pdfview_controller.dart';
 import 'package:gshala/cryptojs_aes_encryption_helper.dart';
 import 'package:gshala/models/3.0_videodownload_model.dart';
+import 'package:gshala/screens/1_homepage.dart';
 import 'package:gshala/screens/2.2_offlinemainpage.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -94,11 +95,21 @@ class _WebViewPageState extends State<WebViewPage>
                     JavascriptChannel(
                       name: 'vdownload',
                       onMessageReceived: (JavascriptMessage message) async {
-                        print(json.decode(message.message));
                         VideoDownloaded videoData = VideoDownloaded.fromJson(
                             json.decode(message.message));
-                        print(videoData.nodeid.toString());
-                        await downloadVideoFunction(videoData);
+                        videoDownloadController.duplicateVideoCheck(
+                            int.parse(videoData.nodeid.toString()));
+
+                        if (videoDownloadController.duplicateCount.value =
+                            false) {
+                          await downloadVideoFunction(videoData);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Video has already been download'),
+                            ),
+                          );
+                        }
                       },
                     ),
                     JavascriptChannel(
@@ -227,9 +238,18 @@ class _WebViewPageState extends State<WebViewPage>
           labelBackgroundColor: Colors.black,
         ),
         SpeedDialChild(
-          child: Icon(Icons.create, color: Colors.white),
+          child: Icon(Icons.login_rounded, color: Colors.white),
           backgroundColor: Theme.of(context).backgroundColor,
-          onTap: () => print('Pressed Write'),
+          onTap: () {
+            box.remove('userName');
+            box.remove('uType');
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (BuildContext context) => HomePage(),
+              ),
+              (route) => false,
+            );
+          },
           label: 'Log Out'.tr,
           labelStyle:
               TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
@@ -241,10 +261,11 @@ class _WebViewPageState extends State<WebViewPage>
 
   pdfBackButton() {
     return FloatingActionButton.extended(
+      backgroundColor: Theme.of(context).backgroundColor,
       onPressed: () {
         pdfViewController.closePDF();
       },
-      label: Text('Back'.tr),
+      label: Text('Return'.tr),
     );
   }
 

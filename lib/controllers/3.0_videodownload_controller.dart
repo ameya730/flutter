@@ -17,7 +17,12 @@ class VideoDownloadController extends GetxController {
   final progressString = ''.obs;
   final progressPercentage = 0.0.obs;
   final downloadComplete = false.obs;
+  final duplicateCount = false.obs;
   Dio dio = Dio();
+
+  Future duplicateVideoCheck(int nodeId) async {
+    await DatabaseProvider.db.videoDownloadControl(nodeId);
+  }
 
   Future<void> downloadFile(VideoDownloaded videoDetails) async {
     try {
