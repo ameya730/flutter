@@ -46,7 +46,7 @@ dependencies:
   new_version:
   flutter_svg:
   webview_flutter:
-  fab_circular_menu:
+  flutter_speed_dial:
   stop_watch_timer:
   flutter_windowmanager:
   tuple:

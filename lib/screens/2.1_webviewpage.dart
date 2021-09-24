@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
@@ -69,7 +68,7 @@ class _WebViewPageState extends State<WebViewPage>
           floatingActionButton: Obx(() {
             return pdfViewController.pdfOpen.value
                 ? pdfBackButton()
-                : webViewFloatingScroller(context);
+                : buildSpeedTray();
           }),
           body: Stack(
             children: [
@@ -201,50 +200,33 @@ class _WebViewPageState extends State<WebViewPage>
     print(videoDownloaded.vidUrl);
   }
 
-  webViewFloatingScroller(BuildContext context) {
-    return FabCircularMenu(
+  SpeedDial buildSpeedTray() {
+    return SpeedDial(
+      icon: Icons.menu,
+      activeIcon: Icons.close,
+      backgroundColor: Colors.green[900],
+      visible: true,
+      curve: Curves.bounceInOut,
+      spaceBetweenChildren: 10,
+      spacing: 10,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: TextButton.icon(
-            onPressed: () {
-              Get.toNamed('/offlinemainpage');
-            },
-            icon: Icon(
-              Icons.wifi_off_outlined,
-              color: normalWhiteText,
-            ),
-            label: Text(
-              'Offline Videos'.tr,
-              style: TextStyle(
-                color: normalWhiteText,
-              ),
-            ),
-          ),
+        SpeedDialChild(
+          child: Icon(Icons.chrome_reader_mode, color: Colors.white),
+          backgroundColor: Colors.green,
+          onTap: () {},
+          label: 'Offline Videos'.tr,
+          labelStyle:
+              TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+          labelBackgroundColor: Colors.black,
         ),
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: TextButton.icon(
-            onPressed: () {
-              SchedulerBinding.instance!.addPostFrameCallback((_) async {
-                box.remove('userName');
-                await Navigator.popAndPushNamed(
-                  context,
-                  '/homepage',
-                );
-              });
-            },
-            icon: Icon(
-              Icons.logout,
-              color: normalWhiteText,
-            ),
-            label: Text(
-              'Log Out'.tr,
-              style: TextStyle(
-                color: normalWhiteText,
-              ),
-            ),
-          ),
+        SpeedDialChild(
+          child: Icon(Icons.create, color: Colors.white),
+          backgroundColor: Colors.green,
+          onTap: () => print('Pressed Write'),
+          label: 'Log Out'.tr,
+          labelStyle:
+              TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+          labelBackgroundColor: Colors.black,
         ),
       ],
     );
