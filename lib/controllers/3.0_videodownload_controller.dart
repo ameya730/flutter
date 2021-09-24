@@ -24,30 +24,32 @@ class VideoDownloadController extends GetxController {
       GetStorage box = new GetStorage();
 
       //Revalidate access token and get a new one if required
-      DateTime tokenStartTime = DateTime.parse(
-        box.read('accessTokenTimeStamp'),
-      );
-      int tokenActiveDuration =
-          DateTime.now().difference(tokenStartTime).inSeconds;
-      print('Time lapsed is " $tokenActiveDuration');
-      if (tokenActiveDuration > 160) {
+      if (box.read('accessTokenTimeStamp') == null) {
         print('gettin token again');
         LogInController logInController = Get.put(LogInController());
         logInController.login();
+        print(box.read('accessToken'));
+      } else {
+        DateTime tokenStartTime = DateTime.parse(
+          box.read('accessTokenTimeStamp'),
+        );
+        int tokenActiveDuration =
+            DateTime.now().difference(tokenStartTime).inSeconds;
+        print('Token duration is $tokenActiveDuration');
+        print('Time lapsed is " $tokenActiveDuration');
+        if (tokenActiveDuration > 160) {
+          print('gettin token again');
+          LogInController logInController = Get.put(LogInController());
+          logInController.login();
+        }
       }
-      print(box.read('accessToken'));
 
       //Get video URL
       videoURL.value = videoDetails.vidUrl.toString();
-
       //Get android download directory
       Directory appDir = await getApplicationDocumentsDirectory();
-
-      print(videoURL.value);
       //Define path
       String imgUrl = videoDownloadURL + videoURL.value;
-      // videoDownloadURL + videoURL.value;
-      print('The video path is');
       print(imgUrl);
       String videoName = imgUrl.split('/').last;
       final videoDownload = VideoDownload(
@@ -66,8 +68,8 @@ class VideoDownloadController extends GetxController {
       );
 
       //Set-up authorization
-
       String autho = 'Bearer ' + box.read('accessToken');
+      print('The authorization token is');
       print(autho);
       isdownloading.value = true;
       // Download the video

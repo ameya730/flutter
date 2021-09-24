@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/apis/sendvideodetails_api.dart';
-import 'package:gshala/apis/videoindex_api.dart';
 import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/templates/custombutton.dart';
 
@@ -66,14 +65,6 @@ class ProfileSelectionPage extends StatelessWidget {
                         new SendVideoDetailsApiService();
                     sendVideoDetailsApiService.sendVideoDetails().then((value) {
                       print('success');
-                    });
-                  }),
-              CElevatedButton(
-                  buttonLabel: 'Get Video Index',
-                  onPressed: () {
-                    GetVideoIndexAPI getVideoIndexAPI = new GetVideoIndexAPI();
-                    getVideoIndexAPI.getIndex().then((value) {
-                      print('got video index');
                     });
                   }),
               CElevatedButton(

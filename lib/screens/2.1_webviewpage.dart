@@ -15,8 +15,6 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
 
-import 'package:syncfusion_flutter_pdf/pdf.dart';
-
 class WebViewPage extends StatefulWidget {
   @override
   _WebViewPageState createState() => _WebViewPageState();
@@ -140,30 +138,48 @@ class _WebViewPageState extends State<WebViewPage>
                           onTap: () {
                             videoDownloadController.isdownloading.value = false;
                           },
-                          child: AlertDialog(
-                            title: Text('Downloading Video...'),
-                            content: Text(
-                              videoDownloadController.progressPercentage
-                                  .toString(),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Card(
+                                  child: AlertDialog(
+                                    title: Obx(() {
+                                      return videoDownloadController
+                                              .isdownloading.value
+                                          ? Text('Downloading Video')
+                                          : Text('Download Complete');
+                                    }),
+                                    content: Text(
+                                      videoDownloadController.progressString
+                                          .toString(),
+                                    ),
+                                    actions: [
+                                      Obx(
+                                        () {
+                                          return videoDownloadController
+                                                  .downloadComplete.value
+                                              ? TextButton(
+                                                  onPressed: () {
+                                                    videoDownloadController
+                                                        .downloadComplete
+                                                        .value = false;
+                                                    videoDownloadController
+                                                        .isdownloading
+                                                        .value = false;
+                                                  },
+                                                  child: Text('Ok'),
+                                                )
+                                              : Container(
+                                                  width: 0,
+                                                  height: 0,
+                                                );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                            actions: [
-                              Obx(
-                                () {
-                                  return videoDownloadController
-                                          .downloadComplete.value
-                                      ? TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text('Ok'),
-                                        )
-                                      : Container(
-                                          width: 0,
-                                          height: 0,
-                                        );
-                                },
-                              )
-                            ],
                           ),
                         )
                       : Container(
