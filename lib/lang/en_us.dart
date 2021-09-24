@@ -29,4 +29,5 @@ const Map<String, String> enUs = {
   'Go Online': 'Go Online',
   'No videos have been downloaded for offline viewing':
       'No videos have been downloaded for offline viewing',
+  'Return': 'Return',
 };

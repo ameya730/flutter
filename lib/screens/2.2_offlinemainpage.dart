@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
@@ -13,6 +14,7 @@ class PostLoginOfflineMainPage extends StatelessWidget {
       Get.put(VideoListController());
   final GetStorage box = new GetStorage();
   final dbHelper = DatabaseProvider.db;
+  final GetXNetworkManager getXNetworkManager = Get.put(GetXNetworkManager());
 
   @override
   Widget build(BuildContext context) {
@@ -20,104 +22,164 @@ class PostLoginOfflineMainPage extends StatelessWidget {
       child: WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
+          floatingActionButton: Obx(() {
+            return getXNetworkManager.connectionPresent.value
+                ? SpeedDial(
+                    icon: Icons.menu,
+                    activeIcon: Icons.close,
+                    backgroundColor: Theme.of(context).backgroundColor,
+                    visible: true,
+                    curve: Curves.bounceInOut,
+                    spaceBetweenChildren: 10,
+                    spacing: 10,
+                    children: [
+                      SpeedDialChild(
+                        child: Icon(Icons.keyboard_return, color: Colors.white),
+                        backgroundColor: Theme.of(context).backgroundColor,
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        label: 'Return'.tr,
+                        labelStyle: TextStyle(
+                            fontWeight: FontWeight.w500, color: Colors.white),
+                        labelBackgroundColor: Colors.black,
+                      ),
+                      SpeedDialChild(
+                        child: Icon(Icons.create, color: Colors.white),
+                        backgroundColor: Theme.of(context).backgroundColor,
+                        onTap: () => print('Pressed Write'),
+                        label: 'Log Out'.tr,
+                        labelStyle: TextStyle(
+                            fontWeight: FontWeight.w500, color: Colors.white),
+                        labelBackgroundColor: Colors.black,
+                      ),
+                    ],
+                  )
+                : SpeedDial(
+                    icon: Icons.menu,
+                    activeIcon: Icons.close,
+                    backgroundColor: Colors.green[900],
+                    visible: true,
+                    curve: Curves.bounceInOut,
+                    spaceBetweenChildren: 10,
+                    spacing: 10,
+                    children: [
+                      SpeedDialChild(
+                        child: Icon(Icons.create, color: Colors.white),
+                        backgroundColor: Theme.of(context).backgroundColor,
+                        onTap: () => print('Pressed Write'),
+                        label: 'Log Out'.tr,
+                        labelStyle: TextStyle(
+                            fontWeight: FontWeight.w500, color: Colors.white),
+                        labelBackgroundColor: Colors.black,
+                      ),
+                    ],
+                  );
+          }),
           backgroundColor: Theme.of(context).backgroundColor,
           body: Center(
-            child: Column(
-              children: [
-                TopWidget(),
-                Obx(() {
-                  return videoListController.listObtained.value
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: videoListController.videoList.length,
-                          itemBuilder: (context, i) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TopWidget(),
+                  Obx(() {
+                    return videoListController.listObtained.value
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: videoListController.videoList.length,
+                            itemBuilder: (context, i) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10),
+                                    ),
                                   ),
-                                ),
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                      child: Image(
-                                        image: FileImage(
-                                          File(
-                                            videoListController
-                                                .thumbNailList[i],
+                                  child: Column(
+                                    children: [
+                                      GestureDetector(
+                                        child: Image(
+                                          image: FileImage(
+                                            File(
+                                              videoListController
+                                                  .thumbNailList[i],
+                                            ),
                                           ),
                                         ),
+                                        onTap: () {
+                                          box.write('i', i);
+                                          print(box.read('i'));
+                                          box.write(
+                                              'videoName',
+                                              videoListController
+                                                  .videoList[i].videoName);
+                                          box.write(
+                                              'videoLastPosition',
+                                              videoListController.videoList[i]
+                                                  .videoLastViewPosition);
+                                          PlayVideoController
+                                              playVideoController =
+                                              Get.put(PlayVideoController());
+                                          playVideoController
+                                              .initializePlayer();
+                                          Get.toNamed('/viewvideopage');
+                                        },
                                       ),
-                                      onTap: () {
-                                        box.write('i', i);
-                                        print(box.read('i'));
-                                        box.write(
-                                            'videoName',
-                                            videoListController
-                                                .videoList[i].videoName);
-                                        box.write(
-                                            'videoLastPosition',
-                                            videoListController.videoList[i]
-                                                .videoLastViewPosition);
-                                        PlayVideoController
-                                            playVideoController =
-                                            Get.put(PlayVideoController());
-                                        playVideoController.initializePlayer();
-                                        Get.toNamed('/viewvideopage');
-                                      },
-                                    ),
-                                    ListTile(
-                                      title: Text(
-                                        videoListController.videoList[i].topic
-                                            .toString(),
+                                      ListTile(
+                                        title: Text(
+                                          videoListController.videoList[i].topic
+                                              .toString(),
+                                        ),
+                                        subtitle: Text(videoListController
+                                            .videoList[i].subjectName
+                                            .toString()),
+                                        trailing: IconButton(
+                                            onPressed: () async {
+                                              await dbHelper
+                                                  .updateDeleteVideoFlat(
+                                                      videoListController
+                                                          .videoList[i]
+                                                          .videoName
+                                                          .toString());
+                                              await videoListController
+                                                  .getVideosList();
+                                            },
+                                            icon: Icon(Icons.delete)),
                                       ),
-                                      subtitle: Text(videoListController
-                                          .videoList[i].subjectName
-                                          .toString()),
-                                      trailing: IconButton(
-                                          onPressed: () async {
-                                            await dbHelper
-                                                .updateDeleteVideoFlat(
-                                                    videoListController
-                                                        .videoList[i].videoName
-                                                        .toString());
-                                            await videoListController
-                                                .getVideosList();
-                                          },
-                                          icon: Icon(Icons.delete)),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          })
-                      : Center(
-                          child: Column(
-                            children: [
-                              Image(
-                                image: AssetImage('assets/offlineimageone.gif'),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  'No videos have been downloaded for offline viewing'
-                                      .tr,
-                                  textAlign: TextAlign.center,
-                                  textScaleFactor: 1.5,
-                                  style: TextStyle(
-                                    color: normalWhiteText,
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                }),
-              ],
+                              );
+                            })
+                        : Center(
+                            child: Column(
+                              children: [
+                                Image(
+                                  image:
+                                      AssetImage('assets/offlineimageone.gif'),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    'No videos have been downloaded for offline viewing'
+                                        .tr,
+                                    textAlign: TextAlign.center,
+                                    textScaleFactor: 1.5,
+                                    style: TextStyle(
+                                      color: normalWhiteText,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                  }),
+                ],
+              ),
             ),
           ),
         ),

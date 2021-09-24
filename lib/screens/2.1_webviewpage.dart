@@ -6,10 +6,12 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
+import 'package:gshala/controllers/2.5_offlinevideoview_controller.dart';
 import 'package:gshala/controllers/3.0_videodownload_controller.dart';
-import 'package:gshala/controllers/pdfview_controller.dart';
+import 'package:gshala/controllers/2.3_pdfview_controller.dart';
 import 'package:gshala/cryptojs_aes_encryption_helper.dart';
 import 'package:gshala/models/3.0_videodownload_model.dart';
+import 'package:gshala/screens/2.2_offlinemainpage.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
@@ -29,6 +31,8 @@ class _WebViewPageState extends State<WebViewPage>
   final VideoDownloadController videoDownloadController =
       Get.put(VideoDownloadController());
   final PDFViewController pdfViewController = Get.put(PDFViewController());
+  final OfflineVideosPageView offlineVideosPageView =
+      Get.put(OfflineVideosPageView());
 
   Future<bool> _onWillPop(BuildContext context) async {
     print("onwillpop");
@@ -204,7 +208,7 @@ class _WebViewPageState extends State<WebViewPage>
     return SpeedDial(
       icon: Icons.menu,
       activeIcon: Icons.close,
-      backgroundColor: Colors.green[900],
+      backgroundColor: Theme.of(context).backgroundColor,
       visible: true,
       curve: Curves.bounceInOut,
       spaceBetweenChildren: 10,
@@ -212,8 +216,11 @@ class _WebViewPageState extends State<WebViewPage>
       children: [
         SpeedDialChild(
           child: Icon(Icons.chrome_reader_mode, color: Colors.white),
-          backgroundColor: Colors.green,
-          onTap: () {},
+          backgroundColor: Theme.of(context).backgroundColor,
+          onTap: () {
+            offlineVideosPageView.isOfflineVideoPageOpen.value = true;
+            Get.to(PostLoginOfflineMainPage());
+          },
           label: 'Offline Videos'.tr,
           labelStyle:
               TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
@@ -221,7 +228,7 @@ class _WebViewPageState extends State<WebViewPage>
         ),
         SpeedDialChild(
           child: Icon(Icons.create, color: Colors.white),
-          backgroundColor: Colors.green,
+          backgroundColor: Theme.of(context).backgroundColor,
           onTap: () => print('Pressed Write'),
           label: 'Log Out'.tr,
           labelStyle:
