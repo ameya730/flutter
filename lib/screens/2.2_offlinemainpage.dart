@@ -8,6 +8,7 @@ import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/controllers/4.0_videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:gshala/getxnetworkmanager.dart';
+import 'package:gshala/screens/1_homepage.dart';
 
 class PostLoginOfflineMainPage extends StatelessWidget {
   final VideoListController videoListController =
@@ -45,9 +46,18 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                         labelBackgroundColor: Colors.black,
                       ),
                       SpeedDialChild(
-                        child: Icon(Icons.create, color: Colors.white),
+                        child: Icon(Icons.logout_rounded, color: Colors.white),
                         backgroundColor: Theme.of(context).backgroundColor,
-                        onTap: () => print('Pressed Write'),
+                        onTap: () {
+                          box.remove('userName');
+                          box.remove('uType');
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => HomePage(),
+                            ),
+                            (route) => false,
+                          );
+                        },
                         label: 'Log Out'.tr,
                         labelStyle: TextStyle(
                             fontWeight: FontWeight.w500, color: Colors.white),
@@ -65,9 +75,18 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                     spacing: 10,
                     children: [
                       SpeedDialChild(
-                        child: Icon(Icons.create, color: Colors.white),
+                        child: Icon(Icons.logout_rounded, color: Colors.white),
                         backgroundColor: Theme.of(context).backgroundColor,
-                        onTap: () => print('Pressed Write'),
+                        onTap: () {
+                          box.remove('userName');
+                          box.remove('uType');
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => HomePage(),
+                            ),
+                            (route) => false,
+                          );
+                        },
                         label: 'Log Out'.tr,
                         labelStyle: TextStyle(
                             fontWeight: FontWeight.w500, color: Colors.white),

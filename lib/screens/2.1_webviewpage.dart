@@ -238,7 +238,7 @@ class _WebViewPageState extends State<WebViewPage>
           labelBackgroundColor: Colors.black,
         ),
         SpeedDialChild(
-          child: Icon(Icons.login_rounded, color: Colors.white),
+          child: Icon(Icons.logout_rounded, color: Colors.white),
           backgroundColor: Theme.of(context).backgroundColor,
           onTap: () {
             box.remove('userName');

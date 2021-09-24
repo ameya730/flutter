@@ -61,6 +61,7 @@ class LogInController extends GetxController {
     print(request);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
+      print('login successful');
       isLoginSuccessful.value = true;
       var res = await response.stream.bytesToString();
       var data = UserResponse.fromJson(json.decode(res));
