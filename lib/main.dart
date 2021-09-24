@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +20,8 @@ import 'package:gshala/screens/signup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIOverlays(
+      [SystemUiOverlay.bottom, SystemUiOverlay.top]);
 
   await GetStorage.init();
   final box = new GetStorage();
@@ -45,7 +48,17 @@ class MyApp extends StatelessWidget {
   MyApp({this.initialRoute});
   @override
   Widget build(BuildContext context) {
-    return LifeCycleManager(
+    return
+        // FutureBuilder(
+        //   future: Init.instance.initialize(),
+        //   builder: (context, AsyncSnapshot snapshot) {
+        //     if (snapshot.connectionState == ConnectionState.waiting) {
+        //       return GetMaterialApp(
+        //         home: Splash(),
+        //       );
+        //     } else {
+        //       return
+        LifeCycleManager(
       child: GetMaterialApp(
         initialBinding: NetWorkBindings(),
         theme: ThemeData(
@@ -78,4 +91,31 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+  // },
+  // );
+  // }
 }
+
+// class Splash extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     // bool lightMode =
+//     //     MediaQuery.of(context).platformBrightness == Brightness.light;
+//     return Scaffold(
+//       backgroundColor: Color(0xe1f5fe).withOpacity(1.0),
+//       body: Center(child: Image.asset('assets/splashscreen.jpeg')),
+//     );
+//   }
+// }
+
+// class Init {
+//   Init._();
+//   static final instance = Init._();
+
+//   Future initialize() async {
+//     // This is where you can initialize the resources needed by your app while
+//     // the splash screen is displayed.  Remove the following example because
+//     // delaying the user experience is a bad design practice!
+//     await Future.delayed(const Duration(seconds: 1));
+//   }
+// }

@@ -29,7 +29,7 @@ class PostLoginOfflineMainPage extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: TextButton.icon(
                 onPressed: () {
-                  Get.offAndToNamed('/webviewpage');
+                  Get.toNamed('/webviewpage');
                 },
                 icon: Icon(
                   Icons.web_asset,

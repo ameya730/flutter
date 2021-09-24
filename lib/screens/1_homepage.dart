@@ -194,7 +194,10 @@ class HomePage extends StatelessWidget {
                                               ? logInController
                                                   .dropValue.value.tr
                                               : null,
-                                      onChanged: (value) {},
+                                      onChanged: (value) {
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
+                                      },
                                       validator: (value) {
                                         if (value == null) {
                                           return 'Please select role'.tr;
