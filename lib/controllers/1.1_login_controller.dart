@@ -42,36 +42,37 @@ class LogInController extends GetxController {
   }
 
   Future login() async {
-    print('scope is');
-    print(loginType.value);
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       'APIKey': 'G12SHA98IZ82938KPP'
     };
     var request = http.Request('POST', Uri.parse(kloginapiurl));
     request.bodyFields = {
-      'username': myEncryptionDecryption(userId.value),
-      'password': myEncryptionDecryption(password.value),
+      'username': myEncryptionDecryption(
+        box.read('userName'),
+      ),
+      'password': myEncryptionDecryption(
+        box.read('password'),
+      ),
       'grant_type': 'password',
-      'scope': myEncryptionDecryption('Student')
+      'scope': myEncryptionDecryption('Student'),
     };
-    //loginType.value
+    print(box.read('uType'));
     print(request.bodyFields);
+    //loginType.value
     request.headers.addAll(headers);
-    print(request);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       print('login successful');
       isLoginSuccessful.value = true;
       var res = await response.stream.bytesToString();
       var data = UserResponse.fromJson(json.decode(res));
+      print(data);
       box.write('accessToken', data.accessToken);
-      print(box.read('accessToken'));
       box.write(
         'accessTokenTimeStamp',
         DateTime.now().toString(),
       );
-      print(box.read('accessTokenTimeStamp'));
     } else {
       print(response.statusCode);
       print(response.reasonPhrase);

@@ -9,16 +9,18 @@ import 'package:http/http.dart' as http;
 class DownloadVideoAPIService {
   GetStorage box = new GetStorage();
   Future sendVideoDetails() async {
+    if (box.read('accessTokenTimeStamp').isBlank == true) {
+      LogInController logInController = Get.put(LogInController());
+      logInController.login();
+    }
     DateTime tokenStartTime = DateTime.parse(
       box.read('accessTokenTimeStamp'),
     );
     int tokenActiveDuration =
         DateTime.now().difference(tokenStartTime).inSeconds;
-    print('Time lapsed is " $tokenActiveDuration');
     if (tokenActiveDuration > 160) {
       LogInController logInController = Get.put(LogInController());
       logInController.login();
-      print('token retrived again');
     }
 
     var sendBody = await getDetails();

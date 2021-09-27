@@ -18,34 +18,22 @@ class VideoDownloadController extends GetxController {
   final progressPercentage = 0.0.obs;
   final downloadComplete = false.obs;
   final duplicateCount = false.obs;
+  final messageReceived = false.obs;
+  GetStorage box = new GetStorage();
+  final LogInController logInController = Get.put(LogInController());
   Dio dio = Dio();
-
-  Future duplicateVideoCheck(int nodeId) async {
-    await DatabaseProvider.db.videoDownloadControl(nodeId);
-  }
 
   Future<void> downloadFile(VideoDownloaded videoDetails) async {
     try {
-      GetStorage box = new GetStorage();
-
       //Revalidate access token and get a new one if required
-      if (box.read('accessTokenTimeStamp') == null) {
-        print('gettin token again');
-        LogInController logInController = Get.put(LogInController());
-        logInController.login();
-        print(box.read('accessToken'));
-      } else {
+      if (box.read('accessTokenTimeStamp') != null) {
         DateTime tokenStartTime = DateTime.parse(
           box.read('accessTokenTimeStamp'),
         );
         int tokenActiveDuration =
             DateTime.now().difference(tokenStartTime).inSeconds;
-        print('Token duration is $tokenActiveDuration');
-        print('Time lapsed is " $tokenActiveDuration');
         if (tokenActiveDuration > 160) {
-          print('gettin token again');
-          LogInController logInController = Get.put(LogInController());
-          logInController.login();
+          await logInController.login();
         }
       }
 
@@ -77,6 +65,7 @@ class VideoDownloadController extends GetxController {
       print('The authorization token is');
       print(autho);
       isdownloading.value = true;
+
       // Download the video
       await dio.download(imgUrl, "${appDir.path}/videos/$videoName",
           options: Options(headers: {
@@ -88,16 +77,18 @@ class VideoDownloadController extends GetxController {
         progressPercentage.value = (rec / total);
         progressString.value = ((rec / total) * 100).toStringAsFixed(0) + "%";
       }).then((value) {
-        VideoThumbnail.thumbnailFile(
-          video: '${appDir.path}/videos/$videoName',
-          imageFormat: ImageFormat.JPEG,
-          maxWidth: 0,
-          quality: 50,
-        );
-        //Insert data in the database
-        DatabaseProvider.db.insertNewVideo(videoDownload);
-        downloadComplete.value = true;
+        progressString.value = '';
+        progressPercentage.value = 0.0;
       });
+      await VideoThumbnail.thumbnailFile(
+        video: '${appDir.path}/videos/$videoName',
+        imageFormat: ImageFormat.JPEG,
+        maxWidth: 0,
+        quality: 50,
+      );
+      //Insert data in the database
+      await DatabaseProvider.db.insertNewVideo(videoDownload);
+      downloadComplete.value = true;
     } catch (e) {
       print(e);
     }

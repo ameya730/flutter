@@ -251,20 +251,28 @@ class HomePage extends StatelessWidget {
                                             logInController.userId.value);
                                         box.write('uType',
                                             logInController.loginType.value);
-                                        logInController.login();
-                                        if (logInController
-                                                .isLoginSuccessful.value ==
-                                            true) {
-                                          Get.offAndToNamed('/webviewpage');
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Login failed. Incorrect User / Password'),
-                                            ),
-                                          );
-                                        }
+                                        box.write('password',
+                                            logInController.password.value);
+                                        logInController.login().then(
+                                          (value) {
+                                            if (logInController
+                                                    .isLoginSuccessful.value ==
+                                                true) {
+                                              Get.offAndToNamed('/webviewpage');
+                                            } else {
+                                              box.remove('userName');
+                                              box.remove('uType');
+                                              box.remove('password');
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'Login failed. Incorrect User / Password'),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        );
                                       }
                                     },
                                   ),

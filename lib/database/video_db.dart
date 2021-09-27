@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:get/get.dart';
-import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/models/2.0_videodetails_sqflite_model.dart';
 import 'package:gshala/models/2.1_videodownload_sqflite_model.dart';
 import 'package:path/path.dart';
@@ -135,6 +133,7 @@ class DatabaseProvider {
 
   Future getAllVideos() async {
     final db = await database;
+    print('Is this happening multiple times');
     List<Map<String, dynamic>> vList = await db.query(
       VIDEO_DOWNLOAD,
       where: '$COLUMN_VIDEO_DELETED = ?',
@@ -147,16 +146,12 @@ class DatabaseProvider {
     return vList.map((e) => VideoDownload.fromMap(e)).toList();
   }
 
-  Future videoDownloadControl(int nodeId) async {
+  Future<int> videoDownloadControl(int nodeId) async {
     final db = await database;
-    final VideoDownloadController videoDownloadController =
-        Get.put(VideoDownloadController());
+    print('The nodeId is $nodeId');
     var count = await db.query(VIDEO_DOWNLOAD,
         where: '$COLUMN_VIDEO_ID_DOWNLOAD = ?', whereArgs: [nodeId]);
-    if (count.length > 0) {
-      videoDownloadController.duplicateCount.value = true;
-    }
-    return count;
+    return count.length;
   }
 
   //Get single video value

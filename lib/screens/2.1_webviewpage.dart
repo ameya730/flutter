@@ -10,10 +10,12 @@ import 'package:gshala/controllers/2.5_offlinevideoview_controller.dart';
 import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/controllers/2.3_pdfview_controller.dart';
 import 'package:gshala/cryptojs_aes_encryption_helper.dart';
+import 'package:gshala/database/video_db.dart';
 import 'package:gshala/models/3.0_videodownload_model.dart';
 import 'package:gshala/screens/1_homepage.dart';
 import 'package:gshala/screens/2.2_offlinemainpage.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:webview_flutter/platform_interface.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
 
@@ -34,6 +36,7 @@ class _WebViewPageState extends State<WebViewPage>
   final PDFViewController pdfViewController = Get.put(PDFViewController());
   final OfflineVideosPageView offlineVideosPageView =
       Get.put(OfflineVideosPageView());
+  final dbHelper = DatabaseProvider.db;
 
   Future<bool> _onWillPop(BuildContext context) async {
     print("onwillpop");
@@ -79,7 +82,6 @@ class _WebViewPageState extends State<WebViewPage>
             children: [
               WebView(
                 initialUrl: url,
-                // 'https://lms.schoolnetindia.com/gujaratlms/Login/MainLoginSL?uname=U2FsdGVkX19OSbRuyg6l+yHDUhG2wdd/CnCqZR4+0u4=&utype=student&mob=1234567891',
                 javascriptMode: JavascriptMode.unrestricted,
                 allowsInlineMediaPlayback: true,
                 onWebViewCreated: (WebViewController c) {
@@ -96,14 +98,20 @@ class _WebViewPageState extends State<WebViewPage>
                       name: 'vdownload',
                       onMessageReceived: (JavascriptMessage message) async {
                         VideoDownloaded videoData = VideoDownloaded.fromJson(
-                            json.decode(message.message));
-                        videoDownloadController.duplicateVideoCheck(
-                            int.parse(videoData.nodeid.toString()));
-
-                        if (videoDownloadController.duplicateCount.value =
+                          json.decode(message.message),
+                        );
+                        print(message.message);
+                        await duplicateVideoCheck(
+                          int.parse(
+                            videoData.nodeid.toString(),
+                          ),
+                        );
+                        if (videoDownloadController.duplicateCount.value ==
                             false) {
-                          await downloadVideoFunction(videoData);
-                        } else {
+                          downloadVideoFunction(videoData);
+                        } else if (videoDownloadController
+                                .duplicateCount.value ==
+                            true) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Video has already been download'),
@@ -129,6 +137,18 @@ class _WebViewPageState extends State<WebViewPage>
                         print(message.message);
                         pdfViewController.pdfPath.value = message.message;
                         pdfViewController.openPDF();
+                      },
+                    ),
+                    JavascriptChannel(
+                      name: 'getProfiles',
+                      onMessageReceived: (JavascriptMessage message) {
+                        print(message.message);
+                      },
+                    ),
+                    JavascriptChannel(
+                      name: 'getSessionStatus',
+                      onMessageReceived: (JavascriptMessage message) {
+                        print(message.message);
                       },
                     ),
                   ],
@@ -209,10 +229,16 @@ class _WebViewPageState extends State<WebViewPage>
     );
   }
 
+  duplicateVideoCheck(int nodeId) async {
+    var count = 0;
+    count = await dbHelper.videoDownloadControl(nodeId);
+    if (count != 0) {
+      videoDownloadController.duplicateCount.value = true;
+    }
+  }
+
   downloadVideoFunction(VideoDownloaded videoDownloaded) async {
-    print(videoDownloaded);
     await videoDownloadController.downloadFile(videoDownloaded);
-    print(videoDownloaded.vidUrl);
   }
 
   SpeedDial buildSpeedTray() {
@@ -230,7 +256,7 @@ class _WebViewPageState extends State<WebViewPage>
           backgroundColor: Theme.of(context).backgroundColor,
           onTap: () {
             offlineVideosPageView.isOfflineVideoPageOpen.value = true;
-            Get.to(PostLoginOfflineMainPage());
+            Get.to(() => PostLoginOfflineMainPage());
           },
           label: 'Offline Videos'.tr,
           labelStyle:

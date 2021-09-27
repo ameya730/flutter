@@ -6,13 +6,20 @@ Color customHintColor = Colors.blue;
 Color textBoxBackgroundColor = Color(0xffEEEEEE);
 
 // Url Links
-String kloginapiurl = 'http://65.0.225.102/kyanlms_api/login';
+String kloginapiurl = 'http://lms.schoolnetindia.com/gujratlmsapi/login';
+// String kloginapiurl = 'http://65.0.225.102/kyanlms_api/login';
+
+// String webViewLoginIn =
+//     "https://gshala.schoolnetindia.com/Login/MainLoginSL?uname=";
 
 String webViewLoginIn =
     'https://lms.schoolnetindia.com/gujaratlms/Login/MainLoginSL?uname=';
 
 String videoDownloadURL =
-    'http://65.0.225.102/kyanlms_api/api/data/viddownload?vid_url=';
+    'http://lms.schoolnetindia.com/gujratlmsapi/api/data/viddownload?vid_url=';
+
+// String videoDownloadURL =
+// 'http://65.0.225.102/kyanlms_api/api/data/viddownload?vid_url=';
 
 String sendVideoDetailsUrl =
     'https://gshala.ecocentricbw.in/api/data/setvideostatistics';
