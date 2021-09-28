@@ -6,6 +6,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
+import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/2.5_offlinevideoview_controller.dart';
 import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/controllers/2.3_pdfview_controller.dart';
@@ -37,6 +38,7 @@ class _WebViewPageState extends State<WebViewPage>
   final OfflineVideosPageView offlineVideosPageView =
       Get.put(OfflineVideosPageView());
   final dbHelper = DatabaseProvider.db;
+  final LanguageController languageController = Get.put(LanguageController());
 
   Future<bool> _onWillPop(BuildContext context) async {
     print("onwillpop");
@@ -88,10 +90,12 @@ class _WebViewPageState extends State<WebViewPage>
                   _controllerCompleter.future
                       .then((value) => controller = value);
                   _controllerCompleter.complete(c);
+                  controller = c;
                 },
                 debuggingEnabled: true,
                 initialMediaPlaybackPolicy:
                     AutoMediaPlaybackPolicy.always_allow,
+                gestureNavigationEnabled: true,
                 javascriptChannels: Set.from(
                   [
                     JavascriptChannel(
@@ -125,6 +129,7 @@ class _WebViewPageState extends State<WebViewPage>
                       onMessageReceived: (JavascriptMessage message) async {
                         print('the value is');
                         print(message.message);
+                        controller.evaluateJavascript(message.message);
                         // orientationController.screenOrientation.value =
                         //     message.message as bool;
                         // changeScreenOrientation();
@@ -149,6 +154,17 @@ class _WebViewPageState extends State<WebViewPage>
                       name: 'getSessionStatus',
                       onMessageReceived: (JavascriptMessage message) {
                         print(message.message);
+                        controller.reload();
+                      },
+                    ),
+                    JavascriptChannel(
+                      name: 'changeLanguage',
+                      onMessageReceived: (JavascriptMessage message) {
+                        print('The language is ');
+                        print(message.message);
+                        languageController.webViewLanguage.value =
+                            message.message;
+                        languageController.changeLanguageWebView();
                       },
                     ),
                   ],
@@ -168,52 +184,47 @@ class _WebViewPageState extends State<WebViewPage>
               Obx(
                 () {
                   return videoDownloadController.isdownloading.value
-                      ? GestureDetector(
-                          onTap: () {
-                            videoDownloadController.isdownloading.value = false;
-                          },
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Card(
-                                  child: AlertDialog(
-                                    title: Obx(() {
-                                      return videoDownloadController
-                                              .isdownloading.value
-                                          ? Text('Downloading Video')
-                                          : Text('Download Complete');
-                                    }),
-                                    content: Text(
-                                      videoDownloadController.progressString
-                                          .toString(),
-                                    ),
-                                    actions: [
-                                      Obx(
-                                        () {
-                                          return videoDownloadController
-                                                  .downloadComplete.value
-                                              ? TextButton(
-                                                  onPressed: () {
-                                                    videoDownloadController
-                                                        .downloadComplete
-                                                        .value = false;
-                                                    videoDownloadController
-                                                        .isdownloading
-                                                        .value = false;
-                                                  },
-                                                  child: Text('Ok'),
-                                                )
-                                              : Container(
-                                                  width: 0,
-                                                  height: 0,
-                                                );
-                                        },
-                                      ),
-                                    ],
+                      ? Center(
+                          child: Column(
+                            children: [
+                              Card(
+                                child: AlertDialog(
+                                  title: Obx(() {
+                                    return videoDownloadController
+                                            .isdownloading.value
+                                        ? Text('Downloading Video')
+                                        : Text('Download Complete');
+                                  }),
+                                  content: Text(
+                                    videoDownloadController.progressString
+                                        .toString(),
                                   ),
+                                  actions: [
+                                    Obx(
+                                      () {
+                                        return videoDownloadController
+                                                .downloadComplete.value
+                                            ? TextButton(
+                                                onPressed: () {
+                                                  videoDownloadController
+                                                      .downloadComplete
+                                                      .value = false;
+                                                  videoDownloadController
+                                                      .isdownloading
+                                                      .value = false;
+                                                },
+                                                child: Text('Ok'),
+                                              )
+                                            : Container(
+                                                width: 0,
+                                                height: 0,
+                                              );
+                                      },
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         )
                       : Container(
@@ -234,6 +245,8 @@ class _WebViewPageState extends State<WebViewPage>
     count = await dbHelper.videoDownloadControl(nodeId);
     if (count != 0) {
       videoDownloadController.duplicateCount.value = true;
+    } else {
+      videoDownloadController.duplicateCount.value = false;
     }
   }
 
