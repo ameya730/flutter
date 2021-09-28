@@ -15,8 +15,8 @@ import 'package:gshala/database/video_db.dart';
 import 'package:gshala/models/3.0_videodownload_model.dart';
 import 'package:gshala/screens/1_homepage.dart';
 import 'package:gshala/screens/2.2_offlinemainpage.dart';
+import 'package:gshala/templates/custombutton.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:webview_flutter/platform_interface.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
 
@@ -167,6 +167,17 @@ class _WebViewPageState extends State<WebViewPage>
                         languageController.changeLanguageWebView();
                       },
                     ),
+                    JavascriptChannel(
+                      name: 'changeProfile',
+                      onMessageReceived: (JavascriptMessage message) {
+                        print('The profile is ');
+                        print(message.message);
+                        decryptAESCryptoJS(
+                          message.message,
+                          '0000000000000',
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -185,46 +196,64 @@ class _WebViewPageState extends State<WebViewPage>
                 () {
                   return videoDownloadController.isdownloading.value
                       ? Center(
-                          child: Column(
-                            children: [
-                              Card(
-                                child: AlertDialog(
-                                  title: Obx(() {
-                                    return videoDownloadController
-                                            .isdownloading.value
-                                        ? Text('Downloading Video')
-                                        : Text('Download Complete');
-                                  }),
-                                  content: Text(
-                                    videoDownloadController.progressString
-                                        .toString(),
-                                  ),
-                                  actions: [
-                                    Obx(
-                                      () {
-                                        return videoDownloadController
-                                                .downloadComplete.value
-                                            ? TextButton(
-                                                onPressed: () {
-                                                  videoDownloadController
-                                                      .downloadComplete
-                                                      .value = false;
-                                                  videoDownloadController
-                                                      .isdownloading
-                                                      .value = false;
-                                                },
-                                                child: Text('Ok'),
-                                              )
-                                            : Container(
-                                                width: 0,
-                                                height: 0,
-                                              );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            color: normalWhiteText,
+                            child: Obx(() {
+                              return videoDownloadController.isdownloading.value
+                                  ? Column(
+                                      children: [
+                                        Text(
+                                          'Downloading Video',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Container(
+                                          color: normalDarkText,
+                                          height: 20,
+                                          width: videoDownloadController
+                                              .progressPercentage.value,
+                                        ),
+                                        Obx(() {
+                                          return videoDownloadController
+                                                  .downloadComplete.value
+                                              ? CElevatedButton(
+                                                  buttonLabel: 'Ok',
+                                                  onPressed: () {
+                                                    videoDownloadController
+                                                        .isdownloading
+                                                        .value = false;
+                                                    videoDownloadController
+                                                        .downloadComplete
+                                                        .value = false;
+                                                  })
+                                              : CElevatedButton(
+                                                  buttonLabel:
+                                                      'Cancel Download',
+                                                  onPressed: () {
+                                                    videoDownloadController
+                                                        .isdownloading
+                                                        .value = false;
+                                                    videoDownloadController
+                                                        .downloadComplete
+                                                        .value = false;
+                                                    videoDownloadController
+                                                        .stopDownload();
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text(
+                                                            'Download cancelled'),
+                                                      ),
+                                                    );
+                                                  });
+                                        }),
+                                      ],
+                                    )
+                                  : Container();
+                            }),
                           ),
                         )
                       : Container(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
@@ -74,6 +75,7 @@ class LogInController extends GetxController {
         DateTime.now().toString(),
       );
     } else {
+      isLoginSuccessful.value = false;
       print(response.statusCode);
       print(response.reasonPhrase);
     }

@@ -21,6 +21,7 @@ class VideoDownloadController extends GetxController {
   final messageReceived = false.obs;
   GetStorage box = new GetStorage();
   final LogInController logInController = Get.put(LogInController());
+  CancelToken cancelToken = new CancelToken();
   Dio dio = Dio();
 
   Future<void> downloadFile(VideoDownloaded videoDetails) async {
@@ -68,6 +69,7 @@ class VideoDownloadController extends GetxController {
 
       // Download the video
       await dio.download(imgUrl, "${appDir.path}/videos/$videoName",
+          cancelToken: cancelToken,
           options: Options(headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             // "Access-Control-Allow-Origin": "*",
@@ -92,5 +94,9 @@ class VideoDownloadController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  stopDownload() {
+    cancelToken.cancel();
   }
 }
