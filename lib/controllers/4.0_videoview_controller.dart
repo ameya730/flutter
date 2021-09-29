@@ -84,6 +84,7 @@ class PlayVideoController extends GetxController {
         showControlsOnInitialize: true,
         showOptions: true,
         showControls: true,
+        fullScreenByDefault: true,
         placeholder: Container(
           color: Colors.black87,
         ),
