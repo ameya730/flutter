@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:get_storage/get_storage.dart';
+import 'package:gshala/models/1.1_userprofiles_sqlite_model.dart';
 import 'package:gshala/models/2.0_videodetails_sqflite_model.dart';
 import 'package:gshala/models/2.1_videodownload_sqflite_model.dart';
 import 'package:path/path.dart';
@@ -8,6 +10,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseProvider {
   static const String VIDEO_DOWNLOAD = "videoDownload";
   static const String VIDEO_DETAILS = "videoDetails";
+  static const String USER_PROFILES = "userProfiles";
   static const String COLUMN_ID = "id";
   static const String COLUMN_USER_ID = "UserId";
   static const String COLUMN_LESSONPLANID = "LessonPlanId"; //always set to 0
@@ -35,11 +38,13 @@ class DatabaseProvider {
   static const String COLUMN_CHAPTER = "chapter";
   static const String COLUMN_CLASS = "Class";
   static const String COLUMN_SUBJECT_NAME = "SubjectName";
+  static const String COLUMN_FIRST_NAME = "FirstName";
 
   static final DatabaseProvider db = DatabaseProvider._init();
   static Database? _database;
   DatabaseProvider._init();
 
+  //Call Database
   Future<Database> get database async {
     print('database getter called');
     if (_database != null) {
@@ -56,6 +61,17 @@ class DatabaseProvider {
       version: 1,
       onCreate: (Database database, int version) async {
         print('Creating new database for video details');
+
+        //Create user profiles database
+        await database.execute(
+          "CREATE TABLE $USER_PROFILES ("
+          "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$COLUMN_USER_ID INT NOT NULL,"
+          "$COLUMN_FIRST_NAME STRING NOT NULL"
+          ")",
+        );
+
+        //Create video download database
         await database.execute(
           "CREATE TABLE $VIDEO_DOWNLOAD ("
           "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -74,6 +90,7 @@ class DatabaseProvider {
           ")",
         );
 
+        //Create video statistics database
         await database.execute(
           "CREATE TABLE $VIDEO_DETAILS ("
           "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -96,6 +113,16 @@ class DatabaseProvider {
         );
       },
     );
+  }
+
+  //Check if user profiles are present in system or not. If not then insert them in the database
+  Future<int> insertUserProfiles(UserProfiles userProfiles) async {
+    final db = await database;
+    int count = await db.insert(
+      USER_PROFILES,
+      userProfiles.toJson(),
+    );
+    return count;
   }
 
   //Insert new video in the video download table
@@ -133,7 +160,6 @@ class DatabaseProvider {
 
   Future getAllVideos() async {
     final db = await database;
-    print('Is this happening multiple times');
     List<Map<String, dynamic>> vList = await db.query(
       VIDEO_DOWNLOAD,
       where: '$COLUMN_VIDEO_DELETED = ?',
@@ -146,11 +172,14 @@ class DatabaseProvider {
     return vList.map((e) => VideoDownload.fromMap(e)).toList();
   }
 
+  //Function for duplicate check while downloading a video. The same video can be downloaded if the user is differen
   Future<int> videoDownloadControl(int nodeId) async {
     final db = await database;
-    print('The nodeId is $nodeId');
+    final box = GetStorage();
+
     var count = await db.query(VIDEO_DOWNLOAD,
-        where: '$COLUMN_VIDEO_ID_DOWNLOAD = ?', whereArgs: [nodeId]);
+        where: '$COLUMN_VIDEO_ID_DOWNLOAD = ? and $COLUMN_USER_ID = ?',
+        whereArgs: [nodeId, box.read('userId')]);
     return count.length;
   }
 
@@ -196,34 +225,43 @@ class DatabaseProvider {
     );
   }
 
+  //Delete the video from the VideoDownloaded Database
   Future<int> updateDeleteVideoFlat(String videoName) async {
     final db = await database;
-    print('Video deleted');
-    print(videoName);
-    int count = await db.rawUpdate(
-      'UPDATE $VIDEO_DOWNLOAD SET $COLUMN_VIDEO_DELETED = ? WHERE $COLUMN_VIDEO_NAME = ?',
-      [1, videoName],
-    );
-    print(count);
-    return count;
-  }
+    final box = new GetStorage();
 
-  //Close database
-  Future closeDB() async {
-    final db = await database;
-    db.close();
+    int count = await db.rawUpdate(
+      'UPDATE $VIDEO_DOWNLOAD SET $COLUMN_VIDEO_DELETED = ? WHERE $COLUMN_VIDEO_NAME = ? and $COLUMN_USER_ID = ?',
+      [
+        1,
+        videoName,
+        box.read('userId'),
+      ],
+    );
+
+    print(count);
+
+    int counter = await db.delete(VIDEO_DOWNLOAD,
+        where: '$COLUMN_VIDEO_NAME =? and $COLUMN_USER_ID = ?',
+        whereArgs: [videoName, box.read('userId')]);
+
+    return counter;
   }
 
   // If file has been deleted from the database and details of usage have been uploaded on server then the file can be deleted from local path
   Future delete(String videoName) async {
+    final box = GetStorage();
+    int userId = int.parse(
+      box.read('userId'),
+    );
     final db = await database;
     Directory appDir = await getApplicationDocumentsDirectory();
-    File file = File(appDir.path + '/videos/' + videoName);
+    File file = File(appDir.path + '/videos/$userId/' + videoName);
     file.exists().then((value) {
       file.delete();
     });
     return await db.delete(VIDEO_DOWNLOAD,
-        where: "$COLUMN_VIDEO_DELETED = ?,$COLUMN_VIDEO_DATA_UPLOADED=?",
+        where: "$COLUMN_VIDEO_DELETED = ? and $COLUMN_VIDEO_DATA_UPLOADED=?",
         whereArgs: [1, 1]);
   }
 }

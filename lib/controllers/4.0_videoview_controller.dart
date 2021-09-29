@@ -52,6 +52,9 @@ class PlayVideoController extends GetxController {
 
   // Initialize the player
   Future initializePlayer() async {
+    int userId = int.parse(
+      box.read('userId'),
+    );
     _stopWatchTimer.onExecute.add(StopWatchExecute.reset);
     List<VideoDownload> vidDetails = await dbHelper.getSingleVideo(
       box.read('videoName'),
@@ -61,7 +64,7 @@ class PlayVideoController extends GetxController {
     vName.value = box.read('videoName');
     currentStartPosition.value = vidDetails[0].videoLastViewPosition!;
     Directory appDir = await getApplicationDocumentsDirectory();
-    String appDirPath = appDir.path + '/videos/' + vName.value;
+    String appDirPath = appDir.path + '/videos/$userId/' + vName.value;
     videoPlayerController = VideoPlayerController.file(File(appDirPath));
     await Future.wait([
       videoPlayerController.initialize().then((value) {

@@ -21,10 +21,17 @@ class VideoDownloadController extends GetxController {
   final messageReceived = false.obs;
   GetStorage box = new GetStorage();
   final LogInController logInController = Get.put(LogInController());
-  CancelToken cancelToken = new CancelToken();
   Dio dio = Dio();
+  CancelToken cancelToken = new CancelToken();
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   Future<void> downloadFile(VideoDownloaded videoDetails) async {
+    isdownloading.value = true;
+
     try {
       //Revalidate access token and get a new one if required
       if (box.read('accessTokenTimeStamp') != null) {
@@ -37,7 +44,6 @@ class VideoDownloadController extends GetxController {
           await logInController.login();
         }
       }
-
       //Get video URL
       videoURL.value = videoDetails.vidUrl.toString();
       //Get android download directory
@@ -47,10 +53,10 @@ class VideoDownloadController extends GetxController {
       print(imgUrl);
       String videoName = imgUrl.split('/').last;
       final videoDownload = VideoDownload(
-        userId: 0,
+        userId: int.parse(box.read('userId')),
         resourceNodeId: 0,
-        videoName: videoName,
         videoLastViewPosition: 0,
+        videoName: videoName,
         videoDeleted: 0,
         videoId: videoDetails.nodeid,
         videoURL: videoDetails.vidUrl,
@@ -65,11 +71,19 @@ class VideoDownloadController extends GetxController {
       String autho = 'Bearer ' + box.read('accessToken');
       print('The authorization token is');
       print(autho);
-      isdownloading.value = true;
+      int userId = int.parse(
+        box.read('userId'),
+      );
+
+      //Reinitialize cancel token
+      if (cancelToken.isCancelled) {
+        cancelToken = new CancelToken();
+      }
 
       // Download the video
-      await dio.download(imgUrl, "${appDir.path}/videos/$videoName",
+      await dio.download(imgUrl, "${appDir.path}/videos/$userId/$videoName",
           cancelToken: cancelToken,
+          deleteOnError: true,
           options: Options(headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             // "Access-Control-Allow-Origin": "*",
@@ -83,7 +97,7 @@ class VideoDownloadController extends GetxController {
         progressPercentage.value = 0.0;
       });
       await VideoThumbnail.thumbnailFile(
-        video: '${appDir.path}/videos/$videoName',
+        video: '${appDir.path}/videos/$userId/$videoName',
         imageFormat: ImageFormat.JPEG,
         maxWidth: 0,
         quality: 50,
@@ -92,11 +106,13 @@ class VideoDownloadController extends GetxController {
       await DatabaseProvider.db.insertNewVideo(videoDownload);
       downloadComplete.value = true;
     } catch (e) {
+      downloadComplete.value = false;
+      isdownloading.value = false;
       print(e);
     }
   }
 
-  stopDownload() {
+  cancelDownload() {
     cancelToken.cancel();
   }
 }
