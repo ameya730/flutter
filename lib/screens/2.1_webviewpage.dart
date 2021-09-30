@@ -173,8 +173,7 @@ class _WebViewPageState extends State<WebViewPage>
                       name: 'changeProfile',
                       onMessageReceived: (JavascriptMessage message) {
                         print('The user profile is ');
-                        print(message.message);
-                        box.write('userId', '98702');
+                        box.write('userId', message.message);
                         print(box.read('userId'));
                       },
                     ),

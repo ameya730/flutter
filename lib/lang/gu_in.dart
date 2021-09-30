@@ -29,4 +29,5 @@ const Map<String, String> guIn = {
   'No videos have been downloaded for offline viewing':
       'Offlineફલાઇન જોવા માટે કોઈ વિડિઓ ડાઉનલોડ કરવામાં આવી નથી',
   'Return': 'પરત',
+  'Filter by Subject': 'વિષય દ્વારા ફિલ્ટર કરો',
 };

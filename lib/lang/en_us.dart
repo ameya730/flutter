@@ -30,4 +30,5 @@ const Map<String, String> enUs = {
   'No videos have been downloaded for offline viewing':
       'No videos have been downloaded for offline viewing',
   'Return': 'Return',
+  'Filter by Subject': 'Filter by Subject',
 };

@@ -16,6 +16,11 @@ class VideoListController extends GetxController {
   final deleteVideo = false.obs;
   final thumbNailList = [].obs;
   final box = GetStorage();
+  final filteredVideoList = <VideoDownload>[].obs;
+  final subjectsList = [].obs;
+  final filteredSubject = ''.obs;
+  final isFiltered = false.obs;
+  final videoListObtained = false.obs;
 
   @override
   void onInit() {
@@ -26,6 +31,7 @@ class VideoListController extends GetxController {
   @override
   void onClose() {
     videoList.clear();
+    videoListObtained.value = false;
     super.onClose();
   }
 
@@ -57,25 +63,56 @@ class VideoListController extends GetxController {
 
   Future getVideosList() async {
     Directory appDir = await getApplicationDocumentsDirectory();
-    final videoDetails = await DatabaseProvider.db.getAllVideos();
+    if (videoListObtained.value == false) {
+      final videoDetails = await DatabaseProvider.db.getAllVideos();
+      videoList.value = videoDetails;
+      videoListObtained.value = true;
+    }
+
     int userId = int.parse(
       box.read('userId'),
     );
+    if (subjectsList.isEmpty) {
+      subjectsList.add('All');
+    }
     try {
-      videoList.value = videoDetails;
       if (videoList.length > 0) {
+        if (filteredSubject.value == '') {
+          videoList.forEach((element) {
+            String thumbName =
+                element.videoName.toString().split('.').first + '.jpg';
+            String thumbPath = appDir.path + '/videos/$userId/' + thumbName;
+            thumbNailList.add(thumbPath);
+            subjectsList.add(element.subjectName);
+          });
+          filteredVideoList.addAll(videoList);
+        } else if (filteredSubject.value == 'All') {
+          filteredVideoList.clear();
+          videoList.forEach((element) {
+            String thumbName =
+                element.videoName.toString().split('.').first + '.jpg';
+            String thumbPath = appDir.path + '/videos/$userId/' + thumbName;
+            thumbNailList.add(thumbPath);
+          });
+          filteredVideoList.addAll(videoList);
+        } else {
+          filteredVideoList.clear();
+          videoList.forEach((element) {
+            if (element.subjectName == filteredSubject.value) {
+              filteredVideoList.add(element);
+              String thumbName =
+                  element.videoName.toString().split('.').first + '.jpg';
+              String thumbPath = appDir.path + '/videos/$userId/' + thumbName;
+              thumbNailList.add(thumbPath);
+            }
+          });
+        }
         listObtained.value = true;
       } else {
         listObtained.value = false;
       }
-      videoList.forEach((element) {
-        String thumbName =
-            element.videoName.toString().split('.').first + '.jpg';
-        String thumbPath = appDir.path + '/videos/$userId/' + thumbName;
-        print(thumbPath);
-        thumbNailList.add(thumbPath);
-      });
-      return videoList;
+
+      return filteredVideoList;
     } catch (e) {
       print(e);
     }

@@ -160,10 +160,11 @@ class DatabaseProvider {
 
   Future getAllVideos() async {
     final db = await database;
+    final box = new GetStorage();
     List<Map<String, dynamic>> vList = await db.query(
       VIDEO_DOWNLOAD,
-      where: '$COLUMN_VIDEO_DELETED = ?',
-      whereArgs: [0],
+      where: '$COLUMN_VIDEO_DELETED = ? and $COLUMN_USER_ID = ?',
+      whereArgs: [0, int.parse(box.read('userId'))],
     );
     print(vList.length);
     vList.forEach((element) {

@@ -9,6 +9,7 @@ import 'package:gshala/controllers/4.0_videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:gshala/getxnetworkmanager.dart';
 import 'package:gshala/screens/1_homepage.dart';
+import 'package:gshala/templates/customdropdown.dart';
 
 class PostLoginOfflineMainPage extends StatelessWidget {
   final VideoListController videoListController =
@@ -103,13 +104,46 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                   TopWidget(),
                   Obx(() {
                     return videoListController.listObtained.value
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                              top: 16.0,
+                              bottom: 8.0,
+                            ),
+                            child: CustomDropDownField(
+                              hinttext: 'Filter by Subject'.tr,
+                              dropDownValue: videoListController
+                                          .filteredSubject.value !=
+                                      ''
+                                  ? videoListController.filteredSubject.value
+                                  : null,
+                              dropList: videoListController.subjectsList,
+                              onChanged: (value) async {
+                                videoListController.filteredSubject.value =
+                                    value;
+                                await videoListController.getVideosList();
+                              },
+                            ),
+                          )
+                        : Container(
+                            height: 0,
+                            width: 0,
+                          );
+                  }),
+                  Obx(() {
+                    return videoListController.listObtained.value
                         ? ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            itemCount: videoListController.videoList.length,
+                            itemCount:
+                                videoListController.filteredVideoList.length,
                             itemBuilder: (context, i) {
                               return Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.only(
+                                  left: 16.0,
+                                  right: 16.0,
+                                  top: 8.0,
+                                  bottom: 8.0,
+                                ),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -150,17 +184,19 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                       ),
                                       ListTile(
                                         title: Text(
-                                          videoListController.videoList[i].topic
+                                          videoListController
+                                              .filteredVideoList[i].topic
                                               .toString(),
                                         ),
                                         subtitle: Text(videoListController
-                                            .videoList[i].subjectName
+                                            .filteredVideoList[i].subjectName
                                             .toString()),
                                         trailing: IconButton(
                                             onPressed: () async {
                                               String videoNameToDelete =
                                                   videoListController
-                                                      .videoList[i].videoName
+                                                      .filteredVideoList[i]
+                                                      .videoName
                                                       .toString()
                                                       .split('.')
                                                       .first;
@@ -174,7 +210,8 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                               await dbHelper
                                                   .updateDeleteVideoFlat(
                                                 videoListController
-                                                    .videoList[i].videoName
+                                                    .filteredVideoList[i]
+                                                    .videoName
                                                     .toString(),
                                               );
                                               print('test1');
