@@ -131,100 +131,105 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                   }),
                   Obx(() {
                     return videoListController.listObtained.value
-                        ? ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount:
-                                videoListController.filteredVideoList.length,
-                            itemBuilder: (context, i) {
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 16.0,
-                                  right: 16.0,
-                                  top: 8.0,
-                                  bottom: 8.0,
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10),
+                        ? Container(
+                            height: MediaQuery.of(context).size.height,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: videoListController
+                                    .filteredVideoList.length,
+                                itemBuilder: (context, i) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 16.0,
+                                      right: 16.0,
+                                      top: 8.0,
+                                      bottom: 8.0,
                                     ),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      GestureDetector(
-                                        child: Image(
-                                          image: FileImage(
-                                            File(
-                                              videoListController
-                                                  .thumbNailList[i],
-                                            ),
-                                          ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10),
                                         ),
-                                        onTap: () {
-                                          box.write('i', i);
-                                          print(box.read('i'));
-                                          box.write(
-                                              'videoName',
-                                              videoListController
-                                                  .videoList[i].videoName);
-                                          box.write(
-                                              'videoLastPosition',
-                                              videoListController.videoList[i]
-                                                  .videoLastViewPosition);
-                                          PlayVideoController
-                                              playVideoController =
-                                              Get.put(PlayVideoController());
-                                          playVideoController
-                                              .initializePlayer();
-                                          Get.toNamed('/viewvideopage');
-                                        },
                                       ),
-                                      ListTile(
-                                        title: Text(
-                                          videoListController
-                                              .filteredVideoList[i].topic
-                                              .toString(),
-                                        ),
-                                        subtitle: Text(videoListController
-                                            .filteredVideoList[i].subjectName
-                                            .toString()),
-                                        trailing: IconButton(
-                                            onPressed: () async {
-                                              String videoNameToDelete =
+                                      child: Column(
+                                        children: [
+                                          GestureDetector(
+                                            child: Image(
+                                              image: FileImage(
+                                                File(
                                                   videoListController
-                                                      .filteredVideoList[i]
-                                                      .videoName
-                                                      .toString()
-                                                      .split('.')
-                                                      .first;
-                                              print(videoNameToDelete);
-                                              await videoListController
-                                                  .deleteVideoFromFile(
-                                                      videoNameToDelete);
-                                              await videoListController
-                                                  .deleteThumbNailFromFile(
-                                                      videoNameToDelete);
-                                              await dbHelper
-                                                  .updateDeleteVideoFlat(
-                                                videoListController
-                                                    .filteredVideoList[i]
-                                                    .videoName
-                                                    .toString(),
-                                              );
-                                              print('test1');
-                                              await videoListController
-                                                  .getVideosList();
+                                                      .thumbNailList[i],
+                                                ),
+                                              ),
+                                            ),
+                                            onTap: () {
+                                              box.write('i', i);
+                                              print(box.read('i'));
+                                              box.write(
+                                                  'videoName',
+                                                  videoListController
+                                                      .videoList[i].videoName);
+                                              box.write(
+                                                  'videoLastPosition',
+                                                  videoListController
+                                                      .videoList[i]
+                                                      .videoLastViewPosition);
+                                              PlayVideoController
+                                                  playVideoController = Get.put(
+                                                      PlayVideoController());
+                                              playVideoController
+                                                  .initializePlayer();
+                                              Get.toNamed('/viewvideopage');
                                             },
-                                            icon: Icon(Icons.delete)),
+                                          ),
+                                          ListTile(
+                                            title: Text(
+                                              videoListController
+                                                  .filteredVideoList[i].topic
+                                                  .toString(),
+                                            ),
+                                            subtitle: Text(videoListController
+                                                .filteredVideoList[i]
+                                                .subjectName
+                                                .toString()),
+                                            trailing: IconButton(
+                                                onPressed: () async {
+                                                  String videoNameToDelete =
+                                                      videoListController
+                                                          .filteredVideoList[i]
+                                                          .videoName
+                                                          .toString()
+                                                          .split('.')
+                                                          .first;
+                                                  print(videoNameToDelete);
+                                                  await videoListController
+                                                      .deleteVideoFromFile(
+                                                          videoNameToDelete);
+                                                  await videoListController
+                                                      .deleteThumbNailFromFile(
+                                                          videoNameToDelete);
+                                                  await dbHelper
+                                                      .updateDeleteVideoFlat(
+                                                    videoListController
+                                                        .filteredVideoList[i]
+                                                        .videoName
+                                                        .toString(),
+                                                  );
+                                                  print('test1');
+                                                  await videoListController
+                                                      .getVideosList();
+                                                },
+                                                icon: Icon(Icons.delete)),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            })
+                                    ),
+                                  );
+                                }),
+                          )
                         : Center(
                             child: Column(
                               children: [
