@@ -9,6 +9,7 @@ import 'package:gshala/controllers/4.0_videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:gshala/getxnetworkmanager.dart';
 import 'package:gshala/screens/1_homepage.dart';
+import 'package:gshala/templates/custombutton.dart';
 import 'package:gshala/templates/customdropdown.dart';
 
 class PostLoginOfflineMainPage extends StatelessWidget {
@@ -22,7 +23,34 @@ class PostLoginOfflineMainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: WillPopScope(
-        onWillPop: () async => false,
+        onWillPop: () async {
+          await showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Exit App'.tr),
+                  content: Text(
+                    'HomePageGoBackContent'.tr,
+                    textAlign: TextAlign.justify,
+                  ),
+                  actions: [
+                    CElevatedButton(
+                        buttonLabel: 'Yes',
+                        onPressed: () {
+                          exit(0);
+                        }),
+                    CElevatedButton(
+                        buttonLabel: 'No',
+                        onPressed: () {
+                          // Future.value(false);
+                          Navigator.pop(context, false);
+                        }),
+                  ],
+                );
+              });
+          throw Exception('Issue');
+        },
         child: Scaffold(
           floatingActionButton: Obx(() {
             return getXNetworkManager.connectionPresent.value
@@ -131,8 +159,8 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                   }),
                   Obx(() {
                     return videoListController.listObtained.value
-                        ? Container(
-                            height: MediaQuery.of(context).size.height,
+                        ? Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
                             child: ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),

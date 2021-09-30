@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -26,321 +27,354 @@ class HomePage extends StatelessWidget {
           FocusScope.of(context).unfocus();
           //FocusScope.of(context).requestFocus(new FocusNode());
         },
-        child: Scaffold(
-          key: _homePageKey,
-          backgroundColor: Theme.of(context).backgroundColor,
-          resizeToAvoidBottomInset: false,
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Image.asset(
-                    'assets/gshalaicon.png',
-                    fit: BoxFit.scaleDown,
-                    height: 80,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 24.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      GestureDetector(
-                        child: Text(
-                          'English',
-                          style: TextStyle(
-                            fontSize:
-                                lControl.selectedLanguage.value == 'English'
-                                    ? 16
-                                    : 10,
-                            fontWeight:
-                                lControl.selectedLanguage.value == 'English'
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                            color: Colors.white,
-                          ),
-                        ),
-                        onTap: () {
-                          lControl.selectedLanguage.value = 'English';
-                          lControl.changeLangauge();
-                        },
-                      ),
-                      SizedBox(width: 2),
-                      Text(
-                        '|',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(width: 2),
-                      GestureDetector(
-                        child: Text(
-                          'ગુજરાતી',
-                          style: TextStyle(
-                            fontSize:
-                                lControl.selectedLanguage.value == 'ગુજરાતી'
-                                    ? 16
-                                    : 10,
-                            fontWeight:
-                                lControl.selectedLanguage.value == 'ગુજરાતી'
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                            color: Colors.white,
-                          ),
-                        ),
-                        onTap: () {
-                          lControl.selectedLanguage.value = 'ગુજરાતી';
-                          lControl.changeLangauge();
-                        },
-                      ),
-                      SizedBox(width: 2),
+        child: WillPopScope(
+          onWillPop: () async {
+            await showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Exit App'.tr),
+                    content: Text(
+                      'Do you want to exit the app ?'.tr,
+                      textAlign: TextAlign.justify,
+                    ),
+                    actions: [
+                      CElevatedButton(
+                          buttonLabel: 'Yes'.tr,
+                          onPressed: () {
+                            exit(0);
+                          }),
+                      CElevatedButton(
+                          buttonLabel: 'No'.tr,
+                          onPressed: () {
+                            // Future.value(false);
+                            Navigator.pop(context, false);
+                          }),
                     ],
+                  );
+                });
+            throw Exception('Issue');
+          },
+          child: Scaffold(
+            key: _homePageKey,
+            backgroundColor: Theme.of(context).backgroundColor,
+            resizeToAvoidBottomInset: false,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Image.asset(
+                      'assets/gshalaicon.png',
+                      fit: BoxFit.scaleDown,
+                      height: 80,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text(
-                                    'Welcome to G-Shala'.tr,
-                                    textScaleFactor: 2,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Text(
-                                  'Learning Management System of Gujarat'.tr,
-                                  textScaleFactor: 1,
-                                ),
-                              ],
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        GestureDetector(
+                          child: Text(
+                            'English',
+                            style: TextStyle(
+                              fontSize:
+                                  lControl.selectedLanguage.value == 'English'
+                                      ? 18
+                                      : 14,
+                              fontWeight:
+                                  lControl.selectedLanguage.value == 'English'
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                              color: Colors.white,
                             ),
                           ),
-                          Container(
-                            child: Form(
-                              key: loginFormKey,
+                          onTap: () {
+                            lControl.selectedLanguage.value = 'English';
+                            lControl.changeLangauge();
+                          },
+                        ),
+                        SizedBox(width: 2),
+                        Text(
+                          '|',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(width: 2),
+                        GestureDetector(
+                          child: Text(
+                            'ગુજરાતી',
+                            style: TextStyle(
+                              fontSize:
+                                  lControl.selectedLanguage.value == 'ગુજરાતી'
+                                      ? 18
+                                      : 14,
+                              fontWeight:
+                                  lControl.selectedLanguage.value == 'ગુજરાતી'
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                              color: Colors.white,
+                            ),
+                          ),
+                          onTap: () {
+                            lControl.selectedLanguage.value = 'ગુજરાતી';
+                            lControl.changeLangauge();
+                          },
+                        ),
+                        SizedBox(width: 2),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
                               child: Column(
                                 children: [
-                                  CustomTextField(
-                                    cLabelText: 'Enter ID/Mobile Number'.tr,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Please input ID/Mobile number'
-                                            .tr;
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (String value) {
-                                      logInController.updateUserName(value);
-                                      // logInController.userControl.value = value;
-                                    },
-                                    onSaved: (value) {
-                                      logInController.userId.value = value;
-                                    },
-                                  ),
-                                  CustomPasswordTextField(
-                                    onTTap: () {
-                                      FocusScope.of(context).unfocus();
-                                    },
-                                    cLabelText: 'Enter Password'.tr,
-                                    icon: IconButton(
-                                      onPressed: () {
-                                        passwordController.togglePassword();
-                                      },
-                                      icon: Obx(
-                                        () {
-                                          return passwordController
-                                                  .showPassword.value
-                                              ? Icon(Icons.visibility_off)
-                                              : Icon(Icons.visibility);
-                                        },
-                                      ),
-                                    ),
-                                    obscureText:
-                                        passwordController.showPassword.value,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Please input password'.tr;
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      logInController.password.value = value;
-                                    },
-                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
-                                    child: CustomDropDownField(
-                                      hinttext: 'Select Role'.tr,
-                                      dropList: dropList,
-                                      dropDownValue:
-                                          logInController.dropValue.value != ''
-                                              ? logInController
-                                                  .dropValue.value.tr
-                                              : null,
-                                      onChanged: (value) {
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                      },
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Please select role'.tr;
-                                        }
-                                        if (logInController
-                                                    .userControl.value.length ==
-                                                18 &&
-                                            value != 'Student') {
-                                          return 'Please select Student role';
-                                        }
-                                        if (logInController
-                                                    .userControl.value.length ==
-                                                8 &&
-                                            value != 'Teacher') {
-                                          return 'Please select Teacher role';
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (value) {
-                                        if (value == 'વિદ્યાર્થી' ||
-                                            value == 'Student') {
-                                          logInController.loginType.value =
-                                              'student';
-                                        } else if (value == 'શિક્ષક' ||
-                                            value == 'Teacher') {
-                                          logInController.loginType.value =
-                                              'teacher';
-                                        }
-                                      },
+                                    child: Text(
+                                      'Welcome to G-Shala'.tr,
+                                      textScaleFactor: 2,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
+                                  ),
+                                  Text(
+                                    'Learning Management System of Gujarat'.tr,
+                                    textScaleFactor: 1,
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 16.0, left: 16.0, right: 16.0),
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: CElevatedButton(
-                                    buttonLabel: 'Login'.tr,
-                                    icon: Icons.arrow_forward,
-                                    avatorColor: Colors.white,
-                                    onPressed: () {
-                                      if (validateAndSave()) {
-                                        box.write('userName',
-                                            logInController.userId.value);
-                                        box.write('uType',
-                                            logInController.loginType.value);
-                                        box.write('password',
-                                            logInController.password.value);
-                                        logInController.login().then(
-                                          (value) {
-                                            if (logInController
-                                                    .isLoginSuccessful.value ==
-                                                true) {
-                                              Get.offAndToNamed('/webviewpage');
-                                            } else {
-                                              box.remove('userName');
-                                              box.remove('uType');
-                                              box.remove('password');
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Login failed. Incorrect User / Password'),
-                                                ),
-                                              );
-                                            }
+                            Container(
+                              child: Form(
+                                key: loginFormKey,
+                                child: Column(
+                                  children: [
+                                    CustomTextField(
+                                      cLabelText: 'Enter ID/Mobile Number'.tr,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Please input ID/Mobile number'
+                                              .tr;
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (String value) {
+                                        logInController.updateUserName(value);
+                                        // logInController.userControl.value = value;
+                                      },
+                                      onSaved: (value) {
+                                        logInController.userId.value = value;
+                                      },
+                                    ),
+                                    CustomPasswordTextField(
+                                      onTTap: () {
+                                        FocusScope.of(context).unfocus();
+                                      },
+                                      cLabelText: 'Enter Password'.tr,
+                                      icon: IconButton(
+                                        onPressed: () {
+                                          passwordController.togglePassword();
+                                        },
+                                        icon: Obx(
+                                          () {
+                                            return passwordController
+                                                    .showPassword.value
+                                                ? Icon(Icons.visibility_off)
+                                                : Icon(Icons.visibility);
                                           },
-                                        );
-                                      }
-                                    },
-                                  ),
+                                        ),
+                                      ),
+                                      obscureText:
+                                          passwordController.showPassword.value,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Please input password'.tr;
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) {
+                                        logInController.password.value = value;
+                                      },
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: CustomDropDownField(
+                                        hinttext: 'Select Role'.tr,
+                                        dropList: dropList,
+                                        dropDownValue: logInController
+                                                    .dropValue.value !=
+                                                ''
+                                            ? logInController.dropValue.value.tr
+                                            : null,
+                                        onChanged: (value) {
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                        },
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'Please select role'.tr;
+                                          }
+                                          if (logInController.userControl.value
+                                                      .length ==
+                                                  18 &&
+                                              value != 'Student') {
+                                            return 'Please select Student role';
+                                          }
+                                          if (logInController.userControl.value
+                                                      .length ==
+                                                  8 &&
+                                              value != 'Teacher') {
+                                            return 'Please select Teacher role';
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (value) {
+                                          if (value == 'વિદ્યાર્થી' ||
+                                              value == 'Student') {
+                                            logInController.loginType.value =
+                                                'student';
+                                          } else if (value == 'શિક્ષક' ||
+                                              value == 'Teacher') {
+                                            logInController.loginType.value =
+                                                'teacher';
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 16.0,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 16.0, left: 16.0, right: 16.0),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: CElevatedButton(
+                                      buttonLabel: 'Login'.tr,
+                                      icon: Icons.arrow_forward,
+                                      avatorColor: Colors.white,
+                                      onPressed: () {
+                                        if (validateAndSave()) {
+                                          box.write('userName',
+                                              logInController.userId.value);
+                                          box.write('uType',
+                                              logInController.loginType.value);
+                                          box.write('password',
+                                              logInController.password.value);
+                                          logInController.login().then(
+                                            (value) {
+                                              if (logInController
+                                                      .isLoginSuccessful
+                                                      .value ==
+                                                  true) {
+                                                Get.offAndToNamed(
+                                                    '/webviewpage');
+                                              } else {
+                                                box.remove('userName');
+                                                box.remove('uType');
+                                                box.remove('password');
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        'Login failed. Incorrect User / Password'),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
                                 ),
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: TextButton(
-                                    onPressed: () {
-                                      Get.offAndToNamed('/forgotpassword');
-                                    },
-                                    child: Text(
-                                      'Forgot Password?'.tr,
-                                      style: TextStyle(
-                                        fontSize: 10,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 16.0,
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: TextButton(
+                                      onPressed: () {
+                                        Get.offAndToNamed('/forgotpassword');
+                                      },
+                                      child: Text(
+                                        'Forgot Password?'.tr,
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 16.0,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  'Dont have an account yet ?'.tr,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                CElevatedButton(
-                                  buttonLabel: 'Sign Up'.tr,
-                                  buttonColor: 0xffFBAA00,
-                                  onPressed: () {
-                                    Get.offAndToNamed('/signuppage');
-                                  },
-                                ),
                               ],
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 16.0,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                    'Dont have an account yet ?'.tr,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  CElevatedButton(
+                                    buttonLabel: 'Sign Up'.tr,
+                                    buttonColor: 0xffFBAA00,
+                                    onPressed: () {
+                                      Get.offAndToNamed('/signuppage');
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 8.0),
-                //   child: SvgPicture.asset('assets/logo-ssa.svg'),
-                // ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: Container(
-                    height: 100,
-                    child: Image.asset(
-                      'assets/getlogo.png',
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 8.0),
+                  //   child: SvgPicture.asset('assets/logo-ssa.svg'),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                    child: Container(
+                      height: 100,
+                      child: Image.asset(
+                        'assets/getlogo.png',
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

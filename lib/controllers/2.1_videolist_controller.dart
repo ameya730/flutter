@@ -77,13 +77,17 @@ class VideoListController extends GetxController {
     }
     try {
       if (videoList.length > 0) {
+        videoList.forEach((element) {
+          subjectsList.add(element.subjectName);
+        });
+        subjectsList.value = subjectsList.toSet().toList();
+        print(subjectsList);
         if (filteredSubject.value == '') {
           videoList.forEach((element) {
             String thumbName =
                 element.videoName.toString().split('.').first + '.jpg';
             String thumbPath = appDir.path + '/videos/$userId/' + thumbName;
             thumbNailList.add(thumbPath);
-            subjectsList.add(element.subjectName);
           });
           filteredVideoList.addAll(videoList);
         } else if (filteredSubject.value == 'All') {

@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:gshala/apis/sendvideodetails_api.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
+import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/controllers/2.5_offlinevideoview_controller.dart';
 import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/controllers/2.3_pdfview_controller.dart';
@@ -42,19 +44,50 @@ class _WebViewPageState extends State<WebViewPage>
 
   Future<bool> _onWillPop(BuildContext context) async {
     print("onwillpop");
+    print(await controller.canGoBack());
     if (await controller.canGoBack()) {
       controller.goBack();
     } else {
-      return Future.value(false);
+      print('object');
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Exit G-Shala'.tr),
+              content: Text('Do you want to exit the app ?'.tr),
+              actions: [
+                CElevatedButton(
+                    buttonLabel: 'Yes'.tr,
+                    onPressed: () {
+                      exit(0);
+                    }),
+                CElevatedButton(
+                    buttonLabel: 'No'.tr,
+                    onPressed: () {
+                      // Future.value(false);
+                      Navigator.pop(context, false);
+                    }),
+              ],
+            );
+          });
     }
     throw Exception('Issue');
   }
 
   @override
   void initState() {
+    // sendVideoStatistics();
     super.initState();
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
+
+  // sendVideoStatistics() {
+  //   SendVideoDetailsApiService sendVideoDetailsApiService =
+  //       new SendVideoDetailsApiService();
+  //   sendVideoDetailsApiService.sendVideoDetails().then((value) {
+  //     print('success');
+  //   });
+  // }
 
   final GetStorage box = new GetStorage();
 
@@ -350,6 +383,9 @@ class _WebViewPageState extends State<WebViewPage>
           child: Icon(Icons.chrome_reader_mode, color: Colors.white),
           backgroundColor: Theme.of(context).backgroundColor,
           onTap: () {
+            final VideoListController videoListController =
+                Get.put(VideoListController());
+            videoListController.getVideosList();
             offlineVideosPageView.isOfflineVideoPageOpen.value = true;
             Get.to(() => PostLoginOfflineMainPage());
           },

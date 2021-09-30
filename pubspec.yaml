@@ -51,8 +51,8 @@ dependencies:
   flutter_windowmanager:
   tuple:
   syncfusion_flutter_pdfviewer:
-  flutter_native_splash:
   uni_links:
+  workmanager:
 
 dev_dependencies:
   flutter_test:
