@@ -146,6 +146,7 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                   : null,
                               dropList: videoListController.subjectsList,
                               onChanged: (value) async {
+                                videoListController.isFiltered.value = true;
                                 videoListController.filteredSubject.value =
                                     value;
                                 await videoListController.getVideosList();
@@ -232,7 +233,6 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                                           .toString()
                                                           .split('.')
                                                           .first;
-                                                  print(videoNameToDelete);
                                                   await videoListController
                                                       .deleteVideoFromFile(
                                                           videoNameToDelete);
@@ -246,7 +246,12 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                                         .videoName
                                                         .toString(),
                                                   );
-                                                  print('test1');
+                                                  videoListController
+                                                      .subjectListObtained
+                                                      .value = false;
+                                                  videoListController
+                                                      .listObtained
+                                                      .value = false;
                                                   await videoListController
                                                       .getVideosList();
                                                 },

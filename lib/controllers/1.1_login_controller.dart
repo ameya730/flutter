@@ -41,6 +41,7 @@ class LogInController extends GetxController {
   }
 
   Future login() async {
+    String? userType = box.read('uType').toString().capitalizeFirst;
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       'APIKey': 'G12SHA98IZ82938KPP'
@@ -54,11 +55,8 @@ class LogInController extends GetxController {
         box.read('password'),
       ),
       'grant_type': 'password',
-      'scope': myEncryptionDecryption('Student'),
+      'scope': myEncryptionDecryption(userType!),
     };
-    print(box.read('uType'));
-    print(request.bodyFields);
-    //loginType.value
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -66,7 +64,6 @@ class LogInController extends GetxController {
       isLoginSuccessful.value = true;
       var res = await response.stream.bytesToString();
       var data = UserResponse.fromJson(json.decode(res));
-      print(data);
       box.write('accessToken', data.accessToken);
       box.write(
         'accessTokenTimeStamp',

@@ -235,13 +235,15 @@ class HomePage extends StatelessWidget {
                                           if (logInController.userControl.value
                                                       .length ==
                                                   18 &&
-                                              value != 'Student') {
+                                              (value != 'Student' &&
+                                                  value != 'વિદ્યાર્થી')) {
                                             return 'Please select Student role';
                                           }
                                           if (logInController.userControl.value
                                                       .length ==
                                                   8 &&
-                                              value != 'Teacher') {
+                                              (value != 'Teacher' &&
+                                                  value != 'શિક્ષક')) {
                                             return 'Please select Teacher role';
                                           }
                                           return null;

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:gshala/apis/sendvideodetails_api.dart';
+// import 'package:gshala/apis/sendvideodetails_api.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/2.1_videolist_controller.dart';
@@ -112,7 +112,12 @@ class _WebViewPageState extends State<WebViewPage>
           floatingActionButton: Obx(() {
             return pdfViewController.pdfOpen.value
                 ? pdfBackButton()
-                : buildSpeedTray();
+                : videoDownloadController.isdownloading.value
+                    ? Container(
+                        height: 0,
+                        width: 0,
+                      )
+                    : buildSpeedTray();
           }),
           body: Stack(
             children: [
@@ -139,7 +144,6 @@ class _WebViewPageState extends State<WebViewPage>
                           json.decode(message.message),
                         );
                         print(message.message);
-
                         await duplicateVideoCheck(
                           int.parse(
                             videoData.nodeid.toString(),
@@ -147,7 +151,7 @@ class _WebViewPageState extends State<WebViewPage>
                         );
                         if (videoDownloadController.duplicateCount.value ==
                             false) {
-                          downloadVideoFunction(videoData);
+                          await downloadVideoFunction(videoData);
                         } else if (videoDownloadController
                                 .duplicateCount.value ==
                             true) {
@@ -224,130 +228,124 @@ class _WebViewPageState extends State<WebViewPage>
                       )
                     : Container();
               }),
-              Obx(
-                () {
-                  return videoDownloadController.isdownloading.value
-                      ? Center(
-                          child: Container(
-                            height: MediaQuery.of(context).size.height,
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.black87,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Obx(() {
-                                  return videoDownloadController
-                                          .isdownloading.value
-                                      ? Column(
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(32.0),
-                                              child: CircleAvatar(
-                                                radius: 80,
-                                                backgroundImage: AssetImage(
-                                                  'assets/downloading.gif',
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                'Downloading \nVideo',
-                                                textAlign: TextAlign.center,
-                                                textScaleFactor: 1.5,
-                                                style: TextStyle(
-                                                  color: normalWhiteText,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                left: 64.0,
-                                                right: 64.0,
-                                                top: 8.0,
-                                                bottom: 8.0,
-                                              ),
-                                              child: Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Container(
-                                                  height: 20,
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      videoDownloadController
-                                                          .progressPercentage
-                                                          .toDouble(),
-                                                  decoration: BoxDecoration(
-                                                    color: normalWhiteText,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
+              Obx(() {
+                return videoDownloadController.isdownloading.value
+                    ? videoDownloadController.downloadInProgress.value
+                        ? Center(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height,
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.black87,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: CircleAvatar(
+                                      radius: 80,
+                                      backgroundImage: AssetImage(
+                                        'assets/downloading.gif',
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'Downloading \nVideo',
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.5,
+                                      style: TextStyle(
+                                        color: normalWhiteText,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 8.0,
+                                      right: 8.0,
+                                      top: 8.0,
+                                      bottom: 8.0,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Container(
+                                        height: 20,
+                                        width:
+                                            MediaQuery.of(context).size.width *
                                                 videoDownloadController
-                                                    .progressString.value,
-                                                textScaleFactor: 1.5,
-                                                style: TextStyle(
-                                                  color: normalWhiteText,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                    .progressPercentage
+                                                    .toDouble(),
+                                        decoration: BoxDecoration(
+                                          color: normalWhiteText,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      videoDownloadController
+                                          .progressString.value,
+                                      textScaleFactor: 1.5,
+                                      style: TextStyle(
+                                        color: normalWhiteText,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Obx(
+                                    () {
+                                      return videoDownloadController
+                                              .downloadComplete.value
+                                          ? CElevatedButton(
+                                              buttonLabel: 'Ok',
+                                              onPressed: () {
+                                                videoDownloadController
+                                                    .isdownloading
+                                                    .value = false;
+                                                videoDownloadController
+                                                    .downloadComplete
+                                                    .value = false;
+                                                videoDownloadController
+                                                    .downloadInProgress
+                                                    .value = false;
+                                              })
+                                          : Container(
+                                              child: CElevatedButton(
+                                                buttonLabel: 'Cancel Download',
+                                                onPressed: () async {
+                                                  await videoDownloadController
+                                                      .cancelDownload();
+                                                  print(videoDownloadController
+                                                      .downloadInProgress
+                                                      .value);
+                                                },
                                               ),
-                                            ),
-                                            Obx(
-                                              () {
-                                                return videoDownloadController
-                                                        .downloadComplete.value
-                                                    ? CElevatedButton(
-                                                        buttonLabel: 'Ok',
-                                                        onPressed: () {
-                                                          videoDownloadController
-                                                              .isdownloading
-                                                              .value = false;
-                                                          videoDownloadController
-                                                              .downloadComplete
-                                                              .value = false;
-                                                        })
-                                                    : Container(
-                                                        child: CElevatedButton(
-                                                          buttonLabel:
-                                                              'Cancel Download',
-                                                          onPressed: () {
-                                                            videoDownloadController
-                                                                .progressPercentage
-                                                                .value = 0.0;
-                                                            videoDownloadController
-                                                                .isdownloading
-                                                                .value = false;
-                                                            videoDownloadController
-                                                                .downloadComplete
-                                                                .value = false;
-                                                            videoDownloadController
-                                                                .cancelDownload();
-                                                          },
-                                                        ),
-                                                      );
-                                              },
-                                            )
-                                          ],
-                                        )
-                                      : Container();
-                                }),
-                              ],
+                                            );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        )
-                      : Container(
-                          height: 0,
-                          width: 0,
-                        );
-                },
-              ),
+                          )
+                        : Center(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height,
+                              width: MediaQuery.of(context).size.width,
+                              color: normalDarkText,
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Download commencing'.tr,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: normalWhiteText),
+                              ),
+                            ),
+                          )
+                    : Container(
+                        height: 0,
+                        width: 0,
+                      );
+              }),
             ],
           ),
         ),
@@ -382,10 +380,12 @@ class _WebViewPageState extends State<WebViewPage>
         SpeedDialChild(
           child: Icon(Icons.chrome_reader_mode, color: Colors.white),
           backgroundColor: Theme.of(context).backgroundColor,
-          onTap: () {
+          onTap: () async {
             final VideoListController videoListController =
                 Get.put(VideoListController());
-            videoListController.getVideosList();
+            videoListController.listObtained.value = false;
+            videoListController.subjectListObtained.value = false;
+            await videoListController.getVideosList();
             offlineVideosPageView.isOfflineVideoPageOpen.value = true;
             Get.to(() => PostLoginOfflineMainPage());
           },

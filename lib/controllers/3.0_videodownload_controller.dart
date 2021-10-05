@@ -19,6 +19,8 @@ class VideoDownloadController extends GetxController {
   final downloadComplete = false.obs;
   final duplicateCount = false.obs;
   final messageReceived = false.obs;
+  final downloadInProgress = false.obs;
+
   GetStorage box = new GetStorage();
   final LogInController logInController = Get.put(LogInController());
   Dio dio = Dio();
@@ -31,6 +33,8 @@ class VideoDownloadController extends GetxController {
 
   Future<void> downloadFile(VideoDownloaded videoDetails) async {
     isdownloading.value = true;
+    downloadInProgress.value = false;
+    print(downloadInProgress.value);
 
     try {
       //Revalidate access token and get a new one if required
@@ -80,32 +84,67 @@ class VideoDownloadController extends GetxController {
         cancelToken = new CancelToken();
       }
 
+      print('The video name is $videoName');
       // Download the video
-      await dio.download(imgUrl, "${appDir.path}/videos/$userId/$videoName",
-          cancelToken: cancelToken,
-          deleteOnError: true,
-          options: Options(headers: {
+      await dio.download(
+        imgUrl,
+        "${appDir.path}/videos/$userId/$videoName",
+        cancelToken: cancelToken,
+        deleteOnError: true,
+        options: Options(
+          headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            // "Access-Control-Allow-Origin": "*",
-            // "APIKey": "G12SHA98IZ82938KPP",
             "Authorization": autho
-          }), onReceiveProgress: (rec, total) {
-        progressPercentage.value = (rec / total);
-        progressString.value = ((rec / total) * 100).toStringAsFixed(0) + "%";
-      }).then((value) {
-        progressString.value = '';
-        progressPercentage.value = 0.0;
-      });
+          },
+        ),
+        onReceiveProgress: (rec, total) {
+          if (rec > 0) {
+            downloadInProgress.value = true;
+          }
+          progressPercentage.value = (rec / total);
+          progressString.value = ((rec / total) * 100).toStringAsFixed(0) + "%";
+          if (rec == total) {
+            rec = 0;
+            total = 0;
+          }
+        },
+      );
+
+      //Download thumbnail
+      String thumbNail = videoDetails.nodename!.replaceAll('mp4', 'jpg');
+      String thumbNailURL = videoURL.value.replaceAll('.mp4', '.png');
+      thumbNailURL = thumbNailURL.replaceAll('mp4', 'thumbnail');
+      print(thumbNail);
+      print(thumbNailURL);
+
+      // await dio.download(
+      //   thumbNailURL,
+      //   "${appDir.path}/videos/$userId/$thumbNail",
+      //   cancelToken: cancelToken,
+      //   deleteOnError: true,
+      //   options: Options(
+      //     headers: {
+      //       "Content-Type": "application/x-www-form-urlencoded",
+      //       "Authorization": autho
+      //     },
+      //   ),
+      // );
+
       await VideoThumbnail.thumbnailFile(
         video: '${appDir.path}/videos/$userId/$videoName',
         imageFormat: ImageFormat.JPEG,
         maxWidth: 0,
         quality: 50,
       );
+
       //Insert data in the database
       await DatabaseProvider.db.insertNewVideo(videoDownload);
       downloadComplete.value = true;
+      progressPercentage.value = 0.0;
+      progressString.value = '';
+      print('download complete');
     } catch (e) {
+      downloadInProgress.value = false;
       downloadComplete.value = false;
       isdownloading.value = false;
       print(e);
@@ -113,6 +152,12 @@ class VideoDownloadController extends GetxController {
   }
 
   cancelDownload() {
+    downloadInProgress.value = false;
+    isdownloading.value = false;
+    downloadComplete.value = false;
+    progressPercentage.value = 0.0;
+    progressString.value = '';
     cancelToken.cancel();
+    update();
   }
 }

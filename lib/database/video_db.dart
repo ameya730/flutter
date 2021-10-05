@@ -151,13 +151,7 @@ class DatabaseProvider {
     return videoDetails;
   }
 
-  //Get list of videos to display in offline mode
-  Future<List<VideoDownload>> getVideos() async {
-    final db = await database;
-    final List<Map<String, dynamic>> vDownload = await db.query(VIDEO_DOWNLOAD);
-    return vDownload.map((e) => VideoDownload.fromMap(e)).toList();
-  }
-
+  //Get the list of all offline videos for a particular user
   Future getAllVideos() async {
     final db = await database;
     final box = new GetStorage();
@@ -166,14 +160,13 @@ class DatabaseProvider {
       where: '$COLUMN_VIDEO_DELETED = ? and $COLUMN_USER_ID = ?',
       whereArgs: [0, int.parse(box.read('userId'))],
     );
-    print(vList.length);
     vList.forEach((element) {
       print('Element is $element');
     });
     return vList.map((e) => VideoDownload.fromMap(e)).toList();
   }
 
-  //Function for duplicate check while downloading a video. The same video can be downloaded if the user is differen
+  //Function for duplicate check while downloading a video. The same video can be downloaded if the user is different
   Future<int> videoDownloadControl(int nodeId) async {
     final db = await database;
     final box = GetStorage();
