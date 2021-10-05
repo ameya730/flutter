@@ -18,6 +18,7 @@ class VideoListController extends GetxController {
   final filteredSubject = ''.obs;
   final isFiltered = false.obs;
   late VideoPlayerController videoPlayerController;
+  final deletingVideo = false.obs;
 
   @override
   void onInit() {

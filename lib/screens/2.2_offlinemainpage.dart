@@ -126,164 +126,218 @@ class PostLoginOfflineMainPage extends StatelessWidget {
           }),
           backgroundColor: Theme.of(context).backgroundColor,
           body: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  TopWidget(),
-                  Obx(() {
-                    return videoListController.listObtained.value
-                        ? Padding(
-                            padding: const EdgeInsets.only(
-                              top: 16.0,
-                              bottom: 8.0,
-                            ),
-                            child: CustomDropDownField(
-                              hinttext: 'Filter by Subject'.tr,
-                              dropDownValue: videoListController
-                                          .filteredSubject.value !=
-                                      ''
-                                  ? videoListController.filteredSubject.value
-                                  : null,
-                              dropList: videoListController.subjectsList,
-                              onChanged: (value) async {
-                                videoListController.isFiltered.value = true;
-                                videoListController.filteredSubject.value =
-                                    value;
-                                await videoListController.getVideosList();
-                              },
-                            ),
-                          )
-                        : Container(
-                            height: 0,
-                            width: 0,
-                          );
-                  }),
-                  Obx(() {
-                    return videoListController.listObtained.value
-                        ? Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: videoListController
-                                    .filteredVideoList.length,
-                                itemBuilder: (context, i) {
-                                  return Padding(
+            child: CustomScrollView(
+              scrollDirection: Axis.vertical,
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: true,
+                  child: Stack(
+                    children: [
+                      Column(
+                        children: [
+                          TopWidget(),
+                          Obx(() {
+                            return videoListController.listObtained.value
+                                ? Padding(
                                     padding: const EdgeInsets.only(
-                                      left: 16.0,
-                                      right: 16.0,
-                                      top: 8.0,
+                                      top: 16.0,
                                       bottom: 8.0,
                                     ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          ListTile(
-                                            leading: GestureDetector(
-                                              onTap: () {
-                                                goToViewVideoPage(i);
-                                              },
-                                              child: CircleAvatar(
-                                                backgroundImage: FileImage(
-                                                  File(
-                                                    videoListController
-                                                        .thumbNailList[i],
+                                    child: CustomDropDownField(
+                                      hinttext: 'Filter by Subject'.tr,
+                                      dropDownValue: videoListController
+                                                  .filteredSubject.value !=
+                                              ''
+                                          ? videoListController
+                                              .filteredSubject.value
+                                          : null,
+                                      dropList:
+                                          videoListController.subjectsList,
+                                      onChanged: (value) async {
+                                        videoListController.isFiltered.value =
+                                            true;
+                                        videoListController
+                                            .filteredSubject.value = value;
+                                        await videoListController
+                                            .getVideosList();
+                                      },
+                                    ),
+                                  )
+                                : Container(
+                                    height: 0,
+                                    width: 0,
+                                  );
+                          }),
+                          Obx(
+                            () {
+                              return videoListController.listObtained.value
+                                  ? Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 16.0),
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemCount: videoListController
+                                              .filteredVideoList.length,
+                                          itemBuilder: (context, i) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 16.0,
+                                                right: 16.0,
+                                                top: 8.0,
+                                                bottom: 8.0,
+                                              ),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(10),
+                                                    bottomRight:
+                                                        Radius.circular(10),
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    topRight:
+                                                        Radius.circular(10),
                                                   ),
                                                 ),
+                                                child: Column(
+                                                  children: [
+                                                    ListTile(
+                                                      leading: GestureDetector(
+                                                        onTap: () {
+                                                          goToViewVideoPage(i);
+                                                        },
+                                                        child: CircleAvatar(
+                                                          backgroundImage:
+                                                              FileImage(
+                                                            File(
+                                                              videoListController
+                                                                  .thumbNailList[i],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      title: GestureDetector(
+                                                        onTap: () {
+                                                          goToViewVideoPage(i);
+                                                        },
+                                                        child: Text(
+                                                          videoListController
+                                                              .filteredVideoList[
+                                                                  i]
+                                                              .topic
+                                                              .toString(),
+                                                        ),
+                                                      ),
+                                                      subtitle: GestureDetector(
+                                                        onTap: () {
+                                                          goToViewVideoPage(i);
+                                                        },
+                                                        child: Text(
+                                                            videoListController
+                                                                .filteredVideoList[
+                                                                    i]
+                                                                .subjectName
+                                                                .toString()),
+                                                      ),
+                                                      trailing: IconButton(
+                                                          onPressed: () async {
+                                                            videoListController
+                                                                .deletingVideo
+                                                                .value = true;
+                                                            String
+                                                                videoNameToDelete =
+                                                                videoListController
+                                                                    .filteredVideoList[
+                                                                        i]
+                                                                    .videoName
+                                                                    .toString()
+                                                                    .split('.')
+                                                                    .first;
+                                                            await videoListController
+                                                                .deleteVideoFromFile(
+                                                                    videoNameToDelete);
+                                                            await videoListController
+                                                                .deleteThumbNailFromFile(
+                                                                    videoNameToDelete);
+                                                            await dbHelper
+                                                                .updateDeleteVideoFlat(
+                                                              videoListController
+                                                                  .filteredVideoList[
+                                                                      i]
+                                                                  .videoName
+                                                                  .toString(),
+                                                            );
+                                                            videoListController
+                                                                .subjectListObtained
+                                                                .value = false;
+                                                            videoListController
+                                                                .listObtained
+                                                                .value = false;
+                                                            await videoListController
+                                                                .getVideosList();
+                                                            videoListController
+                                                                .deletingVideo
+                                                                .value = false;
+                                                          },
+                                                          icon: Icon(
+                                                              Icons.delete)),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                    )
+                                  : Center(
+                                      child: Column(
+                                        children: [
+                                          Image(
+                                            image: AssetImage(
+                                                'assets/offlineimageone.gif'),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(
+                                              'No videos have been downloaded for offline viewing'
+                                                  .tr,
+                                              textAlign: TextAlign.center,
+                                              textScaleFactor: 1.5,
+                                              style: TextStyle(
+                                                color: normalWhiteText,
                                               ),
                                             ),
-                                            title: GestureDetector(
-                                              onTap: () {
-                                                goToViewVideoPage(i);
-                                              },
-                                              child: Text(
-                                                videoListController
-                                                    .filteredVideoList[i].topic
-                                                    .toString(),
-                                              ),
-                                            ),
-                                            subtitle: GestureDetector(
-                                              onTap: () {
-                                                goToViewVideoPage(i);
-                                              },
-                                              child: Text(videoListController
-                                                  .filteredVideoList[i]
-                                                  .subjectName
-                                                  .toString()),
-                                            ),
-                                            trailing: IconButton(
-                                                onPressed: () async {
-                                                  String videoNameToDelete =
-                                                      videoListController
-                                                          .filteredVideoList[i]
-                                                          .videoName
-                                                          .toString()
-                                                          .split('.')
-                                                          .first;
-                                                  await videoListController
-                                                      .deleteVideoFromFile(
-                                                          videoNameToDelete);
-                                                  await videoListController
-                                                      .deleteThumbNailFromFile(
-                                                          videoNameToDelete);
-                                                  await dbHelper
-                                                      .updateDeleteVideoFlat(
-                                                    videoListController
-                                                        .filteredVideoList[i]
-                                                        .videoName
-                                                        .toString(),
-                                                  );
-                                                  videoListController
-                                                      .subjectListObtained
-                                                      .value = false;
-                                                  videoListController
-                                                      .listObtained
-                                                      .value = false;
-                                                  await videoListController
-                                                      .getVideosList();
-                                                },
-                                                icon: Icon(Icons.delete)),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  );
-                                }),
-                          )
-                        : Center(
-                            child: Column(
-                              children: [
-                                Image(
-                                  image:
-                                      AssetImage('assets/offlineimageone.gif'),
+                                    );
+                            },
+                          ),
+                        ],
+                      ),
+                      Obx(() {
+                        return videoListController.deletingVideo.value
+                            ? Container(
+                                height: MediaQuery.of(context).size.height,
+                                width: MediaQuery.of(context).size.width,
+                                color: Colors.black87,
+                                child: Text(
+                                  'Deleting Video',
+                                  style: TextStyle(color: normalWhiteText),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Text(
-                                    'No videos have been downloaded for offline viewing'
-                                        .tr,
-                                    textAlign: TextAlign.center,
-                                    textScaleFactor: 1.5,
-                                    style: TextStyle(
-                                      color: normalWhiteText,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                  }),
-                ],
-              ),
+                              )
+                            : Container(
+                                height: 0,
+                                width: 0,
+                              );
+                      }),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
