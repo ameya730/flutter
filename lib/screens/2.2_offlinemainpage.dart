@@ -181,49 +181,45 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                         borderRadius: BorderRadius.only(
                                           bottomLeft: Radius.circular(10),
                                           bottomRight: Radius.circular(10),
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10),
                                         ),
                                       ),
                                       child: Column(
                                         children: [
-                                          GestureDetector(
-                                            child: Image(
-                                              image: FileImage(
-                                                File(
-                                                  videoListController
-                                                      .thumbNailList[i],
+                                          ListTile(
+                                            leading: GestureDetector(
+                                              onTap: () {
+                                                goToViewVideoPage(i);
+                                              },
+                                              child: CircleAvatar(
+                                                backgroundImage: FileImage(
+                                                  File(
+                                                    videoListController
+                                                        .thumbNailList[i],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                            onTap: () {
-                                              box.write('i', i);
-                                              print(box.read('i'));
-                                              box.write(
-                                                  'videoName',
-                                                  videoListController
-                                                      .videoList[i].videoName);
-                                              box.write(
-                                                  'videoLastPosition',
-                                                  videoListController
-                                                      .videoList[i]
-                                                      .videoLastViewPosition);
-                                              PlayVideoController
-                                                  playVideoController = Get.put(
-                                                      PlayVideoController());
-                                              playVideoController
-                                                  .initializePlayer();
-                                              Get.toNamed('/viewvideopage');
-                                            },
-                                          ),
-                                          ListTile(
-                                            title: Text(
-                                              videoListController
-                                                  .filteredVideoList[i].topic
-                                                  .toString(),
+                                            title: GestureDetector(
+                                              onTap: () {
+                                                goToViewVideoPage(i);
+                                              },
+                                              child: Text(
+                                                videoListController
+                                                    .filteredVideoList[i].topic
+                                                    .toString(),
+                                              ),
                                             ),
-                                            subtitle: Text(videoListController
-                                                .filteredVideoList[i]
-                                                .subjectName
-                                                .toString()),
+                                            subtitle: GestureDetector(
+                                              onTap: () {
+                                                goToViewVideoPage(i);
+                                              },
+                                              child: Text(videoListController
+                                                  .filteredVideoList[i]
+                                                  .subjectName
+                                                  .toString()),
+                                            ),
                                             trailing: IconButton(
                                                 onPressed: () async {
                                                   String videoNameToDelete =
@@ -293,6 +289,17 @@ class PostLoginOfflineMainPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  goToViewVideoPage(int i) {
+    box.write('i', i);
+    print(box.read('i'));
+    box.write('videoName', videoListController.videoList[i].videoName);
+    box.write('videoLastPosition',
+        videoListController.videoList[i].videoLastViewPosition);
+    PlayVideoController playVideoController = Get.put(PlayVideoController());
+    playVideoController.initializePlayer();
+    Get.toNamed('/viewvideopage');
   }
 }
 

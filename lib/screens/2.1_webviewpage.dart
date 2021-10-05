@@ -259,38 +259,55 @@ class _WebViewPageState extends State<WebViewPage>
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 8.0,
-                                      right: 8.0,
-                                      top: 8.0,
-                                      bottom: 8.0,
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Container(
-                                        height: 20,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                videoDownloadController
-                                                    .progressPercentage
-                                                    .toDouble(),
-                                        decoration: BoxDecoration(
-                                          color: normalWhiteText,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(
+                                  //     left: 8.0,
+                                  //     right: 8.0,
+                                  //     top: 8.0,
+                                  //     bottom: 8.0,
+                                  //   ),
+                                  //   child: Align(
+                                  //     alignment: Alignment.centerLeft,
+                                  //     child: Container(
+                                  //       height: 20,
+                                  //       width:
+                                  //           MediaQuery.of(context).size.width *
+                                  //               videoDownloadController
+                                  //                   .progressPercentage
+                                  //                   .toDouble(),
+                                  //       decoration: BoxDecoration(
+                                  //         color: normalWhiteText,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      videoDownloadController
-                                          .progressString.value,
-                                      textScaleFactor: 1.5,
-                                      style: TextStyle(
-                                        color: normalWhiteText,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: 100,
+                                          width: 100,
+                                          child: CircularProgressIndicator(
+                                            value: videoDownloadController
+                                                .progressPercentage
+                                                .toDouble(),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            videoDownloadController
+                                                .progressString.value,
+                                            textScaleFactor: 1.5,
+                                            style: TextStyle(
+                                              color: normalWhiteText,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   Obx(

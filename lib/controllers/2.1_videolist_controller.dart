@@ -52,6 +52,7 @@ class VideoListController extends GetxController {
               subjectsList.add(element.subjectName!);
             },
           );
+          subjectsList.value = subjectsList.toSet().toList();
           subjectListObtained.value = true;
           print(subjectsList);
         }
@@ -72,7 +73,7 @@ class VideoListController extends GetxController {
           }
         } else if (isFiltered.value == false) {
           //If no filter is applied then this is what it should return
-          subjectsList.value = subjectsList.toSet().toList();
+
           filteredVideoList.addAll(videoList);
         }
 
