@@ -36,12 +36,12 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                   ),
                   actions: [
                     CElevatedButton(
-                        buttonLabel: 'Yes',
+                        buttonLabel: 'Yes'.tr,
                         onPressed: () {
                           exit(0);
                         }),
                     CElevatedButton(
-                        buttonLabel: 'No',
+                        buttonLabel: 'No'.tr,
                         onPressed: () {
                           // Future.value(false);
                           Navigator.pop(context, false);
@@ -244,47 +244,48 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                                                 .toString()),
                                                       ),
                                                       trailing: IconButton(
-                                                          onPressed: () async {
-                                                            videoListController
-                                                                .deletingVideo
-                                                                .value = true;
-                                                            String
-                                                                videoNameToDelete =
-                                                                videoListController
-                                                                    .filteredVideoList[
-                                                                        i]
-                                                                    .videoName
-                                                                    .toString()
-                                                                    .split('.')
-                                                                    .first;
-                                                            await videoListController
-                                                                .deleteVideoFromFile(
-                                                                    videoNameToDelete);
-                                                            await videoListController
-                                                                .deleteThumbNailFromFile(
-                                                                    videoNameToDelete);
-                                                            await dbHelper
-                                                                .updateDeleteVideoFlat(
+                                                        onPressed: () async {
+                                                          videoListController
+                                                              .deletingVideo
+                                                              .value = true;
+                                                          String
+                                                              videoNameToDelete =
                                                               videoListController
                                                                   .filteredVideoList[
                                                                       i]
                                                                   .videoName
-                                                                  .toString(),
-                                                            );
+                                                                  .toString()
+                                                                  .split('.')
+                                                                  .first;
+                                                          await videoListController
+                                                              .deleteVideoFromFile(
+                                                                  videoNameToDelete);
+                                                          await videoListController
+                                                              .deleteThumbNailFromFile(
+                                                                  videoNameToDelete);
+                                                          await dbHelper
+                                                              .updateDeleteVideoFlat(
                                                             videoListController
-                                                                .subjectListObtained
-                                                                .value = false;
-                                                            videoListController
-                                                                .listObtained
-                                                                .value = false;
-                                                            await videoListController
-                                                                .getVideosList();
-                                                            videoListController
-                                                                .deletingVideo
-                                                                .value = false;
-                                                          },
-                                                          icon: Icon(
-                                                              Icons.delete)),
+                                                                .filteredVideoList[
+                                                                    i]
+                                                                .videoName
+                                                                .toString(),
+                                                          );
+                                                          videoListController
+                                                              .subjectListObtained
+                                                              .value = false;
+                                                          videoListController
+                                                              .listObtained
+                                                              .value = false;
+                                                          await videoListController
+                                                              .getVideosList();
+                                                          videoListController
+                                                              .deletingVideo
+                                                              .value = false;
+                                                        },
+                                                        icon:
+                                                            Icon(Icons.delete),
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -318,22 +319,24 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Obx(() {
-                        return videoListController.deletingVideo.value
-                            ? Container(
-                                height: MediaQuery.of(context).size.height,
-                                width: MediaQuery.of(context).size.width,
-                                color: Colors.black87,
-                                child: Text(
-                                  'Deleting Video',
-                                  style: TextStyle(color: normalWhiteText),
-                                ),
-                              )
-                            : Container(
-                                height: 0,
-                                width: 0,
-                              );
-                      }),
+                      Obx(
+                        () {
+                          return videoListController.deletingVideo.value
+                              ? Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  width: MediaQuery.of(context).size.width,
+                                  color: Colors.black87,
+                                  child: Text(
+                                    'Deleting Video'.tr,
+                                    style: TextStyle(color: normalWhiteText),
+                                  ),
+                                )
+                              : Container(
+                                  height: 0,
+                                  width: 0,
+                                );
+                        },
+                      ),
                     ],
                   ),
                 ),

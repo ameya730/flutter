@@ -37,5 +37,9 @@ const Map<String, String> enUs = {
   'No': 'No',
   'Exit G-Shala': 'Exit G-Shala',
   'HomePageGoBackContent':
-      'Do you want to exit the app ?\n\nTo go back to the online page click on the bottom icon and then click on "Back" button.'
+      'Do you want to exit the app ?\n\nTo go back to the online page click on the bottom icon and then click on "Back" button.',
+  'Deleting Video': 'Deleting Video',
+  'Downloading Video': 'Downloading Video',
+  'Ok': 'Ok',
+  'Cancel Download': 'Cancel Download',
 };

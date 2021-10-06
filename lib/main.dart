@@ -18,38 +18,8 @@ import 'package:gshala/screens/4.0_viewvideopage.dart';
 import 'package:gshala/screens/2.1_webviewpage.dart';
 import 'package:gshala/screens/forgotpassword.dart';
 import 'package:gshala/screens/signup.dart';
-// import 'package:workmanager/workmanager.dart';
-
-// void callBackDispatcher() {
-//     WidgetsFlutterBinding.ensureInitialized();
-//     Workmanager().executeTask((taskName, inputData) async {
-//       print('Task is running');
-//       switch (taskName) {
-//         case 'pushVideoStatistics':
-//           SendVideoDetailsApiService sendVideoDetailsApiService =
-//               new SendVideoDetailsApiService();
-//           await sendVideoDetailsApiService.sendVideoDetails();
-//           print('success');
-//           break;
-//       }
-//       return Future.value(true);
-//     });
-//   }
 
 void main() async {
-  // //Run tasks for sending video statistics
-  // Workmanager().initialize(callBackDispatcher, isInDebugMode: true);
-  // Workmanager().registerPeriodicTask(
-  //   '1',
-  //   'pushVideoStatistics',
-  //   frequency: Duration(
-  //     seconds: 5,
-  //   ),
-  //   constraints: Constraints(
-  //     networkType: NetworkType.connected,
-  //   ),
-  // );
-
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIOverlays(
       [SystemUiOverlay.bottom, SystemUiOverlay.top]);

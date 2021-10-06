@@ -165,7 +165,7 @@ class _WebViewPageState extends State<WebViewPage>
                     ),
                     JavascriptChannel(
                       name: 'toggleFullScreen',
-                      onMessageReceived: (JavascriptMessage message) async {
+                      onMessageReceived: (JavascriptMessage message) {
                         print('the value is');
                         print(message.message);
                         controller.evaluateJavascript(message.message);
@@ -193,14 +193,16 @@ class _WebViewPageState extends State<WebViewPage>
                       name: 'getSessionStatus',
                       onMessageReceived: (JavascriptMessage message) {
                         print(message.message);
-                        controller.reload();
+                        if (message.message == 'SignedOut') {
+                          controller.reload();
+                        } else if (message.message == 'logout') {
+                          logOut();
+                        }
                       },
                     ),
                     JavascriptChannel(
                       name: 'changeLanguage',
                       onMessageReceived: (JavascriptMessage message) {
-                        print('The language is ');
-                        print(message.message);
                         languageController.webViewLanguage.value =
                             message.message;
                         languageController.changeLanguageWebView();
@@ -209,9 +211,7 @@ class _WebViewPageState extends State<WebViewPage>
                     JavascriptChannel(
                       name: 'changeProfile',
                       onMessageReceived: (JavascriptMessage message) {
-                        print('The user profile is ');
                         box.write('userId', message.message);
-                        print(box.read('userId'));
                       },
                     ),
                   ],
@@ -250,7 +250,7 @@ class _WebViewPageState extends State<WebViewPage>
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      'Downloading \nVideo',
+                                      'Downloading Video'.tr,
                                       textAlign: TextAlign.center,
                                       textScaleFactor: 1.5,
                                       style: TextStyle(
@@ -259,28 +259,6 @@ class _WebViewPageState extends State<WebViewPage>
                                       ),
                                     ),
                                   ),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(
-                                  //     left: 8.0,
-                                  //     right: 8.0,
-                                  //     top: 8.0,
-                                  //     bottom: 8.0,
-                                  //   ),
-                                  //   child: Align(
-                                  //     alignment: Alignment.centerLeft,
-                                  //     child: Container(
-                                  //       height: 20,
-                                  //       width:
-                                  //           MediaQuery.of(context).size.width *
-                                  //               videoDownloadController
-                                  //                   .progressPercentage
-                                  //                   .toDouble(),
-                                  //       decoration: BoxDecoration(
-                                  //         color: normalWhiteText,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Stack(
@@ -315,7 +293,7 @@ class _WebViewPageState extends State<WebViewPage>
                                       return videoDownloadController
                                               .downloadComplete.value
                                           ? CElevatedButton(
-                                              buttonLabel: 'Ok',
+                                              buttonLabel: 'Ok'.tr,
                                               onPressed: () {
                                                 videoDownloadController
                                                     .isdownloading
@@ -329,7 +307,8 @@ class _WebViewPageState extends State<WebViewPage>
                                               })
                                           : Container(
                                               child: CElevatedButton(
-                                                buttonLabel: 'Cancel Download',
+                                                buttonLabel:
+                                                    'Cancel Download'.tr,
                                                 onPressed: () async {
                                                   await videoDownloadController
                                                       .cancelDownload();
@@ -380,6 +359,17 @@ class _WebViewPageState extends State<WebViewPage>
     }
   }
 
+  logOut() {
+    box.remove('userName');
+    box.remove('uType');
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (BuildContext context) => HomePage(),
+      ),
+      (route) => false,
+    );
+  }
+
   downloadVideoFunction(VideoDownloaded videoDownloaded) async {
     await videoDownloadController.downloadFile(videoDownloaded);
   }
@@ -415,14 +405,7 @@ class _WebViewPageState extends State<WebViewPage>
           child: Icon(Icons.logout_rounded, color: Colors.white),
           backgroundColor: Theme.of(context).backgroundColor,
           onTap: () {
-            box.remove('userName');
-            box.remove('uType');
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (BuildContext context) => HomePage(),
-              ),
-              (route) => false,
-            );
+            logOut();
           },
           label: 'Log Out'.tr,
           labelStyle:
