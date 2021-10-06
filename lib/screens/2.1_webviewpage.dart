@@ -14,6 +14,7 @@ import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/controllers/2.3_pdfview_controller.dart';
 import 'package:gshala/cryptojs_aes_encryption_helper.dart';
 import 'package:gshala/database/video_db.dart';
+import 'package:gshala/models/1.1_userprofiles_sqlite_model.dart';
 import 'package:gshala/models/3.0_videodownload_model.dart';
 import 'package:gshala/screens/1_homepage.dart';
 import 'package:gshala/screens/2.2_offlinemainpage.dart';
@@ -186,16 +187,31 @@ class _WebViewPageState extends State<WebViewPage>
                     JavascriptChannel(
                       name: 'getProfiles',
                       onMessageReceived: (JavascriptMessage message) {
+                        print('the profiles are');
                         print(message.message);
+                        // List data = json.decode(message.message);
+                        // UserProfiles profiles =
+                        //     UserProfiles.fromJson(json.decode(message.message));
+
+                        // print(data);
+                        // data.map((e) {
+                        //   print('Inserting $e');
+                        //   UserProfiles userProfiles = UserProfiles.fromJson(e);
+                        //   print(userProfiles.firstName);
+                        //   // DatabaseProvider.db.insertUserProfiles(
+                        //   //   UserProfiles.fromJson(e),
+                        //   // );
+                        //   print('success');
+                        // }).toList();
                       },
                     ),
                     JavascriptChannel(
                       name: 'getSessionStatus',
                       onMessageReceived: (JavascriptMessage message) {
                         print(message.message);
-                        if (message.message == 'SignedOut') {
+                        if (message.message.toLowerCase() == 'timedout') {
                           controller.reload();
-                        } else if (message.message == 'logout') {
+                        } else if (message.message.toLowerCase() == 'logout') {
                           logOut();
                         }
                       },

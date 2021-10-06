@@ -24,6 +24,8 @@ class PlayVideoController extends GetxController {
   final currentStartPosition = 0.obs;
   final currentEndPosition = 0.obs;
   final currentTotalDuration = 0.obs;
+  final isComplete = false.obs;
+  final actuallyComplete = false.obs;
 
   final videoPlayed = false.obs;
   final isFullScreen = false.obs;
@@ -111,6 +113,10 @@ class PlayVideoController extends GetxController {
         _stopWatchTimer.secondTime.listen((value) {
           print('Current time is $value');
         });
+        if (videoPlayerController.value.duration ==
+            videoPlayerController.value.position) {
+          isComplete.value = true;
+        }
       }
     });
   }
@@ -124,6 +130,14 @@ class PlayVideoController extends GetxController {
       box.read('videoName'),
     );
 
+    if (isComplete.value == true &&
+        currentTotalDuration.value >=
+            videoPlayerController.value.duration.inSeconds) {
+      actuallyComplete.value = true;
+    } else {
+      actuallyComplete.value = false;
+    }
+
     final row = VideoDetails(
       userId: 0,
       lessonPlanId: 0,
@@ -134,7 +148,7 @@ class PlayVideoController extends GetxController {
       videoStartTime: currentStartPosition.value,
       videoEndTime: currentEndPosition.value,
       videoViewDate: DateTime.now().toString(),
-      videoViewCompleted: 0,
+      videoViewCompleted: actuallyComplete.value ? 1 : 0,
       videoViewCompletedDate: DateTime.now().toString(),
       videoTotalViewDuration: currentTotalDuration.value,
       videoName: box.read('videoName'),

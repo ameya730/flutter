@@ -10,7 +10,6 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseProvider {
   static const String VIDEO_DOWNLOAD = "videoDownload";
   static const String VIDEO_DETAILS = "videoDetails";
-  static const String USER_PROFILES = "userProfiles";
   static const String COLUMN_ID = "id";
   static const String COLUMN_USER_ID = "UserId";
   static const String COLUMN_LESSONPLANID = "LessonPlanId"; //always set to 0
@@ -38,7 +37,17 @@ class DatabaseProvider {
   static const String COLUMN_CHAPTER = "chapter";
   static const String COLUMN_CLASS = "Class";
   static const String COLUMN_SUBJECT_NAME = "SubjectName";
-  static const String COLUMN_FIRST_NAME = "FirstName";
+
+  //Column names for user profiles database
+  static const String USER_PROFILES = 'userProfiles';
+  static const String USER_NAME = 'userName';
+  static const String FIRST_NAME = 'firstName';
+  static const String LAST_NAME = 'lastName';
+  static const String USER_ID = 'userId';
+  static const String PROFILE_PIC = 'profilePic';
+  static const String MOBILE_NUMBER = 'mobileNumber';
+  static const String GENDER = 'gender';
+  static const String BATCH_NAME = 'batchName';
 
   static final DatabaseProvider db = DatabaseProvider._init();
   static Database? _database;
@@ -66,8 +75,14 @@ class DatabaseProvider {
         await database.execute(
           "CREATE TABLE $USER_PROFILES ("
           "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$COLUMN_USER_ID INT NOT NULL,"
-          "$COLUMN_FIRST_NAME STRING NOT NULL"
+          "$USER_NAME TEXT NOT NULL,"
+          "$FIRST_NAME TEXT NOT NULL,"
+          "$LAST_NAME TEXT NOT NULL,"
+          "$USER_ID INT NOT NULL,"
+          "$PROFILE_PIC INT,"
+          "$MOBILE_NUMBER INT NOT NULL,"
+          "$GENDER TEXT NOT NULL,"
+          "$BATCH_NAME TEXT NOT NULL"
           ")",
         );
 
@@ -115,13 +130,10 @@ class DatabaseProvider {
     );
   }
 
-  //Check if user profiles are present in system or not. If not then insert them in the database
-  Future<int> insertUserProfiles(UserProfiles userProfiles) async {
+  //Insert user profiles in the user profiles table
+  insertUserProfiles(UserProfiles userProfiles) async {
     final db = await database;
-    int count = await db.insert(
-      USER_PROFILES,
-      userProfiles.toJson(),
-    );
+    int count = await db.insert(USER_PROFILES, userProfiles.toJson());
     return count;
   }
 

@@ -122,20 +122,7 @@ class VideoDownloadController extends GetxController {
         "${appDir.path}/videos/$userId/$thumbNail",
         cancelToken: cancelToken,
         deleteOnError: true,
-        // options: Options(
-        //   headers: {
-        //     "Content-Type": "application/x-www-form-urlencoded",
-        //     "Authorization": autho
-        //   },
-        // ),
       );
-
-      // await VideoThumbnail.thumbnailFile(
-      //   video: '${appDir.path}/videos/$userId/$videoName',
-      //   imageFormat: ImageFormat.JPEG,
-      //   maxWidth: 0,
-      //   quality: 50,
-      // );
 
       //Insert data in the database
       await DatabaseProvider.db.insertNewVideo(videoDownload);
