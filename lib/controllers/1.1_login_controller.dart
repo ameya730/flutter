@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/models/1_user_sqlite_model.dart';
+import 'package:gshala/secureservices.dart';
 import 'package:http/http.dart' as http;
 import 'package:gshala/encryption.dart';
 
@@ -41,7 +42,10 @@ class LogInController extends GetxController {
   }
 
   Future login() async {
+    final SecureStorage secureStorage = new SecureStorage();
     String? userType = box.read('uType').toString().capitalizeFirst;
+    String? passWord = await secureStorage.readPassword();
+    print('The secure password is $passWord');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       'APIKey': 'G12SHA98IZ82938KPP'
@@ -51,9 +55,7 @@ class LogInController extends GetxController {
       'username': myEncryptionDecryption(
         box.read('userName'),
       ),
-      'password': myEncryptionDecryption(
-        box.read('password'),
-      ),
+      'password': myEncryptionDecryption(passWord!),
       'grant_type': 'password',
       'scope': myEncryptionDecryption(userType!),
     };

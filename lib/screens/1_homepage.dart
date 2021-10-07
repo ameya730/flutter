@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/1.1_login_controller.dart';
 import 'package:gshala/controllers/1.2_password_controller.dart';
+import 'package:gshala/secureservices.dart';
 import 'package:gshala/templates/custombutton.dart';
 import 'package:gshala/templates/customdropdown.dart';
 import 'package:gshala/templates/custompasswordtextfield.dart';
@@ -279,6 +280,10 @@ class HomePage extends StatelessWidget {
                                       avatorColor: Colors.white,
                                       onPressed: () {
                                         if (validateAndSave()) {
+                                          final SecureStorage secureStorage =
+                                              new SecureStorage();
+                                          secureStorage.writePassWord(
+                                              logInController.password.value);
                                           box.write('userName',
                                               logInController.userId.value);
                                           box.write('uType',

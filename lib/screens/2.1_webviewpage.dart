@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,19 +10,19 @@ import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/2.1_videolist_controller.dart';
+import 'package:gshala/controllers/2.4_orientation_controller.dart';
 import 'package:gshala/controllers/2.5_offlinevideoview_controller.dart';
 import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/controllers/2.3_pdfview_controller.dart';
 import 'package:gshala/cryptojs_aes_encryption_helper.dart';
 import 'package:gshala/database/video_db.dart';
-import 'package:gshala/models/1.1_userprofiles_sqlite_model.dart';
 import 'package:gshala/models/3.0_videodownload_model.dart';
 import 'package:gshala/screens/1_homepage.dart';
 import 'package:gshala/screens/2.2_offlinemainpage.dart';
 import 'package:gshala/templates/custombutton.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class WebViewPage extends StatefulWidget {
   @override
@@ -30,11 +31,12 @@ class WebViewPage extends StatefulWidget {
 
 class _WebViewPageState extends State<WebViewPage>
     with AutomaticKeepAliveClientMixin<WebViewPage> {
-  late WebViewController controller;
-  final Completer<WebViewController> _controllerCompleter =
-      Completer<WebViewController>();
-  final GlobalKey<ScaffoldState> _webViewScaffoldKey =
-      new GlobalKey<ScaffoldState>();
+  InAppWebViewController? controller;
+
+  // late WebViewController controller;
+  // final Completer<WebViewController> _controllerCompleter =
+  //     Completer<WebViewController>();
+  final GlobalKey webViewKey = GlobalKey();
   final VideoDownloadController videoDownloadController =
       Get.put(VideoDownloadController());
   final PDFViewController pdfViewController = Get.put(PDFViewController());
@@ -42,12 +44,14 @@ class _WebViewPageState extends State<WebViewPage>
       Get.put(OfflineVideosPageView());
   final dbHelper = DatabaseProvider.db;
   final LanguageController languageController = Get.put(LanguageController());
+  final OrientationController orientationController =
+      Get.put(OrientationController());
 
   Future<bool> _onWillPop(BuildContext context) async {
     print("onwillpop");
-    print(await controller.canGoBack());
-    if (await controller.canGoBack()) {
-      controller.goBack();
+    print(await controller!.canGoBack());
+    if (await controller!.canGoBack()) {
+      controller!.goBack();
     } else {
       print('object');
       await showDialog(
@@ -79,7 +83,14 @@ class _WebViewPageState extends State<WebViewPage>
   void initState() {
     // sendVideoStatistics();
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    if (Platform.isAndroid) {
+      androidPlatform();
+    }
+  }
+
+  androidPlatform() async {
+    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
 
   // sendVideoStatistics() {
@@ -107,9 +118,10 @@ class _WebViewPageState extends State<WebViewPage>
     print(url);
     return SafeArea(
       child: WillPopScope(
-        onWillPop: () => _onWillPop(context),
+        onWillPop: () => videoDownloadController.isdownloading.value
+            ? Future.value(false)
+            : _onWillPop(context),
         child: Scaffold(
-          key: _webViewScaffoldKey,
           floatingActionButton: Obx(() {
             return pdfViewController.pdfOpen.value
                 ? pdfBackButton()
@@ -122,116 +134,112 @@ class _WebViewPageState extends State<WebViewPage>
           }),
           body: Stack(
             children: [
-              WebView(
-                initialUrl: url,
-                javascriptMode: JavascriptMode.unrestricted,
-                allowsInlineMediaPlayback: true,
-                onWebViewCreated: (WebViewController c) {
-                  _controllerCompleter.future
-                      .then((value) => controller = value);
-                  _controllerCompleter.complete(c);
+              InAppWebView(
+                key: webViewKey,
+                initialUrlRequest: URLRequest(
+                  url: Uri.parse(url),
+                ),
+                initialOptions: InAppWebViewGroupOptions(
+                  crossPlatform: InAppWebViewOptions(
+                    useShouldOverrideUrlLoading: true,
+                    mediaPlaybackRequiresUserGesture: false,
+                    javaScriptEnabled: true,
+                    allowFileAccessFromFileURLs: true,
+                    javaScriptCanOpenWindowsAutomatically: true,
+                  ),
+                  android: AndroidInAppWebViewOptions(
+                    useHybridComposition: true,
+                  ),
+                ),
+                onWebViewCreated: (c) {
                   controller = c;
-                },
-                debuggingEnabled: true,
-                initialMediaPlaybackPolicy:
-                    AutoMediaPlaybackPolicy.always_allow,
-                gestureNavigationEnabled: true,
-                javascriptChannels: Set.from(
-                  [
-                    JavascriptChannel(
-                      name: 'vdownload',
-                      onMessageReceived: (JavascriptMessage message) async {
-                        VideoDownloaded videoData = VideoDownloaded.fromJson(
-                          json.decode(message.message),
-                        );
-                        print(message.message);
-                        await duplicateVideoCheck(
-                          int.parse(
-                            videoData.nodeid.toString(),
+                  c.addJavaScriptHandler(
+                    handlerName: 'vdownload',
+                    callback: (args) async {
+                      print(args);
+                      var data = json.decode(args.toString());
+                      print('The data is $data');
+                      VideoDownloaded videoData =
+                          VideoDownloaded.fromJson(data[0]);
+                      await duplicateVideoCheck(
+                        int.parse(
+                          videoData.nodeid.toString(),
+                        ),
+                      );
+                      if (videoDownloadController.duplicateCount.value ==
+                          false) {
+                        await downloadVideoFunction(videoData);
+                      } else if (videoDownloadController.duplicateCount.value ==
+                          true) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Video has already been download'),
                           ),
                         );
-                        if (videoDownloadController.duplicateCount.value ==
-                            false) {
-                          await downloadVideoFunction(videoData);
-                        } else if (videoDownloadController
-                                .duplicateCount.value ==
-                            true) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Video has already been download'),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    JavascriptChannel(
-                      name: 'toggleFullScreen',
-                      onMessageReceived: (JavascriptMessage message) {
-                        print('the value is');
-                        print(message.message);
-                        controller.evaluateJavascript(message.message);
-                        // orientationController.screenOrientation.value =
-                        //     message.message as bool;
-                        // changeScreenOrientation();
-                      },
-                    ),
-                    JavascriptChannel(
-                      name: 'downloadPDF',
-                      onMessageReceived: (JavascriptMessage message) {
-                        print('The pdf is');
-                        print(message.message);
-                        pdfViewController.pdfPath.value = message.message;
-                        pdfViewController.openPDF();
-                      },
-                    ),
-                    JavascriptChannel(
-                      name: 'getProfiles',
-                      onMessageReceived: (JavascriptMessage message) {
-                        print('the profiles are');
-                        print(message.message);
-                        // List data = json.decode(message.message);
-                        // UserProfiles profiles =
-                        //     UserProfiles.fromJson(json.decode(message.message));
-
-                        // print(data);
-                        // data.map((e) {
-                        //   print('Inserting $e');
-                        //   UserProfiles userProfiles = UserProfiles.fromJson(e);
-                        //   print(userProfiles.firstName);
-                        //   // DatabaseProvider.db.insertUserProfiles(
-                        //   //   UserProfiles.fromJson(e),
-                        //   // );
-                        //   print('success');
-                        // }).toList();
-                      },
-                    ),
-                    JavascriptChannel(
-                      name: 'getSessionStatus',
-                      onMessageReceived: (JavascriptMessage message) {
-                        print(message.message);
-                        if (message.message.toLowerCase() == 'timedout') {
-                          controller.reload();
-                        } else if (message.message.toLowerCase() == 'logout') {
-                          logOut();
-                        }
-                      },
-                    ),
-                    JavascriptChannel(
-                      name: 'changeLanguage',
-                      onMessageReceived: (JavascriptMessage message) {
-                        languageController.webViewLanguage.value =
-                            message.message;
-                        languageController.changeLanguageWebView();
-                      },
-                    ),
-                    JavascriptChannel(
-                      name: 'changeProfile',
-                      onMessageReceived: (JavascriptMessage message) {
-                        box.write('userId', message.message);
-                      },
-                    ),
-                  ],
-                ),
+                      }
+                    },
+                  );
+                  c.addJavaScriptHandler(
+                    handlerName: 'toggleFullScreen',
+                    callback: (args) {
+                      print(args);
+                      orientationController.screenOrientation.value =
+                          args as bool;
+                      changeScreenOrientation();
+                    },
+                  );
+                  c.addJavaScriptHandler(
+                    handlerName: 'downloadPDF',
+                    callback: (args) {
+                      print(args);
+                      pdfViewController.pdfPath.value = args.toString();
+                      pdfViewController.openPDF();
+                    },
+                  );
+                  c.addJavaScriptHandler(
+                    handlerName: 'getProfiles',
+                    callback: (args) {
+                      print(args);
+                    },
+                  );
+                  c.addJavaScriptHandler(
+                    handlerName: 'getSessionStatus',
+                    callback: (args) {
+                      print(args);
+                      if (args.toString().toLowerCase() == 'timedout') {
+                        controller!.reload();
+                      } else if (args.toString().toLowerCase() == 'logout') {
+                        logOut();
+                      }
+                    },
+                  );
+                  c.addJavaScriptHandler(
+                    handlerName: 'changeLanguage',
+                    callback: (args) {
+                      print(args);
+                      languageController.webViewLanguage.value =
+                          args.toString();
+                      languageController.changeLanguageWebView();
+                    },
+                  );
+                  c.addJavaScriptHandler(
+                    handlerName: 'changeProfile',
+                    callback: (args) {
+                      print('Check');
+                      print(args);
+                      box.write('userId', args);
+                    },
+                  );
+                },
+                onConsoleMessage: (controller, consoleMessage) {
+                  print(consoleMessage.message);
+                },
+                androidOnPermissionRequest:
+                    (controller, origin, resources) async {
+                  return PermissionRequestResponse(
+                      resources: resources,
+                      action: PermissionRequestResponseAction.GRANT);
+                },
               ),
               Obx(() {
                 return pdfViewController.pdfOpen.value
@@ -244,120 +252,123 @@ class _WebViewPageState extends State<WebViewPage>
                       )
                     : Container();
               }),
-              Obx(() {
-                return videoDownloadController.isdownloading.value
-                    ? videoDownloadController.downloadInProgress.value
-                        ? Center(
-                            child: Container(
-                              height: MediaQuery.of(context).size.height,
-                              width: MediaQuery.of(context).size.width,
-                              color: Colors.black87,
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(32.0),
-                                    child: CircleAvatar(
-                                      radius: 80,
-                                      backgroundImage: AssetImage(
-                                        'assets/downloading.gif',
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Downloading Video'.tr,
-                                      textAlign: TextAlign.center,
-                                      textScaleFactor: 1.5,
-                                      style: TextStyle(
-                                        color: normalWhiteText,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: 100,
-                                          width: 100,
-                                          child: CircularProgressIndicator(
-                                            value: videoDownloadController
-                                                .progressPercentage
-                                                .toDouble(),
-                                          ),
+              Obx(
+                () {
+                  return videoDownloadController.isdownloading.value
+                      ? videoDownloadController.downloadInProgress.value
+                          ? Center(
+                              child: Container(
+                                height: MediaQuery.of(context).size.height,
+                                width: MediaQuery.of(context).size.width,
+                                color: Colors.black87,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(32.0),
+                                      child: CircleAvatar(
+                                        radius: 80,
+                                        backgroundImage: AssetImage(
+                                          'assets/downloading.gif',
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            videoDownloadController
-                                                .progressString.value,
-                                            textScaleFactor: 1.5,
-                                            style: TextStyle(
-                                              color: normalWhiteText,
-                                              fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Downloading Video'.tr,
+                                        textAlign: TextAlign.center,
+                                        textScaleFactor: 1.5,
+                                        style: TextStyle(
+                                          color: normalWhiteText,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          SizedBox(
+                                            height: 100,
+                                            width: 100,
+                                            child: CircularProgressIndicator(
+                                              value: videoDownloadController
+                                                  .progressPercentage
+                                                  .toDouble(),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Obx(
-                                    () {
-                                      return videoDownloadController
-                                              .downloadComplete.value
-                                          ? CElevatedButton(
-                                              buttonLabel: 'Ok'.tr,
-                                              onPressed: () {
-                                                videoDownloadController
-                                                    .isdownloading
-                                                    .value = false;
-                                                videoDownloadController
-                                                    .downloadComplete
-                                                    .value = false;
-                                                videoDownloadController
-                                                    .downloadInProgress
-                                                    .value = false;
-                                              })
-                                          : Container(
-                                              child: CElevatedButton(
-                                                buttonLabel:
-                                                    'Cancel Download'.tr,
-                                                onPressed: () async {
-                                                  await videoDownloadController
-                                                      .cancelDownload();
-                                                  print(videoDownloadController
-                                                      .downloadInProgress
-                                                      .value);
-                                                },
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              videoDownloadController
+                                                  .progressString.value,
+                                              textScaleFactor: 1.5,
+                                              style: TextStyle(
+                                                color: normalWhiteText,
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            );
-                                    },
-                                  ),
-                                ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Obx(
+                                      () {
+                                        return videoDownloadController
+                                                .downloadComplete.value
+                                            ? CElevatedButton(
+                                                buttonLabel: 'Ok'.tr,
+                                                onPressed: () {
+                                                  videoDownloadController
+                                                      .isdownloading
+                                                      .value = false;
+                                                  videoDownloadController
+                                                      .downloadComplete
+                                                      .value = false;
+                                                  videoDownloadController
+                                                      .downloadInProgress
+                                                      .value = false;
+                                                })
+                                            : Container(
+                                                child: CElevatedButton(
+                                                  buttonLabel:
+                                                      'Cancel Download'.tr,
+                                                  onPressed: () async {
+                                                    await videoDownloadController
+                                                        .cancelDownload();
+                                                    print(
+                                                        videoDownloadController
+                                                            .downloadInProgress
+                                                            .value);
+                                                  },
+                                                ),
+                                              );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          )
-                        : Center(
-                            child: Container(
-                              height: MediaQuery.of(context).size.height,
-                              width: MediaQuery.of(context).size.width,
-                              color: normalDarkText,
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Download commencing'.tr,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: normalWhiteText),
+                            )
+                          : Center(
+                              child: Container(
+                                height: MediaQuery.of(context).size.height,
+                                width: MediaQuery.of(context).size.width,
+                                color: normalDarkText,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Download commencing'.tr,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: normalWhiteText),
+                                ),
                               ),
-                            ),
-                          )
-                    : Container(
-                        height: 0,
-                        width: 0,
-                      );
-              }),
+                            )
+                      : Container(
+                          height: 0,
+                          width: 0,
+                        );
+                },
+              ),
             ],
           ),
         ),
@@ -430,6 +441,24 @@ class _WebViewPageState extends State<WebViewPage>
         ),
       ],
     );
+  }
+
+  changeScreenOrientation() {
+    if (orientationController.screenOrientation.value == true) {
+      SystemChrome.setPreferredOrientations(
+        [
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ],
+      );
+    } else if (orientationController.screenOrientation.value == false) {
+      SystemChrome.setPreferredOrientations(
+        [
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ],
+      );
+    }
   }
 
   pdfBackButton() {

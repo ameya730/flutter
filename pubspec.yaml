@@ -53,6 +53,8 @@ dependencies:
   syncfusion_flutter_pdfviewer:
   uni_links:
   workmanager:
+  flutter_inappwebview:
+  flutter_secure_storage:
 
 dev_dependencies:
   flutter_test:

@@ -8,7 +8,6 @@ import 'package:gshala/models/2.1_videodownload_sqflite_model.dart';
 import 'package:gshala/models/3.0_videodownload_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 class VideoDownloadController extends GetxController {
   final videoURL = ''.obs;
