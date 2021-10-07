@@ -32,50 +32,47 @@ class WebViewPage extends StatefulWidget {
 class _WebViewPageState extends State<WebViewPage>
     with AutomaticKeepAliveClientMixin<WebViewPage> {
   InAppWebViewController? controller;
-
-  // late WebViewController controller;
-  // final Completer<WebViewController> _controllerCompleter =
-  //     Completer<WebViewController>();
   final GlobalKey webViewKey = GlobalKey();
-  final VideoDownloadController videoDownloadController =
-      Get.put(VideoDownloadController());
-  final PDFViewController pdfViewController = Get.put(PDFViewController());
-  final OfflineVideosPageView offlineVideosPageView =
-      Get.put(OfflineVideosPageView());
   final dbHelper = DatabaseProvider.db;
-  final LanguageController languageController = Get.put(LanguageController());
-  final OrientationController orientationController =
-      Get.put(OrientationController());
+  final VideoDownloadController videoDownloadController = Get.put(
+    VideoDownloadController(),
+  );
+  final PDFViewController pdfViewController = Get.put(
+    PDFViewController(),
+  );
+  final OfflineVideosPageView offlineVideosPageView = Get.put(
+    OfflineVideosPageView(),
+  );
+  final LanguageController languageController = Get.put(
+    LanguageController(),
+  );
+  final OrientationController orientationController = Get.put(
+    OrientationController(),
+  );
 
   Future<bool> _onWillPop(BuildContext context) async {
-    print("onwillpop");
-    print(await controller!.canGoBack());
-    if (await controller!.canGoBack()) {
-      controller!.goBack();
-    } else {
-      print('object');
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Exit G-Shala'.tr),
-              content: Text('Do you want to exit the app ?'.tr),
-              actions: [
-                CElevatedButton(
-                    buttonLabel: 'Yes'.tr,
-                    onPressed: () {
-                      exit(0);
-                    }),
-                CElevatedButton(
-                    buttonLabel: 'No'.tr,
-                    onPressed: () {
-                      // Future.value(false);
-                      Navigator.pop(context, false);
-                    }),
-              ],
-            );
-          });
-    }
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Exit G-Shala'.tr),
+            content: Text('Do you want to exit the app ?'.tr),
+            actions: [
+              CElevatedButton(
+                  buttonLabel: 'Yes'.tr,
+                  onPressed: () {
+                    exit(0);
+                  }),
+              CElevatedButton(
+                  buttonLabel: 'No'.tr,
+                  onPressed: () {
+                    // Future.value(false);
+                    Navigator.pop(context, false);
+                  }),
+            ],
+          );
+        });
+
     throw Exception('Issue');
   }
 
@@ -122,17 +119,47 @@ class _WebViewPageState extends State<WebViewPage>
             ? Future.value(false)
             : _onWillPop(context),
         child: Scaffold(
-          floatingActionButton: Obx(() {
-            return pdfViewController.pdfOpen.value
-                ? pdfBackButton()
-                : videoDownloadController.isdownloading.value
-                    ? Container(
-                        height: 0,
-                        width: 0,
-                      )
-                    : buildSpeedTray();
-          }),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: Obx(
+            () {
+              return pdfViewController.pdfOpen.value
+                  ? pdfBackButton()
+                  : Obx(
+                      () {
+                        return videoDownloadController.isdownloading.value
+                            ? Container(
+                                height: 0,
+                                width: 0,
+                              )
+                            : FloatingActionButton(
+                                backgroundColor: backGroundColor,
+                                elevation: 0,
+                                tooltip: 'Offline Video',
+                                child: Icon(
+                                  Icons.web_stories,
+                                  color: normalWhiteText,
+                                ),
+                                onPressed: () async {
+                                  final VideoListController
+                                      videoListController =
+                                      Get.put(VideoListController());
+                                  videoListController.listObtained.value =
+                                      false;
+                                  videoListController
+                                      .subjectListObtained.value = false;
+                                  await videoListController.getVideosList();
+                                  offlineVideosPageView
+                                      .isOfflineVideoPageOpen.value = true;
+                                  Get.to(() => PostLoginOfflineMainPage());
+                                },
+                              );
+                      },
+                    );
+            },
+          ),
           body: Stack(
+            alignment: AlignmentDirectional.topCenter,
             children: [
               InAppWebView(
                 key: webViewKey,
@@ -146,6 +173,7 @@ class _WebViewPageState extends State<WebViewPage>
                     javaScriptEnabled: true,
                     allowFileAccessFromFileURLs: true,
                     javaScriptCanOpenWindowsAutomatically: true,
+                    clearCache: true,
                   ),
                   android: AndroidInAppWebViewOptions(
                     useHybridComposition: true,
@@ -366,6 +394,81 @@ class _WebViewPageState extends State<WebViewPage>
                       : Container(
                           height: 0,
                           width: 0,
+                        );
+                },
+              ),
+              Obx(
+                () {
+                  return videoDownloadController.isdownloading.value
+                      ? Container(
+                          height: 0,
+                          width: 0,
+                        )
+                      : Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 4.0,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: normalWhiteText,
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  topLeft: Radius.circular(10),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 32.0),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          if (await controller!.canGoBack()) {
+                                            controller!.goBack();
+                                          }
+                                        },
+                                        icon: Icon(
+                                          Icons.arrow_back,
+                                          color: normalDarkText,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 32.0),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          if (await controller!
+                                              .canGoForward()) {
+                                            controller!.goForward();
+                                          }
+                                        },
+                                        icon: Icon(
+                                          Icons.arrow_forward,
+                                          color: normalDarkText,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  // IconButton(
+                                  //   onPressed: () {
+                                  //     logOut();
+                                  //   },
+                                  //   icon: Icon(
+                                  //     Icons.logout,
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
                         );
                 },
               ),

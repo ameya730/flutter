@@ -4,6 +4,7 @@ Color normalDarkText = Colors.black87;
 Color normalWhiteText = Colors.white;
 Color customHintColor = Colors.blue;
 Color textBoxBackgroundColor = Color(0xffEEEEEE);
+Color backGroundColor = Color(0xff1B52CC);
 
 // Url Links
 String kloginapiurl = 'http://lms.schoolnetindia.com/gujratlmsapi/login';
