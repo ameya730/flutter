@@ -80,6 +80,7 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                         onTap: () {
                           box.remove('userName');
                           box.remove('uType');
+                          box.remove('userId');
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                               builder: (BuildContext context) => HomePage(),

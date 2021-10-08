@@ -42,4 +42,10 @@ const Map<String, String> enUs = {
   'Downloading Video': 'Downloading Video',
   'Ok': 'Ok',
   'Cancel Download': 'Cancel Download',
+  'View Downloaded Videos': 'View Downloaded Videos',
+  'Do you wish to view downloaded videos ?':
+      'Do you wish to view downloaded videos ?',
+  'Language Changed': 'Language has been changed',
+  'Download commencing': 'Commencing Download',
+  'Downloaded Videos Page': 'Downloaded Videos Page',
 };

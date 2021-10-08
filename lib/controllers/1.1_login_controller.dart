@@ -59,6 +59,8 @@ class LogInController extends GetxController {
       'grant_type': 'password',
       'scope': myEncryptionDecryption(userType!),
     };
+    print('The body fields are');
+    print(request.bodyFields);
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {

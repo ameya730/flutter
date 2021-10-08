@@ -76,24 +76,22 @@ class PlayVideoController extends GetxController {
       }),
     ]);
     chewieController = ChewieController(
-        videoPlayerController: videoPlayerController,
-        autoPlay: false,
-        looping: false,
-        allowFullScreen: true,
-        allowMuting: true,
-        allowedScreenSleep: false,
-        materialProgressColors: ChewieProgressColors(),
-        showControlsOnInitialize: true,
-        showOptions: true,
-        showControls: true,
-        fullScreenByDefault: true,
-        placeholder: Container(
-          color: Colors.black87,
-        ),
-        autoInitialize: true,
-        additionalOptions: (context) {
-          return <OptionItem>[];
-        });
+      videoPlayerController: videoPlayerController,
+      autoPlay: false,
+      looping: false,
+      allowFullScreen: true,
+      allowMuting: true,
+      showOptions: false,
+      allowedScreenSleep: false,
+      materialProgressColors: ChewieProgressColors(),
+      showControlsOnInitialize: true,
+      showControls: true,
+      fullScreenByDefault: true,
+      placeholder: Container(
+        color: Colors.black87,
+      ),
+      autoInitialize: true,
+    );
     trackVideoUpdate();
     update();
   }
@@ -117,6 +115,11 @@ class PlayVideoController extends GetxController {
             videoPlayerController.value.position) {
           isComplete.value = true;
         }
+      }
+      if (chewieController!.isFullScreen) {
+        isFullScreen.value = true;
+      } else {
+        isFullScreen.value = false;
       }
     });
   }

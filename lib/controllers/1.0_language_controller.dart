@@ -6,6 +6,8 @@ class LanguageController extends GetxController {
   var selectedLanguage = 'ગુજરાતી'.obs;
   final webViewLanguage = ''.obs;
   late Locale locale;
+  final changeLanguage = false.obs;
+  final languageChanged = false.obs;
 
   @override
   void onInit() {

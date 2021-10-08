@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 // import 'package:gshala/apis/sendvideodetails_api.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/2.1_videolist_controller.dart';
+import 'package:gshala/controllers/2.2_floatingbarcontrollers.dart';
 import 'package:gshala/controllers/2.4_orientation_controller.dart';
 import 'package:gshala/controllers/2.5_offlinevideoview_controller.dart';
 import 'package:gshala/controllers/3.0_videodownload_controller.dart';
@@ -34,21 +34,12 @@ class _WebViewPageState extends State<WebViewPage>
   InAppWebViewController? controller;
   final GlobalKey webViewKey = GlobalKey();
   final dbHelper = DatabaseProvider.db;
-  final VideoDownloadController videoDownloadController = Get.put(
-    VideoDownloadController(),
-  );
-  final PDFViewController pdfViewController = Get.put(
-    PDFViewController(),
-  );
-  final OfflineVideosPageView offlineVideosPageView = Get.put(
-    OfflineVideosPageView(),
-  );
-  final LanguageController languageController = Get.put(
-    LanguageController(),
-  );
-  final OrientationController orientationController = Get.put(
-    OrientationController(),
-  );
+  final videoDownloadController = Get.put(VideoDownloadController());
+  final pdfViewController = Get.put(PDFViewController());
+  final offlineVideosPageView = Get.put(OfflineVideosPageView());
+  final languageController = Get.put(LanguageController());
+  final orientationController = Get.put(OrientationController());
+  final floatingController = Get.put(FloatingBarControllers());
 
   Future<bool> _onWillPop(BuildContext context) async {
     await showDialog(
@@ -103,8 +94,10 @@ class _WebViewPageState extends State<WebViewPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    box.write('userId', '98702');
-    var encuname = encryptAESCryptoJS(box.read('userName'), "0000000000000");
+    var encuname = encryptAESCryptoJS(
+      box.read('userName'),
+      "0000000000000",
+    );
     print(encuname);
     print(box.read('uType'));
     var url = webViewLoginIn +
@@ -119,6 +112,7 @@ class _WebViewPageState extends State<WebViewPage>
             ? Future.value(false)
             : _onWillPop(context),
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Obx(
@@ -127,7 +121,7 @@ class _WebViewPageState extends State<WebViewPage>
                   ? pdfBackButton()
                   : Obx(
                       () {
-                        return videoDownloadController.isdownloading.value
+                        return floatingController.hideNavigationBar.value
                             ? Container(
                                 height: 0,
                                 width: 0,
@@ -135,23 +129,13 @@ class _WebViewPageState extends State<WebViewPage>
                             : FloatingActionButton(
                                 backgroundColor: backGroundColor,
                                 elevation: 0,
-                                tooltip: 'Offline Video',
+                                tooltip: 'Downloaded Videos Page'.tr,
                                 child: Icon(
                                   Icons.web_stories,
                                   color: normalWhiteText,
                                 ),
-                                onPressed: () async {
-                                  final VideoListController
-                                      videoListController =
-                                      Get.put(VideoListController());
-                                  videoListController.listObtained.value =
-                                      false;
-                                  videoListController
-                                      .subjectListObtained.value = false;
-                                  await videoListController.getVideosList();
-                                  offlineVideosPageView
-                                      .isOfflineVideoPageOpen.value = true;
-                                  Get.to(() => PostLoginOfflineMainPage());
+                                onPressed: () {
+                                  moveToOfflineDialogBox();
                                 },
                               );
                       },
@@ -184,9 +168,7 @@ class _WebViewPageState extends State<WebViewPage>
                   c.addJavaScriptHandler(
                     handlerName: 'vdownload',
                     callback: (args) async {
-                      print(args);
                       var data = json.decode(args.toString());
-                      print('The data is $data');
                       VideoDownloaded videoData =
                           VideoDownloaded.fromJson(data[0]);
                       await duplicateVideoCheck(
@@ -196,6 +178,7 @@ class _WebViewPageState extends State<WebViewPage>
                       );
                       if (videoDownloadController.duplicateCount.value ==
                           false) {
+                        floatingController.hideNavigationBar.value = true;
                         await downloadVideoFunction(videoData);
                       } else if (videoDownloadController.duplicateCount.value ==
                           true) {
@@ -210,23 +193,26 @@ class _WebViewPageState extends State<WebViewPage>
                   c.addJavaScriptHandler(
                     handlerName: 'toggleFullScreen',
                     callback: (args) {
-                      print(args);
-                      orientationController.screenOrientation.value =
-                          args as bool;
+                      if (args[0] == 'true') {
+                        orientationController.screenOrientation.value = true;
+                      } else if (args[0] == 'false') {
+                        orientationController.screenOrientation.value = false;
+                      }
                       changeScreenOrientation();
                     },
                   );
                   c.addJavaScriptHandler(
                     handlerName: 'downloadPDF',
                     callback: (args) {
-                      print(args);
-                      pdfViewController.pdfPath.value = args.toString();
+                      pdfViewController.pdfPath.value = args[0];
+                      floatingController.hideNavigationBar.value = true;
                       pdfViewController.openPDF();
                     },
                   );
                   c.addJavaScriptHandler(
                     handlerName: 'getProfiles',
                     callback: (args) {
+                      print('The profiles are');
                       print(args);
                     },
                   );
@@ -234,9 +220,9 @@ class _WebViewPageState extends State<WebViewPage>
                     handlerName: 'getSessionStatus',
                     callback: (args) {
                       print(args);
-                      if (args.toString().toLowerCase() == 'timedout') {
+                      if (args[0].toString().toLowerCase() == 'timedout') {
                         controller!.reload();
-                      } else if (args.toString().toLowerCase() == 'logout') {
+                      } else if (args[0].toString().toLowerCase() == 'logout') {
                         logOut();
                       }
                     },
@@ -245,17 +231,13 @@ class _WebViewPageState extends State<WebViewPage>
                     handlerName: 'changeLanguage',
                     callback: (args) {
                       print(args);
-                      languageController.webViewLanguage.value =
-                          args.toString();
-                      languageController.changeLanguageWebView();
+                      toggleLanguage(args[0].toString());
                     },
                   );
                   c.addJavaScriptHandler(
                     handlerName: 'changeProfile',
                     callback: (args) {
-                      print('Check');
-                      print(args);
-                      box.write('userId', args);
+                      box.write('userId', args[0].toString());
                     },
                   );
                 },
@@ -357,6 +339,9 @@ class _WebViewPageState extends State<WebViewPage>
                                                   videoDownloadController
                                                       .downloadInProgress
                                                       .value = false;
+                                                  floatingController
+                                                      .hideNavigationBar
+                                                      .value = false;
                                                 })
                                             : Container(
                                                 child: CElevatedButton(
@@ -365,10 +350,9 @@ class _WebViewPageState extends State<WebViewPage>
                                                   onPressed: () async {
                                                     await videoDownloadController
                                                         .cancelDownload();
-                                                    print(
-                                                        videoDownloadController
-                                                            .downloadInProgress
-                                                            .value);
+                                                    floatingController
+                                                        .hideNavigationBar
+                                                        .value = false;
                                                   },
                                                 ),
                                               );
@@ -397,9 +381,46 @@ class _WebViewPageState extends State<WebViewPage>
                         );
                 },
               ),
+              Obx(() {
+                return languageController.changeLanguage.value
+                    ? Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        color: normalDarkText,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Language Changed'.tr,
+                                style: TextStyle(
+                                  color: normalWhiteText,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CElevatedButton(
+                                  buttonLabel: 'Ok'.tr,
+                                  onPressed: () {
+                                    languageController.languageChanged.value =
+                                        false;
+                                    languageController.changeLanguage.value =
+                                        false;
+                                  }),
+                            )
+                          ],
+                        ),
+                      )
+                    : Container(
+                        height: 0,
+                        width: 0,
+                      );
+              }),
               Obx(
                 () {
-                  return videoDownloadController.isdownloading.value
+                  return floatingController.hideNavigationBar.value
                       ? Container(
                           height: 0,
                           width: 0,
@@ -489,9 +510,17 @@ class _WebViewPageState extends State<WebViewPage>
     }
   }
 
+  toggleLanguage(String languageId) async {
+    languageController.changeLanguage.value = true;
+    languageController.webViewLanguage.value = languageId;
+    languageController.changeLanguageWebView();
+    languageController.languageChanged.value = true;
+  }
+
   logOut() {
     box.remove('userName');
     box.remove('uType');
+    box.remove('userId');
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (BuildContext context) => HomePage(),
@@ -502,48 +531,6 @@ class _WebViewPageState extends State<WebViewPage>
 
   downloadVideoFunction(VideoDownloaded videoDownloaded) async {
     await videoDownloadController.downloadFile(videoDownloaded);
-  }
-
-  SpeedDial buildSpeedTray() {
-    return SpeedDial(
-      icon: Icons.menu,
-      activeIcon: Icons.close,
-      backgroundColor: Theme.of(context).backgroundColor,
-      visible: true,
-      curve: Curves.bounceInOut,
-      spaceBetweenChildren: 10,
-      spacing: 10,
-      children: [
-        SpeedDialChild(
-          child: Icon(Icons.chrome_reader_mode, color: Colors.white),
-          backgroundColor: Theme.of(context).backgroundColor,
-          onTap: () async {
-            final VideoListController videoListController =
-                Get.put(VideoListController());
-            videoListController.listObtained.value = false;
-            videoListController.subjectListObtained.value = false;
-            await videoListController.getVideosList();
-            offlineVideosPageView.isOfflineVideoPageOpen.value = true;
-            Get.to(() => PostLoginOfflineMainPage());
-          },
-          label: 'Offline Videos'.tr,
-          labelStyle:
-              TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
-          labelBackgroundColor: Colors.black,
-        ),
-        SpeedDialChild(
-          child: Icon(Icons.logout_rounded, color: Colors.white),
-          backgroundColor: Theme.of(context).backgroundColor,
-          onTap: () {
-            logOut();
-          },
-          label: 'Log Out'.tr,
-          labelStyle:
-              TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
-          labelBackgroundColor: Colors.black,
-        ),
-      ],
-    );
   }
 
   changeScreenOrientation() {
@@ -564,11 +551,48 @@ class _WebViewPageState extends State<WebViewPage>
     }
   }
 
+  moveToOfflineDialogBox() async {
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('View Downloaded Videos'.tr),
+            content: Text('Do you wish to view downloaded videos ?'.tr),
+            actions: [
+              CElevatedButton(
+                  buttonLabel: 'Yes'.tr,
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                    moveToOffline();
+                  }),
+              CElevatedButton(
+                  buttonLabel: 'No'.tr,
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  }),
+            ],
+          );
+        });
+  }
+
+  moveToOffline() async {
+    final VideoListController videoListController =
+        Get.put(VideoListController());
+    videoListController.listObtained.value = false;
+    videoListController.subjectListObtained.value = false;
+    if (box.read('userId') != null) {
+      await videoListController.getVideosList();
+    }
+    offlineVideosPageView.isOfflineVideoPageOpen.value = true;
+    Get.to(() => PostLoginOfflineMainPage());
+  }
+
   pdfBackButton() {
     return FloatingActionButton.extended(
       backgroundColor: Theme.of(context).backgroundColor,
       onPressed: () {
         pdfViewController.closePDF();
+        floatingController.hideNavigationBar.value = false;
       },
       label: Text('Return'.tr),
     );

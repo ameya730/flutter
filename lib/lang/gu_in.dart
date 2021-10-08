@@ -42,4 +42,10 @@ const Map<String, String> guIn = {
   'Downloading Video': 'વિડિઓ ડાઉનલોડ કરી રહ્યા છીએ',
   'Ok': 'ઓકે',
   'Cancel Download': 'ડાઉનલોડ રદ કરો',
+  'View Downloaded Videos': 'ડાઉનલોડ કરેલી વિડિઓઝ જુઓ',
+  'Do you wish to view downloaded videos ?':
+      'શું તમે ડાઉનલોડ કરેલા વીડિયો જોવા માંગો છો?',
+  'Language Changed': 'ભાષા બદલાઈ ગઈ છે',
+  'Download commencing': 'ડાઉનલોડ શરૂ કરી રહ્યા છીએ',
+  'Downloaded Videos Page': 'ડાઉનલોડ કરેલા વિડીયો પેજ',
 };
