@@ -8,20 +8,18 @@ import 'package:get_storage/get_storage.dart';
 // import 'package:gshala/apis/sendvideodetails_api.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
-import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/controllers/2.2_floatingbarcontrollers.dart';
 import 'package:gshala/controllers/2.4_orientation_controller.dart';
 import 'package:gshala/controllers/2.5_offlinevideoview_controller.dart';
 import 'package:gshala/controllers/2.6_profile_update_controller.dart';
 import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/controllers/2.3_pdfview_controller.dart';
-import 'package:gshala/controllers/5.0_profile_selection_controller.dart';
 import 'package:gshala/cryptojs_aes_encryption_helper.dart';
 import 'package:gshala/database/video_db.dart';
+import 'package:gshala/functions/getofflinevideos_function.dart';
+import 'package:gshala/functions/logout_function.dart';
 import 'package:gshala/models/1.1_userprofiles_sqlite_model.dart';
 import 'package:gshala/models/3.0_videodownload_model.dart';
-import 'package:gshala/screens/1_homepage.dart';
-import 'package:gshala/screens/2.2_offlinemainpage.dart';
 import 'package:gshala/templates/custombutton.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:get/get.dart';
@@ -167,33 +165,6 @@ class _WebViewPageState extends State<WebViewPage>
                     useHybridComposition: true,
                   ),
                 ),
-                onLoadStop: (c, url) {
-                  url = url;
-                  c.addJavaScriptHandler(
-                    handlerName: 'changeProfile',
-                    callback: (args) {
-                      print('Check $args[0]');
-                      box.write('userId', args[0].toString());
-                      Future.delayed(Duration(seconds: 2)).then((value) {
-                        floatingController.hideNavigationBar.value = false;
-                      });
-                    },
-                  );
-                },
-                onLoadStart: (c, url) {
-                  url = url;
-                  c.addJavaScriptHandler(
-                    handlerName: 'changeProfile',
-                    callback: (args) {
-                      print(args);
-                      print('Load $args[0]');
-                      box.write('userId', args[0].toString());
-                      Future.delayed(Duration(seconds: 2)).then((value) {
-                        floatingController.hideNavigationBar.value = false;
-                      });
-                    },
-                  );
-                },
                 onWebViewCreated: (c) {
                   controller = c;
                   c.addJavaScriptHandler(
@@ -224,6 +195,7 @@ class _WebViewPageState extends State<WebViewPage>
                   c.addJavaScriptHandler(
                     handlerName: 'toggleFullScreen',
                     callback: (args) {
+                      print(args);
                       if (args[0] == 'true') {
                         orientationController.screenOrientation.value = true;
                       } else if (args[0] == 'false') {
@@ -267,7 +239,7 @@ class _WebViewPageState extends State<WebViewPage>
                       if (args[0].toString().toLowerCase() == 'timedout') {
                         controller!.reload();
                       } else if (args[0].toString().toLowerCase() == 'logout') {
-                        logOut();
+                        logOut(context);
                       }
                     },
                   );
@@ -287,6 +259,13 @@ class _WebViewPageState extends State<WebViewPage>
                       Future.delayed(Duration(seconds: 2)).then((value) {
                         floatingController.hideNavigationBar.value = false;
                       });
+                    },
+                  );
+                  c.addJavaScriptHandler(
+                    handlerName: 'checkplatformready',
+                    callback: (args) {
+                      print('ready');
+                      return 'true';
                     },
                   );
                 },
@@ -580,19 +559,6 @@ class _WebViewPageState extends State<WebViewPage>
     languageController.languageChanged.value = true;
   }
 
-  logOut() async {
-    await dbHelper.deleteProfiles();
-    box.remove('userName');
-    box.remove('uType');
-    box.remove('userId');
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (BuildContext context) => HomePage(),
-      ),
-      (route) => false,
-    );
-  }
-
   downloadVideoFunction(VideoDownloaded videoDownloaded) async {
     await videoDownloadController.downloadFile(videoDownloaded);
   }
@@ -637,18 +603,6 @@ class _WebViewPageState extends State<WebViewPage>
             ],
           );
         });
-  }
-
-  moveToOffline() async {
-    final VideoListController videoListController =
-        Get.put(VideoListController());
-    videoListController.listObtained.value = false;
-    videoListController.subjectListObtained.value = false;
-    if (box.read('userId') != null) {
-      await videoListController.getVideosList();
-    }
-    offlineVideosPageView.isOfflineVideoPageOpen.value = true;
-    Get.to(() => PostLoginOfflineMainPage());
   }
 
   pdfBackButton() {

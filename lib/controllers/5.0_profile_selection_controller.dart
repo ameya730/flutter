@@ -15,6 +15,7 @@ class ProfileSelectioController extends GetxController {
   }
 
   fetchProfiles() async {
+    listOfProfiles.clear();
     var profiles = await dbHelper.getAllProfiles();
     listOfProfiles.value = profiles;
     profileListObtained.value = true;

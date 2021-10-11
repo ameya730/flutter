@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
-import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/controllers/5.0_profile_selection_controller.dart';
 import 'package:gshala/database/video_db.dart';
-import 'package:gshala/screens/1_homepage.dart';
-import 'package:gshala/screens/2.2_offlinemainpage.dart';
+import 'package:gshala/functions/getofflinevideos_function.dart';
+import 'package:gshala/functions/logout_function.dart';
 import 'package:gshala/templates/profilecards.dart';
 
 class OfflineProfileSelectionPage extends StatelessWidget {
@@ -75,10 +74,12 @@ class OfflineProfileSelectionPage extends StatelessWidget {
                                   profileControl.listOfProfiles[i].userName,
                               classNo:
                                   profileControl.listOfProfiles[i].batchname,
-                              onTap: () {
+                              onTap: () async {
                                 box.write('userId',
                                     profileControl.listOfProfiles[i].userId);
-                                moveToOffline();
+                                print(profileControl
+                                    .listOfProfiles[i].userId.runtimeType);
+                                await moveToOffline();
                               },
                             );
                           }),
@@ -90,30 +91,6 @@ class OfflineProfileSelectionPage extends StatelessWidget {
                 );
         }),
       ),
-    );
-  }
-
-  moveToOffline() async {
-    final VideoListController videoListController =
-        Get.put(VideoListController());
-    videoListController.listObtained.value = false;
-    videoListController.subjectListObtained.value = false;
-    if (box.read('userId') != null) {
-      await videoListController.getVideosList();
-    }
-    Get.to(() => PostLoginOfflineMainPage());
-  }
-
-  logOut(BuildContext context) async {
-    await dbHelper.deleteProfiles();
-    box.remove('userName');
-    box.remove('uType');
-    box.remove('userId');
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (BuildContext context) => HomePage(),
-      ),
-      (route) => false,
     );
   }
 }

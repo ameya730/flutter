@@ -151,11 +151,8 @@ class DatabaseProvider {
   //Get the list of all profiles for a user
   Future getAllProfiles() async {
     final db = await database;
-    final box = new GetStorage();
     List<Map<String, dynamic>> profileList = await db.query(
       USER_PROFILES,
-      // where: '$MOBILE_NUMBER = ?',
-      // whereArgs: [int.parse(box.read('userName'))],
     );
     print('success');
 
@@ -165,10 +162,18 @@ class DatabaseProvider {
             userName: e['userName'],
             firstName: e['firstName'],
             batchname: e['batchName'],
+            userId: e['userId'],
           ),
         )
         .toList();
     return profiles;
+  }
+
+  Future<int> countRows() async {
+    final db = await database;
+    final result = await db.rawQuery('SELECT COUNT(*) FROM $USER_PROFILES');
+    final count = Sqflite.firstIntValue(result);
+    return count!;
   }
 
   //Delete all profiles on sign-out
@@ -216,7 +221,14 @@ class DatabaseProvider {
     List<Map<String, dynamic>> vList = await db.query(
       VIDEO_DOWNLOAD,
       where: '$COLUMN_VIDEO_DELETED = ? and $COLUMN_USER_ID = ?',
-      whereArgs: [0, int.parse(box.read('userId'))],
+      whereArgs: [
+        0,
+        box.read('userId').runtimeType == int
+            ? box.read('userId')
+            : int.parse(
+                box.read('userId'),
+              ),
+      ],
     );
     vList.forEach((element) {
       print('Element is $element');

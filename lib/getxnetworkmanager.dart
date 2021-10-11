@@ -2,6 +2,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:gshala/database/video_db.dart';
+import 'package:gshala/functions/getprofiles_function.dart';
 
 class GetXNetworkManager extends GetxController {
   final validationDone = false.obs;
@@ -43,7 +45,14 @@ class GetXNetworkManager extends GetxController {
   }
 
   showPostLoginOfflinePage() async {
-    await Get.offAndToNamed('/profilepage');
+    final dbHelper = DatabaseProvider.db;
+    int count = await dbHelper.countRows();
+    if (count > 0) {
+      getProfilesFunction();
+      await Get.offAndToNamed('/profilepage');
+    } else {
+      await Get.offAndToNamed('/offlinemainpage');
+    }
   }
 
   showHomePage() async {

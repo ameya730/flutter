@@ -38,9 +38,11 @@ class VideoListController extends GetxController {
     final videoDetails = await DatabaseProvider.db.getAllVideos();
     videoList.value = videoDetails;
 
-    int userId = int.parse(
-      box.read('userId'),
-    );
+    int userId = box.read('userId').runtimeType == int
+        ? box.read('userId')
+        : int.parse(
+            box.read('userId'),
+          );
 
     try {
       if (videoList.length > 0) {

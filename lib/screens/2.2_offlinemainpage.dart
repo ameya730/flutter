@@ -7,8 +7,8 @@ import 'package:gshala/const.dart';
 import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/controllers/4.0_videoview_controller.dart';
 import 'package:gshala/database/video_db.dart';
+import 'package:gshala/functions/logout_function.dart';
 import 'package:gshala/getxnetworkmanager.dart';
-import 'package:gshala/screens/1_homepage.dart';
 import 'package:gshala/templates/custombutton.dart';
 import 'package:gshala/templates/customdropdown.dart';
 
@@ -76,15 +76,7 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                 child: Icon(Icons.logout_rounded, color: Colors.white),
                 backgroundColor: Theme.of(context).backgroundColor,
                 onTap: () {
-                  box.remove('userName');
-                  box.remove('uType');
-                  box.remove('userId');
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => HomePage(),
-                    ),
-                    (route) => false,
-                  );
+                  logOut(context);
                 },
                 label: 'Log Out'.tr,
                 labelStyle:
