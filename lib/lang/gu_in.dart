@@ -48,4 +48,5 @@ const Map<String, String> guIn = {
   'Language Changed': 'ભાષા બદલાઈ ગઈ છે',
   'Download commencing': 'ડાઉનલોડ શરૂ કરી રહ્યા છીએ',
   'Downloaded Videos Page': 'ડાઉનલોડ કરેલા વિડીયો પેજ',
+  "Choose a profile": "એક પ્રોફાઇલ પસંદ કરો",
 };

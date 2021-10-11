@@ -52,79 +52,47 @@ class PostLoginOfflineMainPage extends StatelessWidget {
           throw Exception('Issue');
         },
         child: Scaffold(
-          floatingActionButton: Obx(() {
-            return getXNetworkManager.connectionPresent.value
-                ? SpeedDial(
-                    icon: Icons.menu,
-                    activeIcon: Icons.close,
-                    backgroundColor: Theme.of(context).backgroundColor,
-                    visible: true,
-                    curve: Curves.bounceInOut,
-                    spaceBetweenChildren: 10,
-                    spacing: 10,
-                    children: [
-                      SpeedDialChild(
-                        child: Icon(Icons.keyboard_return, color: Colors.white),
-                        backgroundColor: Theme.of(context).backgroundColor,
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        label: 'Return'.tr,
-                        labelStyle: TextStyle(
-                            fontWeight: FontWeight.w500, color: Colors.white),
-                        labelBackgroundColor: Colors.black,
-                      ),
-                      SpeedDialChild(
-                        child: Icon(Icons.logout_rounded, color: Colors.white),
-                        backgroundColor: Theme.of(context).backgroundColor,
-                        onTap: () {
-                          box.remove('userName');
-                          box.remove('uType');
-                          box.remove('userId');
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage(),
-                            ),
-                            (route) => false,
-                          );
-                        },
-                        label: 'Log Out'.tr,
-                        labelStyle: TextStyle(
-                            fontWeight: FontWeight.w500, color: Colors.white),
-                        labelBackgroundColor: Colors.black,
-                      ),
-                    ],
-                  )
-                : SpeedDial(
-                    icon: Icons.menu,
-                    activeIcon: Icons.close,
-                    backgroundColor: Colors.green[900],
-                    visible: true,
-                    curve: Curves.bounceInOut,
-                    spaceBetweenChildren: 10,
-                    spacing: 10,
-                    children: [
-                      SpeedDialChild(
-                        child: Icon(Icons.logout_rounded, color: Colors.white),
-                        backgroundColor: Theme.of(context).backgroundColor,
-                        onTap: () {
-                          box.remove('userName');
-                          box.remove('uType');
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage(),
-                            ),
-                            (route) => false,
-                          );
-                        },
-                        label: 'Log Out'.tr,
-                        labelStyle: TextStyle(
-                            fontWeight: FontWeight.w500, color: Colors.white),
-                        labelBackgroundColor: Colors.black,
-                      ),
-                    ],
+          floatingActionButton: SpeedDial(
+            icon: Icons.menu,
+            activeIcon: Icons.close,
+            backgroundColor: Theme.of(context).backgroundColor,
+            visible: true,
+            curve: Curves.bounceInOut,
+            spaceBetweenChildren: 10,
+            spacing: 10,
+            children: [
+              SpeedDialChild(
+                child: Icon(Icons.keyboard_return, color: Colors.white),
+                backgroundColor: Theme.of(context).backgroundColor,
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                label: 'Return'.tr,
+                labelStyle:
+                    TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+                labelBackgroundColor: Colors.black,
+              ),
+              SpeedDialChild(
+                child: Icon(Icons.logout_rounded, color: Colors.white),
+                backgroundColor: Theme.of(context).backgroundColor,
+                onTap: () {
+                  box.remove('userName');
+                  box.remove('uType');
+                  box.remove('userId');
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => HomePage(),
+                    ),
+                    (route) => false,
                   );
-          }),
+                },
+                label: 'Log Out'.tr,
+                labelStyle:
+                    TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+                labelBackgroundColor: Colors.black,
+              ),
+            ],
+          ),
           backgroundColor: Theme.of(context).backgroundColor,
           body: Center(
             child: CustomScrollView(

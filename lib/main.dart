@@ -34,7 +34,7 @@ void main() async {
   } else if (initialRoute == 1) {
     pageToDisplay = '/homepage';
   } else if (initialRoute == 2) {
-    pageToDisplay = '/offlinemainpage';
+    pageToDisplay = '/profilepage';
   } else if (initialRoute == 3) {
     pageToDisplay = '/webviewpage';
   }
@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
           '/offlinemainpage': (context) => PostLoginOfflineMainPage(),
           '/downloadvideopage': (context) => DownloadVideoPage(),
           '/viewvideopage': (context) => ViewVideoPage(),
-          '/profilepage': (context) => ProfileSelectionPage(),
+          '/profilepage': (context) => OfflineProfileSelectionPage(),
           '/webviewpage': (context) => WebViewPage(),
           '/signuppage': (context) => SignUpPage(),
           '/forgotpassword': (context) => ForgotPassword(),

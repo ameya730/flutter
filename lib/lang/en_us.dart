@@ -48,4 +48,5 @@ const Map<String, String> enUs = {
   'Language Changed': 'Language has been changed',
   'Download commencing': 'Commencing Download',
   'Downloaded Videos Page': 'Downloaded Videos Page',
+  "Choose a profile": "Choose a profile",
 };

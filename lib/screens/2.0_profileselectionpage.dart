@@ -1,111 +1,119 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:gshala/apis/sendvideodetails_api.dart';
+import 'package:gshala/const.dart';
 import 'package:gshala/controllers/2.1_videolist_controller.dart';
-import 'package:gshala/templates/custombutton.dart';
+import 'package:gshala/controllers/5.0_profile_selection_controller.dart';
+import 'package:gshala/database/video_db.dart';
+import 'package:gshala/screens/1_homepage.dart';
+import 'package:gshala/screens/2.2_offlinemainpage.dart';
+import 'package:gshala/templates/profilecards.dart';
 
-class ProfileSelectionPage extends StatelessWidget {
-  final List profiles = ['Profile A', 'Profile B', 'Profile C'];
-  final GetStorage box = new GetStorage();
+class OfflineProfileSelectionPage extends StatelessWidget {
+  final profileControl = Get.put(ProfileSelectioController());
+  final box = new GetStorage();
+  final dbHelper = DatabaseProvider.db;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Select Profile'),
-          backgroundColor: Theme.of(context).backgroundColor,
-          shadowColor: Colors.transparent,
-        ),
-        backgroundColor: Theme.of(context).backgroundColor,
-        body: Center(
-          child: Column(
-            children: [
-              GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  childAspectRatio: 3,
-                ),
-                itemCount: profiles.length,
-                itemBuilder: (context, i) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        box.write(
-                          'profileName',
-                          profiles[i],
-                        );
-                        final VideoListController videoListController =
-                            Get.put(VideoListController());
-                        videoListController.getVideosList();
-                        Get.toNamed('/offlinemainpage');
-                      },
-                      child: Card(
-                        child: ListTile(
-                          title: Text(profiles[i]),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              CElevatedButton(
-                  buttonLabel: 'Download Video',
-                  onPressed: () {
-                    Get.toNamed('/downloadvideopage');
-                  }),
-              CElevatedButton(
-                  buttonLabel: 'Send Video Statistics',
-                  onPressed: () {
-                    SendVideoDetailsApiService sendVideoDetailsApiService =
-                        new SendVideoDetailsApiService();
-                    sendVideoDetailsApiService.sendVideoDetails().then((value) {
-                      print('success');
-                    });
-                  }),
-              CElevatedButton(
-                  buttonLabel: 'Offline Page',
-                  onPressed: () {
-                    Get.toNamed('/offlinemainpage');
-                  }),
-            ],
+        backgroundColor: normalWhiteText,
+        floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: backGroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-        ),
-        drawer: Container(
-          width: 130,
-          height: 65,
-          color: Colors.black,
-          child: Drawer(
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    box.remove('userName');
-                    Get.offAndToNamed('/homepage');
-                  },
-                  child: Card(
-                    borderOnForeground: true,
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: Text(
-                        'Log out',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+          onPressed: () {
+            logOut(context);
+          },
+          label: Text(
+            'Log Out'.tr,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
+        body: Obx(() {
+          return profileControl.profileListObtained.value
+              ? Container(
+                  decoration: BoxDecoration(
+                    color: backGroundColor,
+                    gradient: LinearGradient(
+                      colors: [
+                        backGroundColor.withOpacity(0.9),
+                        normalWhiteText.withOpacity(0.15),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Text(
+                          'Choose a profile'.tr,
+                          style: TextStyle(
+                            color: normalWhiteText,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: profileControl.listOfProfiles.length,
+                          itemBuilder: (BuildContext context, int i) {
+                            return ProfileCard(
+                              cardNo: i + 1,
+                              personName:
+                                  profileControl.listOfProfiles[i].firstName,
+                              personRollNo:
+                                  profileControl.listOfProfiles[i].userName,
+                              classNo:
+                                  profileControl.listOfProfiles[i].batchname,
+                              onTap: () {
+                                box.write('userId',
+                                    profileControl.listOfProfiles[i].userId);
+                                moveToOffline();
+                              },
+                            );
+                          }),
+                    ],
+                  ),
+                )
+              : Center(
+                  child: CircularProgressIndicator.adaptive(),
+                );
+        }),
       ),
+    );
+  }
+
+  moveToOffline() async {
+    final VideoListController videoListController =
+        Get.put(VideoListController());
+    videoListController.listObtained.value = false;
+    videoListController.subjectListObtained.value = false;
+    if (box.read('userId') != null) {
+      await videoListController.getVideosList();
+    }
+    Get.to(() => PostLoginOfflineMainPage());
+  }
+
+  logOut(BuildContext context) async {
+    await dbHelper.deleteProfiles();
+    box.remove('userName');
+    box.remove('uType');
+    box.remove('userId');
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (BuildContext context) => HomePage(),
+      ),
+      (route) => false,
     );
   }
 }

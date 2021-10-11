@@ -1,44 +1,55 @@
+// To parse this JSON data, do
+//
+//     final userProfiles = userProfilesFromJson(jsonString);
+
+import 'dart:convert';
+
+List<UserProfiles> userProfilesFromJson(String str) => List<UserProfiles>.from(
+    json.decode(str).map((x) => UserProfiles.fromJson(x)));
+
+String userProfilesToJson(List<UserProfiles> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 class UserProfiles {
-  int? userName;
-  String? firstName;
-  String? lastName;
-  int? userId;
-  // String? profilePic;
-  int? mobileNumber;
-  String? gender;
-  int? batchname;
+  UserProfiles({
+    this.userName,
+    this.firstName,
+    this.lastName,
+    this.userId,
+    this.profilePic,
+    this.mobileNumber,
+    this.gender,
+    this.batchname,
+  });
 
-  UserProfiles(
-      {this.userName,
-      this.firstName,
-      this.lastName,
-      this.userId,
-      // this.profilePic,
-      this.mobileNumber,
-      this.gender,
-      this.batchname});
+  var userName;
+  var firstName;
+  var lastName;
+  var userId;
+  var profilePic;
+  var mobileNumber;
+  var gender;
+  var batchname;
 
-  UserProfiles.fromJson(Map<String, dynamic> json) {
-    userName = json['UserName'];
-    firstName = json['FirstName'];
-    lastName = json['LastName'];
-    userId = json['UserId'];
-    // profilePic = json['ProfilePic'];
-    mobileNumber = json['MobileNumber'];
-    gender = json['Gender'];
-    batchname = json['Batchname'];
-  }
+  factory UserProfiles.fromJson(Map<String, dynamic> json) => UserProfiles(
+        userName: json["UserName"],
+        firstName: json["FirstName"],
+        lastName: json["LastName"],
+        userId: json["UserId"],
+        profilePic: json["ProfilePic"],
+        mobileNumber: json["MobileNumber"],
+        gender: json["Gender"],
+        batchname: json["Batchname"],
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['UserName'] = this.userName;
-    data['FirstName'] = this.firstName;
-    data['LastName'] = this.lastName;
-    data['UserId'] = this.userId;
-    // data['ProfilePic'] = this.profilePic;
-    data['MobileNumber'] = this.mobileNumber;
-    data['Gender'] = this.gender;
-    data['Batchname'] = this.batchname;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "UserName": userName,
+        "FirstName": firstName,
+        "LastName": lastName,
+        "UserId": userId,
+        "ProfilePic": profilePic,
+        "MobileNumber": mobileNumber,
+        "Gender": gender,
+        "Batchname": batchname,
+      };
 }

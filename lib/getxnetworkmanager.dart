@@ -43,7 +43,7 @@ class GetXNetworkManager extends GetxController {
   }
 
   showPostLoginOfflinePage() async {
-    await Get.offAndToNamed('/offlinemainpage');
+    await Get.offAndToNamed('/profilepage');
   }
 
   showHomePage() async {

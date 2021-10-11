@@ -130,11 +130,57 @@ class DatabaseProvider {
     );
   }
 
+  //Function for duplicate check while downloading a video. The same video can be downloaded if the user is different
+  Future<int> profileDuplicateControl(int userId) async {
+    final db = await database;
+    var count = await db
+        .query(USER_PROFILES, where: '$USER_ID = ?', whereArgs: [userId]);
+    print('count is $count');
+    return count.length;
+  }
+
   //Insert user profiles in the user profiles table
   insertUserProfiles(UserProfiles userProfiles) async {
+    print('testing');
     final db = await database;
     int count = await db.insert(USER_PROFILES, userProfiles.toJson());
+    print('Inserted count is $count');
     return count;
+  }
+
+  //Get the list of all profiles for a user
+  Future getAllProfiles() async {
+    final db = await database;
+    final box = new GetStorage();
+    List<Map<String, dynamic>> profileList = await db.query(
+      USER_PROFILES,
+      // where: '$MOBILE_NUMBER = ?',
+      // whereArgs: [int.parse(box.read('userName'))],
+    );
+    print('success');
+
+    var profiles = profileList
+        .map(
+          (e) => UserProfiles(
+            userName: e['userName'],
+            firstName: e['firstName'],
+            batchname: e['batchName'],
+          ),
+        )
+        .toList();
+    return profiles;
+  }
+
+  //Delete all profiles on sign-out
+  Future<int> deleteProfiles() async {
+    final db = await database;
+    final box = new GetStorage();
+    print(box.read('userName').toString());
+
+    int counter = await db.delete(
+      USER_PROFILES,
+    );
+    return counter;
   }
 
   //Insert new video in the video download table

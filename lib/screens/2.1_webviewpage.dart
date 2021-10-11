@@ -12,10 +12,13 @@ import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/controllers/2.2_floatingbarcontrollers.dart';
 import 'package:gshala/controllers/2.4_orientation_controller.dart';
 import 'package:gshala/controllers/2.5_offlinevideoview_controller.dart';
+import 'package:gshala/controllers/2.6_profile_update_controller.dart';
 import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/controllers/2.3_pdfview_controller.dart';
+import 'package:gshala/controllers/5.0_profile_selection_controller.dart';
 import 'package:gshala/cryptojs_aes_encryption_helper.dart';
 import 'package:gshala/database/video_db.dart';
+import 'package:gshala/models/1.1_userprofiles_sqlite_model.dart';
 import 'package:gshala/models/3.0_videodownload_model.dart';
 import 'package:gshala/screens/1_homepage.dart';
 import 'package:gshala/screens/2.2_offlinemainpage.dart';
@@ -40,6 +43,7 @@ class _WebViewPageState extends State<WebViewPage>
   final languageController = Get.put(LanguageController());
   final orientationController = Get.put(OrientationController());
   final floatingController = Get.put(FloatingBarControllers());
+  final profileUpdateController = Get.put(ProfileUpdateController());
 
   Future<bool> _onWillPop(BuildContext context) async {
     await showDialog(
@@ -163,6 +167,33 @@ class _WebViewPageState extends State<WebViewPage>
                     useHybridComposition: true,
                   ),
                 ),
+                onLoadStop: (c, url) {
+                  url = url;
+                  c.addJavaScriptHandler(
+                    handlerName: 'changeProfile',
+                    callback: (args) {
+                      print('Check $args[0]');
+                      box.write('userId', args[0].toString());
+                      Future.delayed(Duration(seconds: 2)).then((value) {
+                        floatingController.hideNavigationBar.value = false;
+                      });
+                    },
+                  );
+                },
+                onLoadStart: (c, url) {
+                  url = url;
+                  c.addJavaScriptHandler(
+                    handlerName: 'changeProfile',
+                    callback: (args) {
+                      print(args);
+                      print('Load $args[0]');
+                      box.write('userId', args[0].toString());
+                      Future.delayed(Duration(seconds: 2)).then((value) {
+                        floatingController.hideNavigationBar.value = false;
+                      });
+                    },
+                  );
+                },
                 onWebViewCreated: (c) {
                   controller = c;
                   c.addJavaScriptHandler(
@@ -212,8 +243,21 @@ class _WebViewPageState extends State<WebViewPage>
                   c.addJavaScriptHandler(
                     handlerName: 'getProfiles',
                     callback: (args) {
+                      floatingController.hideNavigationBar.value = true;
                       print('The profiles are');
                       print(args);
+                      var data = args[0];
+                      print('The data is $data');
+                      var profiles = userProfilesFromJson(data);
+                      profiles.forEach((element) {
+                        print(element.firstName);
+                        insertIntoDatabase(
+                          int.parse(
+                            element.userId.toString(),
+                          ),
+                          element,
+                        );
+                      });
                     },
                   );
                   c.addJavaScriptHandler(
@@ -237,12 +281,18 @@ class _WebViewPageState extends State<WebViewPage>
                   c.addJavaScriptHandler(
                     handlerName: 'changeProfile',
                     callback: (args) {
+                      print(args);
+                      print('Check $args[0]');
                       box.write('userId', args[0].toString());
+                      Future.delayed(Duration(seconds: 2)).then((value) {
+                        floatingController.hideNavigationBar.value = false;
+                      });
                     },
                   );
                 },
                 onConsoleMessage: (controller, consoleMessage) {
                   print(consoleMessage.message);
+                  print(ConsoleMessageLevel.values);
                 },
                 androidOnPermissionRequest:
                     (controller, origin, resources) async {
@@ -381,43 +431,45 @@ class _WebViewPageState extends State<WebViewPage>
                         );
                 },
               ),
-              Obx(() {
-                return languageController.changeLanguage.value
-                    ? Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        color: normalDarkText,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Language Changed'.tr,
-                                style: TextStyle(
-                                  color: normalWhiteText,
+              Obx(
+                () {
+                  return languageController.changeLanguage.value
+                      ? Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          color: normalDarkText,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Language Changed'.tr,
+                                  style: TextStyle(
+                                    color: normalWhiteText,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CElevatedButton(
-                                  buttonLabel: 'Ok'.tr,
-                                  onPressed: () {
-                                    languageController.languageChanged.value =
-                                        false;
-                                    languageController.changeLanguage.value =
-                                        false;
-                                  }),
-                            )
-                          ],
-                        ),
-                      )
-                    : Container(
-                        height: 0,
-                        width: 0,
-                      );
-              }),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CElevatedButton(
+                                    buttonLabel: 'Ok'.tr,
+                                    onPressed: () {
+                                      languageController.languageChanged.value =
+                                          false;
+                                      languageController.changeLanguage.value =
+                                          false;
+                                    }),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container(
+                          height: 0,
+                          width: 0,
+                        );
+                },
+              ),
               Obx(
                 () {
                   return floatingController.hideNavigationBar.value
@@ -478,14 +530,6 @@ class _WebViewPageState extends State<WebViewPage>
                                       ),
                                     ),
                                   ),
-                                  // IconButton(
-                                  //   onPressed: () {
-                                  //     logOut();
-                                  //   },
-                                  //   icon: Icon(
-                                  //     Icons.logout,
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                             ),
@@ -499,6 +543,25 @@ class _WebViewPageState extends State<WebViewPage>
       ),
     );
   }
+
+  insertIntoDatabase(int userId, UserProfiles userProfiles) async {
+    var count = 0;
+    count = await dbHelper.profileDuplicateControl(userId);
+    if (count != 0) {
+      profileUpdateController.isDuplicate.value = true;
+      print('user profile duplicate');
+      print(profileUpdateController.isDuplicate.value);
+    } else {
+      profileUpdateController.isDuplicate.value = false;
+      print('updating database');
+      await profileUpdateController.insertProfileInDatabase(userProfiles);
+    }
+  }
+
+  // insertProfileInDatabase(UserProfiles userProfiles) async {
+  //   print('updating database');
+  //   await profileUpdateController.insertProfileInDatabase(userProfiles);
+  // }
 
   duplicateVideoCheck(int nodeId) async {
     var count = 0;
@@ -517,7 +580,8 @@ class _WebViewPageState extends State<WebViewPage>
     languageController.languageChanged.value = true;
   }
 
-  logOut() {
+  logOut() async {
+    await dbHelper.deleteProfiles();
     box.remove('userName');
     box.remove('uType');
     box.remove('userId');

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
+import 'package:gshala/controllers/2.2_floatingbarcontrollers.dart';
 import 'package:gshala/models/1_user_sqlite_model.dart';
 import 'package:gshala/secureservices.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +18,7 @@ class LogInController extends GetxController {
   final userToggle = false.obs;
   final dropValue = ''.tr.obs;
   final isLoginSuccessful = false.obs;
+  final floatingController = Get.put(FloatingBarControllers());
 
   @override
   onInit() {
@@ -59,8 +61,6 @@ class LogInController extends GetxController {
       'grant_type': 'password',
       'scope': myEncryptionDecryption(userType!),
     };
-    print('The body fields are');
-    print(request.bodyFields);
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -68,6 +68,7 @@ class LogInController extends GetxController {
       isLoginSuccessful.value = true;
       var res = await response.stream.bytesToString();
       var data = UserResponse.fromJson(json.decode(res));
+      print(data);
       box.write('accessToken', data.accessToken);
       box.write(
         'accessTokenTimeStamp',
