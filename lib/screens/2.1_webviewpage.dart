@@ -130,7 +130,7 @@ class _WebViewPageState extends State<WebViewPage>
                               )
                             : FloatingActionButton(
                                 backgroundColor: backGroundColor,
-                                elevation: 0,
+                                elevation: 5,
                                 tooltip: 'Downloaded Videos Page'.tr,
                                 child: Icon(
                                   Icons.web_stories,
@@ -154,15 +154,14 @@ class _WebViewPageState extends State<WebViewPage>
                 ),
                 initialOptions: InAppWebViewGroupOptions(
                   crossPlatform: InAppWebViewOptions(
-                    useShouldOverrideUrlLoading: true,
                     mediaPlaybackRequiresUserGesture: false,
                     javaScriptEnabled: true,
                     allowFileAccessFromFileURLs: true,
                     javaScriptCanOpenWindowsAutomatically: true,
-                    clearCache: true,
                   ),
                   android: AndroidInAppWebViewOptions(
                     useHybridComposition: true,
+                    hardwareAcceleration: false,
                   ),
                 ),
                 onWebViewCreated: (c) {
@@ -237,7 +236,7 @@ class _WebViewPageState extends State<WebViewPage>
                     callback: (args) {
                       print(args);
                       if (args[0].toString().toLowerCase() == 'timedout') {
-                        controller!.reload();
+                        c.reload();
                       } else if (args[0].toString().toLowerCase() == 'logout') {
                         logOut(context);
                       }
@@ -289,7 +288,10 @@ class _WebViewPageState extends State<WebViewPage>
                           pdfViewController.pdfPath.value,
                         ),
                       )
-                    : Container();
+                    : Container(
+                        height: 0,
+                        width: 0,
+                      );
               }),
               Obx(
                 () {
@@ -516,6 +518,20 @@ class _WebViewPageState extends State<WebViewPage>
                         );
                 },
               ),
+              Obx(
+                () {
+                  return orientationController.screenOrientation.value
+                      ? Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.black87,
+                        )
+                      : Container(
+                          height: 0,
+                          width: 0,
+                        );
+                },
+              ),
             ],
           ),
         ),
@@ -536,11 +552,6 @@ class _WebViewPageState extends State<WebViewPage>
       await profileUpdateController.insertProfileInDatabase(userProfiles);
     }
   }
-
-  // insertProfileInDatabase(UserProfiles userProfiles) async {
-  //   print('updating database');
-  //   await profileUpdateController.insertProfileInDatabase(userProfiles);
-  // }
 
   duplicateVideoCheck(int nodeId) async {
     var count = 0;
@@ -574,8 +585,8 @@ class _WebViewPageState extends State<WebViewPage>
     } else if (orientationController.screenOrientation.value == false) {
       SystemChrome.setPreferredOrientations(
         [
-          DeviceOrientation.portraitUp,
           DeviceOrientation.portraitDown,
+          DeviceOrientation.portraitUp,
         ],
       );
     }
@@ -606,13 +617,19 @@ class _WebViewPageState extends State<WebViewPage>
   }
 
   pdfBackButton() {
-    return FloatingActionButton.extended(
-      backgroundColor: Theme.of(context).backgroundColor,
-      onPressed: () {
-        pdfViewController.closePDF();
-        floatingController.hideNavigationBar.value = false;
-      },
-      label: Text('Return'.tr),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: FloatingActionButton.extended(
+        backgroundColor: Theme.of(context).backgroundColor,
+        onPressed: () {
+          pdfViewController.closePDF();
+          floatingController.hideNavigationBar.value = false;
+        },
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        label: Text('Return'.tr),
+      ),
     );
   }
 

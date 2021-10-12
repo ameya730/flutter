@@ -97,31 +97,35 @@ class PlayVideoController extends GetxController {
   }
 
   trackVideoUpdate() {
-    videoPlayerController.addListener(() {
-      if (chewieController!.isPlaying == false) {
-        _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
-        currentTotalDuration.value =
-            StopWatchTimer.getRawSecond(_stopWatchTimer.rawTime.value);
-        print('Total Duration is : $currentTotalDuration.value');
-        currentEndPosition.value =
-            videoPlayerController.value.position.inSeconds;
-      }
-      if (chewieController!.isPlaying == true) {
-        _stopWatchTimer.onExecute.add(StopWatchExecute.start);
-        _stopWatchTimer.secondTime.listen((value) {
-          print('Current time is $value');
-        });
-        if (videoPlayerController.value.duration ==
-            videoPlayerController.value.position) {
-          isComplete.value = true;
+    videoPlayerController.addListener(
+      () {
+        if (chewieController!.isPlaying == false) {
+          _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
+          currentTotalDuration.value =
+              StopWatchTimer.getRawSecond(_stopWatchTimer.rawTime.value);
+          print('Total Duration is : $currentTotalDuration.value');
+          currentEndPosition.value =
+              videoPlayerController.value.position.inSeconds;
         }
-      }
-      if (chewieController!.isFullScreen) {
-        isFullScreen.value = true;
-      } else {
-        isFullScreen.value = false;
-      }
-    });
+        if (chewieController!.isPlaying == true) {
+          _stopWatchTimer.onExecute.add(StopWatchExecute.start);
+          _stopWatchTimer.secondTime.listen((value) {
+            print('Current time is $value');
+          });
+          if (videoPlayerController.value.duration ==
+              videoPlayerController.value.position) {
+            isComplete.value = true;
+          }
+        }
+        if (chewieController!.isFullScreen) {
+          isFullScreen.value = true;
+          print(isFullScreen.value);
+        } else {
+          isFullScreen.value = false;
+          print(isFullScreen.value);
+        }
+      },
+    );
   }
 
   videoUpdate() {

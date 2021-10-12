@@ -83,97 +83,104 @@ class _ViewVideoPageState extends State<ViewVideoPage> {
                                 child: Chewie(
                                     controller: vcontrol.chewieController!),
                               ),
-                              Obx(() {
-                                return vController.isFullScreen.value
-                                    ? Container(
-                                        height: 0,
-                                        width: 0,
-                                      )
-                                    : Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.41,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.9,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            Card(
-                                              child: ListTile(
-                                                title: Text(
-                                                  'Video'.tr,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
+                              Obx(
+                                () {
+                                  return vController.isFullScreen.value
+                                      ? Container(
+                                          height: 0,
+                                          width: 0,
+                                        )
+                                      : Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.41,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.9,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Card(
+                                                child: ListTile(
+                                                  title: Text(
+                                                    'Video'.tr,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
-                                                ),
-                                                subtitle: Text(
-                                                  videoListController
-                                                      .videoList[i].topic
-                                                      .toString(),
+                                                  subtitle: Text(
+                                                    videoListController
+                                                        .videoList[i].topic
+                                                        .toString(),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.44,
-                                                  child: Card(
-                                                    child: ListTile(
-                                                      title: Text(
-                                                        'Subject'.tr,
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.44,
+                                                    child: Card(
+                                                      child: ListTile(
+                                                        title: Text(
+                                                          'Subject'.tr,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      subtitle: Text(
-                                                        videoListController
-                                                            .videoList[i]
-                                                            .subjectName
-                                                            .toString(),
+                                                        subtitle: Text(
+                                                          videoListController
+                                                              .videoList[i]
+                                                              .subjectName
+                                                              .toString(),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.44,
-                                                  child: Card(
-                                                    child: ListTile(
-                                                      title: Text(
-                                                        'Class'.tr,
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                  Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.44,
+                                                    child: Card(
+                                                      child: ListTile(
+                                                        title: Text(
+                                                          'Class'.tr,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      subtitle: Text(
-                                                        videoListController
-                                                            .videoList[i]
-                                                            .videoClass
-                                                            .toString(),
+                                                        subtitle: Text(
+                                                          videoListController
+                                                              .videoList[i]
+                                                              .videoClass
+                                                              .toString(),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                              }),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                },
+                              ),
                             ],
                           ),
                         )
