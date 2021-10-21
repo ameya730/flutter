@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 class SendVideoDetailsApiService {
   GetStorage box = new GetStorage();
-  Future sendVideoDetails() async {
+  Future sendVideoDetails(var videoData) async {
     print(box.read('accessTokenTimeStamp'));
     DateTime tokenStartTime = DateTime.parse(
       box.read('accessTokenTimeStamp'),
@@ -22,7 +22,7 @@ class SendVideoDetailsApiService {
       print('token retrived again');
     }
 
-    var sendBody = await getDetails();
+    var sendBody = videoData;
     String autho = 'bearer ' + box.read('accessToken');
     print(autho);
     print(jsonEncode(sendBody));
@@ -41,24 +41,15 @@ class SendVideoDetailsApiService {
 
     print(response.body);
     if (response.statusCode == 200 || response.statusCode == 400) {
-      updateDatabase();
       return json.decode(response.body);
     } else {
-      print(response.statusCode);
       throw Exception('Failed to signin');
     }
   }
 
-  getDetails() async {
-    final dbHelper = DatabaseProvider.db;
-    var data = await dbHelper.getVideoStatistics();
-    print(jsonEncode(data));
-    return data;
-  }
-
-  updateDatabase() async {
-    final dbHelper = DatabaseProvider.db;
-    await dbHelper.updateVideoDetails();
-    return print('Success');
-  }
+  // updateDatabase() async {
+  //   final dbHelper = DatabaseProvider.db;
+  //   await dbHelper.updateVideoDetails();
+  //   return print('Success');
+  // }
 }

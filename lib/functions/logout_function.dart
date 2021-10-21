@@ -11,6 +11,7 @@ logOut(BuildContext context) async {
   final profileControl = Get.put(ProfileSelectioController());
   await dbHelper.deleteProfiles();
   profileControl.fetchProfiles();
+  box.remove('downloadPermission');
   box.remove('userName');
   box.remove('uType');
   box.remove('userId');

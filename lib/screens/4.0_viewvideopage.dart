@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/controllers/4.0_videoview_controller.dart';
+import 'package:gshala/controllers/6.0_videoviewpage_controller.dart';
 import 'package:gshala/database/video_db.dart';
 
 class ViewVideoPage extends StatefulWidget {
@@ -25,6 +26,7 @@ class _ViewVideoPageState extends State<ViewVideoPage> {
   }
 
   final PlayVideoController vController = Get.put(PlayVideoController());
+  final videoViewPageOpenController = Get.put(VideoViewPageOpenController());
   final VideoListController videoListController =
       Get.put(VideoListController());
 
@@ -38,6 +40,7 @@ class _ViewVideoPageState extends State<ViewVideoPage> {
     return SafeArea(
       child: WillPopScope(
         onWillPop: () {
+          videoViewPageOpenController.isvideoViewPageOpen.value = false;
           vController.videoUpdate();
           box.remove('i');
           Get.back();
@@ -47,6 +50,7 @@ class _ViewVideoPageState extends State<ViewVideoPage> {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
+                videoViewPageOpenController.isvideoViewPageOpen.value = false;
                 vController.videoUpdate();
                 box.remove('i');
                 Get.back();

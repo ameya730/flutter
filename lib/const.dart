@@ -23,7 +23,7 @@ String videoDownloadURL =
 // 'http://65.0.225.102/kyanlms_api/api/data/viddownload?vid_url=';
 
 String sendVideoDetailsUrl =
-    'https://gshala.ecocentricbw.in/api/data/setvideostatistics';
+    'http://lms.schoolnetindia.com/gujratlmsapi/api/data/setvideostatistics';
 
 String signUpURL =
     "https://lms.schoolnetindia.com/gujaratlms/Login/StudentRegistration";

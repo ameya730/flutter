@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/controllers/4.0_videoview_controller.dart';
+import 'package:gshala/controllers/6.0_videoviewpage_controller.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:gshala/functions/logout_function.dart';
 import 'package:gshala/getxnetworkmanager.dart';
@@ -15,6 +16,7 @@ import 'package:gshala/templates/customdropdown.dart';
 class PostLoginOfflineMainPage extends StatelessWidget {
   final VideoListController videoListController =
       Get.put(VideoListController());
+  final videoViewPageOpenController = Get.put(VideoViewPageOpenController());
   final GetStorage box = new GetStorage();
   final dbHelper = DatabaseProvider.db;
   final GetXNetworkManager getXNetworkManager = Get.put(GetXNetworkManager());
@@ -169,6 +171,9 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                                     ListTile(
                                                       leading: GestureDetector(
                                                         onTap: () {
+                                                          videoViewPageOpenController
+                                                              .isvideoViewPageOpen
+                                                              .value = true;
                                                           goToViewVideoPage(i);
                                                         },
                                                         child: CircleAvatar(
@@ -183,6 +188,9 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                                       ),
                                                       title: GestureDetector(
                                                         onTap: () {
+                                                          videoViewPageOpenController
+                                                              .isvideoViewPageOpen
+                                                              .value = true;
                                                           goToViewVideoPage(i);
                                                         },
                                                         child: Text(
@@ -195,6 +203,9 @@ class PostLoginOfflineMainPage extends StatelessWidget {
                                                       ),
                                                       subtitle: GestureDetector(
                                                         onTap: () {
+                                                          videoViewPageOpenController
+                                                              .isvideoViewPageOpen
+                                                              .value = true;
                                                           goToViewVideoPage(i);
                                                         },
                                                         child: Text(

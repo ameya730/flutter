@@ -4,6 +4,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:gshala/controllers/2.1_videolist_controller.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:gshala/models/2.0_videodetails_sqflite_model.dart';
 import 'package:gshala/models/2.1_videodownload_sqflite_model.dart';
@@ -87,6 +88,19 @@ class PlayVideoController extends GetxController {
       showControlsOnInitialize: true,
       showControls: true,
       fullScreenByDefault: true,
+      overlay: Align(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 4.0,
+            top: 4.0,
+          ),
+          child: Image.asset(
+            'assets/videooverlay.png',
+            height: 15,
+          ),
+        ),
+      ),
       placeholder: Container(
         color: Colors.black87,
       ),
@@ -129,6 +143,8 @@ class PlayVideoController extends GetxController {
   }
 
   videoUpdate() {
+    final videoListController = Get.put(VideoListController());
+    int i = box.read('i');
     if (chewieController!.isPlaying == true) {
       videoPlayerController.pause();
     }
@@ -146,9 +162,9 @@ class PlayVideoController extends GetxController {
     }
 
     final row = VideoDetails(
-      userId: 0,
+      userId: videoListController.filteredVideoList[i].userId,
       lessonPlanId: 0,
-      resourceNodeId: 0,
+      resourceNodeId: videoListController.filteredVideoList[i].resourceNodeId,
       docType: 'video',
       videoInitializeDate: DateTime.now().toString(),
       videoDuration: videoPlayerController.value.duration.inSeconds,

@@ -14,6 +14,7 @@ import 'package:gshala/controllers/2.5_offlinevideoview_controller.dart';
 import 'package:gshala/controllers/2.6_profile_update_controller.dart';
 import 'package:gshala/controllers/3.0_videodownload_controller.dart';
 import 'package:gshala/controllers/2.3_pdfview_controller.dart';
+import 'package:gshala/controllers/7.0_permissioncontroller.dart';
 import 'package:gshala/cryptojs_aes_encryption_helper.dart';
 import 'package:gshala/database/video_db.dart';
 import 'package:gshala/functions/getofflinevideos_function.dart';
@@ -42,6 +43,7 @@ class _WebViewPageState extends State<WebViewPage>
   final orientationController = Get.put(OrientationController());
   final floatingController = Get.put(FloatingBarControllers());
   final profileUpdateController = Get.put(ProfileUpdateController());
+  final permissionHandler = Get.put(PermissionHandler());
 
   Future<bool> _onWillPop(BuildContext context) async {
     await showDialog(
@@ -71,9 +73,8 @@ class _WebViewPageState extends State<WebViewPage>
 
   @override
   void initState() {
-    // sendVideoStatistics();
+    permissionHandler.checkDownloadPermission();
     super.initState();
-    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     if (Platform.isAndroid) {
       androidPlatform();
     }
@@ -82,14 +83,6 @@ class _WebViewPageState extends State<WebViewPage>
   androidPlatform() async {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
-
-  // sendVideoStatistics() {
-  //   SendVideoDetailsApiService sendVideoDetailsApiService =
-  //       new SendVideoDetailsApiService();
-  //   sendVideoDetailsApiService.sendVideoDetails().then((value) {
-  //     print('success');
-  //   });
-  // }
 
   final GetStorage box = new GetStorage();
 
@@ -115,8 +108,61 @@ class _WebViewPageState extends State<WebViewPage>
             : _onWillPop(context),
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: Obx(() {
+            return floatingController.hideNavigationBar.value
+                ? Container(
+                    height: 0,
+                    width: 0,
+                  )
+                : BottomAppBar(
+                    color: normalWhiteText,
+                    shape: CircularNotchedRectangle(),
+                    elevation: 20,
+                    notchMargin: 8,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 32.0, right: 32.0),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: IconButton(
+                              onPressed: () async {
+                                if (await controller!.canGoBack()) {
+                                  controller!.goBack();
+                                }
+                              },
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: normalDarkText,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 32.0, right: 64.0),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: IconButton(
+                              onPressed: () async {
+                                if (await controller!.canGoForward()) {
+                                  controller!.goForward();
+                                }
+                              },
+                              icon: Icon(
+                                Icons.arrow_forward,
+                                color: normalDarkText,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+          }),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           floatingActionButton: Obx(
             () {
               return pdfViewController.pdfOpen.value
@@ -130,7 +176,7 @@ class _WebViewPageState extends State<WebViewPage>
                               )
                             : FloatingActionButton(
                                 backgroundColor: backGroundColor,
-                                elevation: 5,
+                                elevation: 20,
                                 tooltip: 'Downloaded Videos Page'.tr,
                                 child: Icon(
                                   Icons.web_stories,
@@ -453,73 +499,6 @@ class _WebViewPageState extends State<WebViewPage>
               ),
               Obx(
                 () {
-                  return floatingController.hideNavigationBar.value
-                      ? Container(
-                          height: 0,
-                          width: 0,
-                        )
-                      : Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 4.0,
-                            ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: normalWhiteText,
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  topLeft: Radius.circular(10),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 32.0),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          if (await controller!.canGoBack()) {
-                                            controller!.goBack();
-                                          }
-                                        },
-                                        icon: Icon(
-                                          Icons.arrow_back,
-                                          color: normalDarkText,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 32.0),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          if (await controller!
-                                              .canGoForward()) {
-                                            controller!.goForward();
-                                          }
-                                        },
-                                        icon: Icon(
-                                          Icons.arrow_forward,
-                                          color: normalDarkText,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                },
-              ),
-              Obx(
-                () {
                   return orientationController.screenOrientation.value
                       ? Container(
                           height: MediaQuery.of(context).size.height,
@@ -532,6 +511,51 @@ class _WebViewPageState extends State<WebViewPage>
                         );
                 },
               ),
+              Obx(() {
+                return permissionHandler.isPermissionGiven.value
+                    ? permissionHandler.alertBoxOpen.value
+                        ? AlertDialog(
+                            title: Text(
+                              'Information on Video Download'.tr,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            content: Text(
+                              'InfoContent'.tr,
+                              style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            actions: [
+                              TextButton.icon(
+                                onPressed: () {
+                                  box.write(
+                                      'downloadPermission', 'Permission Taken');
+                                  permissionHandler.alertBoxOpen.value = false;
+                                },
+                                icon: Icon(Icons.check),
+                                label: Text(
+                                  'Ok',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container(
+                            height: 0,
+                            width: 0,
+                          )
+                    : Container(
+                        height: 0,
+                        width: 0,
+                      );
+              })
             ],
           ),
         ),

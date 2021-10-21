@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/1.1_login_controller.dart';
 import 'package:gshala/controllers/1.2_password_controller.dart';
+import 'package:gshala/controllers/7.0_permissioncontroller.dart';
 import 'package:gshala/secureservices.dart';
 import 'package:gshala/templates/custombutton.dart';
 import 'package:gshala/templates/customdropdown.dart';
@@ -19,6 +20,7 @@ class HomePage extends StatelessWidget {
   final GetStorage box = new GetStorage();
   final GlobalKey<ScaffoldState> _homePageKey = new GlobalKey<ScaffoldState>();
   final PasswordController passwordController = Get.put(PasswordController());
+  final permissionHandler = Get.put(PermissionHandler());
 
   @override
   Widget build(BuildContext context) {

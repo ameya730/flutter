@@ -12,7 +12,7 @@ const Map<String, String> enUs = {
   'Please select role': 'Please select role',
   'Login': 'Login',
   'Forgot Password?': 'Forgot Password?',
-  'Dont have an account yet ?': 'Dont have an account yet ?',
+  'Dont have an account yet ?': 'Don\'t have an account yet ?',
   'Sign Up': 'Sign Up',
   'Log Out': 'Log Out',
   'Language': 'ગુજરાતી',
@@ -21,8 +21,7 @@ const Map<String, String> enUs = {
   'Welcome': 'Welcome',
   'ActualOfflineMessage':
       'You are offline. Below are the list of videos that you can view offline',
-  'OnlineOfflineMessage':
-      'Find below the videos you downloaded to watch offline flight',
+  'OnlineOfflineMessage': 'Please find below the list of download videos',
   'Class': 'Class',
   'Subject': 'Subject',
   'Video': 'Video',
@@ -49,4 +48,7 @@ const Map<String, String> enUs = {
   'Download commencing': 'Commencing Download',
   'Downloaded Videos Page': 'Downloaded Videos Page',
   "Choose a profile": "Choose a profile",
+  'Information on Video Download': 'Information on Video Download',
+  'InfoContent':
+      'Please note that any video downloaded in this app will be stored within the app directory and will not be applicable outside of the app. \nWhile downloading a video you are giving permission to the app to download it.',
 };

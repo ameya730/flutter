@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gshala/functions/sendvideostatistics_function.dart';
 import 'package:gshala/getxnetworkmanager.dart';
 import 'package:gshala/localization_service.dart';
 import 'package:gshala/models/0_lifecycle_model.dart';
@@ -23,6 +24,7 @@ void main() async {
   SystemChrome.setEnabledSystemUIOverlays(
       [SystemUiOverlay.bottom, SystemUiOverlay.top]);
 
+  sendVideoStatistics();
   await GetStorage.init();
   final box = new GetStorage();
   final GetXNetworkManager networkManager = Get.put(GetXNetworkManager());
@@ -46,6 +48,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final String? initialRoute;
   MyApp({this.initialRoute});
+
   @override
   Widget build(BuildContext context) {
     return LifeCycleManager(

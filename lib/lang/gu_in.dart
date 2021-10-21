@@ -20,14 +20,13 @@ const Map<String, String> guIn = {
   'Welcome': 'સ્વાગત છે',
   'ActualOfflineMessage':
       'તમે .ફલાઇન છો. નીચે તમે offlineફલાઇન જોઈ શકો છો તે વિડિઓઝની સૂચિ છે',
-  'OnlineOfflineMessage':
-      'Offlineફલાઇન ફ્લાઇટ જોવા માટે તમે ડાઉનલોડ કરેલા વીડિયો નીચે શોધો',
+  'OnlineOfflineMessage': 'કૃપા કરીને ડાઉનલોડ વિડિઓઝની સૂચિ નીચે શોધો',
   'Class': 'વર્ગ',
   'Subject': 'વિષય',
   'Video': 'વિડીયો',
   'Go Online': 'ઓનલાઇન જાઓ',
   'No videos have been downloaded for offline viewing':
-      'Offlineફલાઇન જોવા માટે કોઈ વિડિઓ ડાઉનલોડ કરવામાં આવી નથી',
+      'ઓફલાઇન મોડમાં જોવા માટે વીડિયો ડાઉનલોડ કરો',
   'Return': 'પરત',
   'Filter by Subject': 'વિષય દ્વારા ફિલ્ટર કરો',
   'Exit App': 'એપમાંથી બહાર નીકળો',
@@ -49,4 +48,7 @@ const Map<String, String> guIn = {
   'Download commencing': 'ડાઉનલોડ શરૂ કરી રહ્યા છીએ',
   'Downloaded Videos Page': 'ડાઉનલોડ કરેલા વિડીયો પેજ',
   "Choose a profile": "એક પ્રોફાઇલ પસંદ કરો",
+  'Information on Video Download': 'વિડિઓ ડાઉનલોડ પર માહિતી',
+  'InfoContent':
+      'મહેરબાની કરીને નોંધ કરો કે આ એપ્લિકેશનમાં ડાઉનલોડ કરેલ કોઈપણ વિડિઓ એપ્લિકેશન ડિરેક્ટરીમાં સંગ્રહિત થશે અને એપ્લિકેશનની બહાર લાગુ થશે નહીં. વિડિઓ ડાઉનલોડ કરતી વખતે તમે એપ્લિકેશનને ડાઉનલોડ કરવાની પરવાનગી આપી રહ્યા છો.',
 };

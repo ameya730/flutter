@@ -31,10 +31,7 @@ class DownloadVideoAPIService {
     final response = await http.post(
       url,
       headers: {
-        "Accept": "application/json",
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "APIKey": "G12SHA98IZ82938KPP",
         "Authorization": autho,
       },
       body: jsonEncode(sendBody),
