@@ -14,9 +14,7 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   void _checkVersion() async {
-    final newVersion = NewVersion(
-      androidId: "com.snapchat.android",
-    );
+    final newVersion = NewVersion();
     final status = await newVersion.getVersionStatus();
     newVersion.showUpdateDialog(
       context: context,
@@ -32,9 +30,6 @@ class _LandingPageState extends State<LandingPage> {
       },
       updateButtonText: "Lets update",
     );
-
-    print("DEVICE : " + status.localVersion);
-    print("STORE : " + status.storeVersion);
   }
 
   @override

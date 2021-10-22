@@ -21,12 +21,9 @@ sendVideoStatistics() {
           videoViewPageOpenController.isvideoViewPageOpen.value == false &&
           networkManager.connectionPresent.value == true) {
         var videoData = json.encode(data);
-        print(videoData);
-        print(videoData.runtimeType);
         sendVideoDetailsApiService.sendVideoDetails(videoData).then(
           (value) {
             dbHelper.updateVideoDetails();
-            print('Data sent successfully');
             // dbHelper.updateDetails();
           },
         );

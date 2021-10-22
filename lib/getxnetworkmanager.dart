@@ -18,7 +18,6 @@ class GetXNetworkManager extends GetxController {
   @override
   void onInit() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      print('The internet connection is : $result');
       if (result == ConnectivityResult.none) {
         connectionPresent.value = false;
         if (box.read('userName') == null) {
@@ -40,7 +39,6 @@ class GetXNetworkManager extends GetxController {
   }
 
   showOfflinePage() async {
-    print('success');
     await Get.offAndToNamed('/nologinofflinescreen');
   }
 
@@ -67,7 +65,6 @@ class GetXNetworkManager extends GetxController {
     try {
       ConnectivityResult connectivityResult =
           await _connectivity.checkConnectivity();
-      print(connectivityResult);
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi ||
           connectivityResult == ConnectivityResult.ethernet) {
@@ -75,14 +72,11 @@ class GetXNetworkManager extends GetxController {
       } else {
         connectionType.value = 0;
       }
-      print(box.read('userName'));
       if (box.read('userName') != null) {
         isLoggedIn.value = true;
       } else if (box.read('userName') == null) {
         isLoggedIn.value = false;
       }
-
-      print('Is user logged in : $isLoggedIn.value');
 
       if (connectionType.value == 0 && isLoggedIn.value == false) {
         page.value = 0;
@@ -96,8 +90,6 @@ class GetXNetworkManager extends GetxController {
       return page.value;
 
       // checkLogInStatus();
-    } on PlatformException catch (e) {
-      print(e);
-    }
+    } on PlatformException catch (e) {}
   }
 }

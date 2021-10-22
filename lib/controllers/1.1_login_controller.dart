@@ -19,17 +19,16 @@ class LogInController extends GetxController {
   final dropValue = ''.tr.obs;
   final isLoginSuccessful = false.obs;
   final floatingController = Get.put(FloatingBarControllers());
+  final userLogginIn = false.obs;
 
   @override
   onInit() {
     userControl.listen((value) {
       if (userControl.value.length == 18) {
         dropValue.value = 'Student'.tr;
-        print(dropValue.value);
         userToggle.value = true;
       } else if (userControl.value.length == 8) {
         dropValue.value = 'Teacher'.tr;
-        print(dropValue.value);
         userToggle.value = true;
       } else {
         dropValue.value = '';
@@ -47,7 +46,6 @@ class LogInController extends GetxController {
     final SecureStorage secureStorage = new SecureStorage();
     String? userType = box.read('uType').toString().capitalizeFirst;
     String? passWord = await secureStorage.readPassword();
-    print('The secure password is $passWord');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       'APIKey': 'G12SHA98IZ82938KPP'
@@ -64,11 +62,9 @@ class LogInController extends GetxController {
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
-      print('login successful');
       isLoginSuccessful.value = true;
       var res = await response.stream.bytesToString();
       var data = UserResponse.fromJson(json.decode(res));
-      print(data);
       box.write('accessToken', data.accessToken);
       box.write(
         'accessTokenTimeStamp',
@@ -76,8 +72,6 @@ class LogInController extends GetxController {
       );
     } else {
       isLoginSuccessful.value = false;
-      print(response.statusCode);
-      print(response.reasonPhrase);
     }
   }
 }

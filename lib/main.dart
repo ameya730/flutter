@@ -26,9 +26,7 @@ void main() async {
 
   sendVideoStatistics();
   await GetStorage.init();
-  final box = new GetStorage();
   final GetXNetworkManager networkManager = Get.put(GetXNetworkManager());
-  print(box.read('userName'));
   int initialRoute = await networkManager.getConnectionType();
   String pageToDisplay = '';
   if (initialRoute == 0) {

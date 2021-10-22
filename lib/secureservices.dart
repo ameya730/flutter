@@ -24,6 +24,5 @@ class SecureStorage {
   Future removeAllSecureDetails() async {
     await _secureStorage.delete(key: 'password');
     await _secureStorage.delete(key: 'userName');
-    print('All details have been deleted');
   }
 }

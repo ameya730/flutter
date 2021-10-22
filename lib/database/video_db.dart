@@ -55,7 +55,6 @@ class DatabaseProvider {
 
   //Call Database
   Future<Database> get database async {
-    print('database getter called');
     if (_database != null) {
       return _database!;
     }
@@ -69,8 +68,6 @@ class DatabaseProvider {
       join(dbPath, 'videoDetails.db'),
       version: 1,
       onCreate: (Database database, int version) async {
-        print('Creating new database for video details');
-
         //Create user profiles database
         await database.execute(
           "CREATE TABLE $USER_PROFILES ("
@@ -135,16 +132,13 @@ class DatabaseProvider {
     final db = await database;
     var count = await db
         .query(USER_PROFILES, where: '$USER_ID = ?', whereArgs: [userId]);
-    print('count is $count');
     return count.length;
   }
 
   //Insert user profiles in the user profiles table
   insertUserProfiles(UserProfiles userProfiles) async {
-    print('testing');
     final db = await database;
     int count = await db.insert(USER_PROFILES, userProfiles.toJson());
-    print('Inserted count is $count');
     return count;
   }
 
@@ -154,7 +148,6 @@ class DatabaseProvider {
     List<Map<String, dynamic>> profileList = await db.query(
       USER_PROFILES,
     );
-    print('success');
 
     var profiles = profileList
         .map(
@@ -179,9 +172,6 @@ class DatabaseProvider {
   //Delete all profiles on sign-out
   Future<int> deleteProfiles() async {
     final db = await database;
-    final box = new GetStorage();
-    print(box.read('userName').toString());
-
     int counter = await db.delete(
       USER_PROFILES,
     );
@@ -198,8 +188,6 @@ class DatabaseProvider {
   //Insert current instance video view details
   Future updateVideoLastPosition(int lastPosition, String videoName) async {
     final db = await database;
-    print('LastPositionIs $lastPosition');
-    print('Video Name is $videoName');
 
     return db.rawUpdate(
       'UPDATE videoDownload SET videoLastViewPosition = ? WHERE videoName = ?',
@@ -230,9 +218,7 @@ class DatabaseProvider {
               ),
       ],
     );
-    vList.forEach((element) {
-      print('Element is $element');
-    });
+    vList.forEach((element) {});
     return vList.map((e) => VideoDownload.fromMap(e)).toList();
   }
 
@@ -293,17 +279,6 @@ class DatabaseProvider {
   Future<int> updateDeleteVideoFlat(String videoName) async {
     final db = await database;
     final box = new GetStorage();
-
-    int count = await db.rawUpdate(
-      'UPDATE $VIDEO_DOWNLOAD SET $COLUMN_VIDEO_DELETED = ? WHERE $COLUMN_VIDEO_NAME = ? and $COLUMN_USER_ID = ?',
-      [
-        1,
-        videoName,
-        box.read('userId'),
-      ],
-    );
-
-    print(count);
 
     int counter = await db.delete(VIDEO_DOWNLOAD,
         where: '$COLUMN_VIDEO_NAME =? and $COLUMN_USER_ID = ?',

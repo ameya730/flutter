@@ -77,8 +77,6 @@ class OfflineProfileSelectionPage extends StatelessWidget {
                               onTap: () async {
                                 box.write('userId',
                                     profileControl.listOfProfiles[i].userId);
-                                print(profileControl
-                                    .listOfProfiles[i].userId.runtimeType);
                                 await moveToOffline();
                               },
                             );

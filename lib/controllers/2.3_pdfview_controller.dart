@@ -5,7 +5,6 @@ class PDFViewController extends GetxController {
   final pdfPath = ''.obs;
 
   openPDF() {
-    print('check');
     pdfOpen.value = true;
     update();
   }

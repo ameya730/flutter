@@ -281,6 +281,8 @@ class HomePage extends StatelessWidget {
                                       icon: Icons.arrow_forward,
                                       avatorColor: Colors.white,
                                       onPressed: () {
+                                        logInController.userLogginIn.value =
+                                            true;
                                         if (validateAndSave()) {
                                           final SecureStorage secureStorage =
                                               new SecureStorage();
@@ -298,9 +300,13 @@ class HomePage extends StatelessWidget {
                                                       .isLoginSuccessful
                                                       .value ==
                                                   true) {
+                                                logInController
+                                                    .userLogginIn.value = false;
                                                 Get.offAndToNamed(
                                                     '/webviewpage');
                                               } else {
+                                                logInController
+                                                    .userLogginIn.value = false;
                                                 box.remove('userName');
                                                 box.remove('uType');
                                                 box.remove('password');
@@ -369,10 +375,6 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 8.0),
-                  //   child: SvgPicture.asset('assets/logo-ssa.svg'),
-                  // ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                     child: Container(

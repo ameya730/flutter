@@ -322,7 +322,6 @@ class PostLoginOfflineMainPage extends StatelessWidget {
 
   goToViewVideoPage(int i) {
     box.write('i', i);
-    print(box.read('i'));
     box.write('videoName', videoListController.videoList[i].videoName);
     box.write('videoLastPosition',
         videoListController.videoList[i].videoLastViewPosition);

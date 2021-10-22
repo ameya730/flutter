@@ -33,7 +33,6 @@ class VideoDownloadController extends GetxController {
   Future<void> downloadFile(VideoDownloaded videoDetails) async {
     isdownloading.value = true;
     downloadInProgress.value = false;
-    print(downloadInProgress.value);
 
     try {
       //Revalidate access token and get a new one if required
@@ -53,7 +52,6 @@ class VideoDownloadController extends GetxController {
       Directory appDir = await getApplicationDocumentsDirectory();
       //Define path
       String imgUrl = videoDownloadURL + videoURL.value;
-      print(imgUrl);
       String videoName = imgUrl.split('/').last;
       final videoDownload = VideoDownload(
         userId: int.parse(box.read('userId')),
@@ -72,8 +70,6 @@ class VideoDownloadController extends GetxController {
 
       //Set-up authorization
       String autho = 'Bearer ' + box.read('accessToken');
-      print('The authorization token is');
-      print(autho);
       int userId = int.parse(
         box.read('userId'),
       );
@@ -83,7 +79,6 @@ class VideoDownloadController extends GetxController {
         cancelToken = new CancelToken();
       }
 
-      print('The video name is $videoName');
       // Download the video
       await dio.download(
         imgUrl,
@@ -113,8 +108,6 @@ class VideoDownloadController extends GetxController {
       String thumbNail = videoDetails.nodename!.replaceAll('mp4', 'jpg');
       String thumbNailURL = videoURL.value.replaceAll('.mp4', '.png');
       thumbNailURL = thumbNailURL.replaceAll('mp4', 'thumbnail');
-      print(thumbNail);
-      print(thumbNailURL);
 
       await dio.download(
         thumbNailURL,
@@ -128,12 +121,10 @@ class VideoDownloadController extends GetxController {
       downloadComplete.value = true;
       progressPercentage.value = 0.0;
       progressString.value = '';
-      print('download complete');
     } catch (e) {
       downloadInProgress.value = false;
       downloadComplete.value = false;
       isdownloading.value = false;
-      print(e);
     }
   }
 

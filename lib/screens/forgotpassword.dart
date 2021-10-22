@@ -48,9 +48,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   [
                     JavascriptChannel(
                       name: 'formSubmitted',
-                      onMessageReceived: (JavascriptMessage message) async {
-                        print(json.decode(message.message));
-                      },
+                      onMessageReceived: (JavascriptMessage message) async {},
                     ),
                   ],
                 ),

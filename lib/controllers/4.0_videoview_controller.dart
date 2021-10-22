@@ -34,9 +34,7 @@ class PlayVideoController extends GetxController {
   final vId = 0.obs;
   final StopWatchTimer _stopWatchTimer = StopWatchTimer(
     mode: StopWatchMode.countUp,
-    onChangeRawSecond: (value) {
-      print('onChangeRawSecond $value');
-    },
+    onChangeRawSecond: (value) {},
   );
   @override
   void onInit() {
@@ -63,7 +61,6 @@ class PlayVideoController extends GetxController {
       box.read('videoName'),
     );
 
-    print(vidDetails[0].videoLastViewPosition);
     vName.value = box.read('videoName');
     currentStartPosition.value = vidDetails[0].videoLastViewPosition!;
     Directory appDir = await getApplicationDocumentsDirectory();
@@ -117,15 +114,12 @@ class PlayVideoController extends GetxController {
           _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
           currentTotalDuration.value =
               StopWatchTimer.getRawSecond(_stopWatchTimer.rawTime.value);
-          print('Total Duration is : $currentTotalDuration.value');
           currentEndPosition.value =
               videoPlayerController.value.position.inSeconds;
         }
         if (chewieController!.isPlaying == true) {
           _stopWatchTimer.onExecute.add(StopWatchExecute.start);
-          _stopWatchTimer.secondTime.listen((value) {
-            print('Current time is $value');
-          });
+          _stopWatchTimer.secondTime.listen((value) {});
           if (videoPlayerController.value.duration ==
               videoPlayerController.value.position) {
             isComplete.value = true;
@@ -133,10 +127,8 @@ class PlayVideoController extends GetxController {
         }
         if (chewieController!.isFullScreen) {
           isFullScreen.value = true;
-          print(isFullScreen.value);
         } else {
           isFullScreen.value = false;
-          print(isFullScreen.value);
         }
       },
     );

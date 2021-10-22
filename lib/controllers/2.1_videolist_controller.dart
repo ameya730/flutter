@@ -47,7 +47,6 @@ class VideoListController extends GetxController {
     try {
       if (videoList.length > 0) {
         if (subjectListObtained.value == false) {
-          print('Are subjects getting added');
           subjectsList.clear();
           subjectsList.add('All');
           videoList.forEach(
@@ -57,7 +56,6 @@ class VideoListController extends GetxController {
           );
           subjectsList.value = subjectsList.toSet().toList();
           subjectListObtained.value = true;
-          print(subjectsList);
         }
         // if a filtered is applied then the entire list should be returned
         filteredVideoList.clear();
@@ -93,7 +91,6 @@ class VideoListController extends GetxController {
       return filteredVideoList;
     } catch (e) {
       listObtained.value = false;
-      print(e);
     }
     update();
   }
@@ -105,10 +102,7 @@ class VideoListController extends GetxController {
       );
       final appDir = await getApplicationDocumentsDirectory();
       File(appDir.path + '/videos/$userId/' + videoName + '.mp4').delete();
-      print('Video Deleted');
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   deleteThumbNailFromFile(String videoName) async {
@@ -118,9 +112,6 @@ class VideoListController extends GetxController {
       );
       final appDir = await getApplicationDocumentsDirectory();
       File(appDir.path + '/videos/$userId/' + videoName + '.png').delete();
-      print('Thumbnail Deleted');
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 }

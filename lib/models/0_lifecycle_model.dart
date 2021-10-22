@@ -21,9 +21,7 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('state = $state');
-  }
+  void didChangeAppLifecycleState(AppLifecycleState state) {}
 
   @override
   Widget build(BuildContext context) {

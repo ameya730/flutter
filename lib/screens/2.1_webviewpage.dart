@@ -93,14 +93,11 @@ class _WebViewPageState extends State<WebViewPage>
       box.read('userName'),
       "0000000000000",
     );
-    print(encuname);
-    print(box.read('uType'));
     var url = webViewLoginIn +
         encuname +
         "&utype=" +
         box.read('uType').toString().toLowerCase() +
         "&mob=1234567891";
-    print(url);
     return SafeArea(
       child: WillPopScope(
         onWillPop: () => videoDownloadController.isdownloading.value
@@ -240,7 +237,6 @@ class _WebViewPageState extends State<WebViewPage>
                   c.addJavaScriptHandler(
                     handlerName: 'toggleFullScreen',
                     callback: (args) {
-                      print(args);
                       if (args[0] == 'true') {
                         orientationController.screenOrientation.value = true;
                       } else if (args[0] == 'false') {
@@ -261,13 +257,9 @@ class _WebViewPageState extends State<WebViewPage>
                     handlerName: 'getProfiles',
                     callback: (args) {
                       floatingController.hideNavigationBar.value = true;
-                      print('The profiles are');
-                      print(args);
                       var data = args[0];
-                      print('The data is $data');
                       var profiles = userProfilesFromJson(data);
                       profiles.forEach((element) {
-                        print(element.firstName);
                         insertIntoDatabase(
                           int.parse(
                             element.userId.toString(),
@@ -280,7 +272,6 @@ class _WebViewPageState extends State<WebViewPage>
                   c.addJavaScriptHandler(
                     handlerName: 'getSessionStatus',
                     callback: (args) {
-                      print(args);
                       if (args[0].toString().toLowerCase() == 'timedout') {
                         c.reload();
                       } else if (args[0].toString().toLowerCase() == 'logout') {
@@ -291,15 +282,12 @@ class _WebViewPageState extends State<WebViewPage>
                   c.addJavaScriptHandler(
                     handlerName: 'changeLanguage',
                     callback: (args) {
-                      print(args);
                       toggleLanguage(args[0].toString());
                     },
                   );
                   c.addJavaScriptHandler(
                     handlerName: 'changeProfile',
                     callback: (args) {
-                      print(args);
-                      print('Check $args[0]');
                       box.write('userId', args[0].toString());
                       Future.delayed(Duration(seconds: 2)).then((value) {
                         floatingController.hideNavigationBar.value = false;
@@ -309,15 +297,11 @@ class _WebViewPageState extends State<WebViewPage>
                   c.addJavaScriptHandler(
                     handlerName: 'checkplatformready',
                     callback: (args) {
-                      print('ready');
                       return 'true';
                     },
                   );
                 },
-                onConsoleMessage: (controller, consoleMessage) {
-                  print(consoleMessage.message);
-                  print(ConsoleMessageLevel.values);
-                },
+                onConsoleMessage: (controller, consoleMessage) {},
                 androidOnPermissionRequest:
                     (controller, origin, resources) async {
                   return PermissionRequestResponse(
@@ -568,11 +552,8 @@ class _WebViewPageState extends State<WebViewPage>
     count = await dbHelper.profileDuplicateControl(userId);
     if (count != 0) {
       profileUpdateController.isDuplicate.value = true;
-      print('user profile duplicate');
-      print(profileUpdateController.isDuplicate.value);
     } else {
       profileUpdateController.isDuplicate.value = false;
-      print('updating database');
       await profileUpdateController.insertProfileInDatabase(userProfiles);
     }
   }
