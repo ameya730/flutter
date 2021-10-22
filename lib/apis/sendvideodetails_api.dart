@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
 import 'package:gshala/controllers/1.1_login_controller.dart';
-import 'package:gshala/database/video_db.dart';
 import 'package:http/http.dart' as http;
 
 class SendVideoDetailsApiService {

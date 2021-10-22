@@ -90,6 +90,8 @@ class GetXNetworkManager extends GetxController {
       return page.value;
 
       // checkLogInStatus();
-    } on PlatformException catch (e) {}
+    } on PlatformException catch (e) {
+      print(e);
+    }
   }
 }
