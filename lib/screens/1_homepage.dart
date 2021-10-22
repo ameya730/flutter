@@ -64,326 +64,355 @@ class HomePage extends StatelessWidget {
             backgroundColor: Theme.of(context).backgroundColor,
             resizeToAvoidBottomInset: false,
             body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+              child: Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Image.asset(
-                      'assets/gshalaicon.png',
-                      fit: BoxFit.scaleDown,
-                      height: 80,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        GestureDetector(
-                          child: Text(
-                            'English',
-                            style: TextStyle(
-                              fontSize:
-                                  lControl.selectedLanguage.value == 'English'
-                                      ? 18
-                                      : 14,
-                              fontWeight:
-                                  lControl.selectedLanguage.value == 'English'
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                              color: Colors.white,
-                            ),
-                          ),
-                          onTap: () {
-                            lControl.selectedLanguage.value = 'English';
-                            lControl.changeLangauge();
-                          },
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Image.asset(
+                          'assets/gshalaicon.png',
+                          fit: BoxFit.scaleDown,
+                          height: 80,
                         ),
-                        SizedBox(width: 2),
-                        Text(
-                          '|',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(width: 2),
-                        GestureDetector(
-                          child: Text(
-                            'ગુજરાતી',
-                            style: TextStyle(
-                              fontSize:
-                                  lControl.selectedLanguage.value == 'ગુજરાતી'
-                                      ? 18
-                                      : 14,
-                              fontWeight:
-                                  lControl.selectedLanguage.value == 'ગુજરાતી'
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                              color: Colors.white,
-                            ),
-                          ),
-                          onTap: () {
-                            lControl.selectedLanguage.value = 'ગુજરાતી';
-                            lControl.changeLangauge();
-                          },
-                        ),
-                        SizedBox(width: 2),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
                           children: [
-                            Container(
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      'Welcome to G-Shala'.tr,
-                                      textScaleFactor: 2,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Text(
-                                    'Learning Management System of Gujarat'.tr,
-                                    textScaleFactor: 1,
-                                  ),
-                                ],
+                            GestureDetector(
+                              child: Text(
+                                'English',
+                                style: TextStyle(
+                                  fontSize: lControl.selectedLanguage.value ==
+                                          'English'
+                                      ? 18
+                                      : 14,
+                                  fontWeight: lControl.selectedLanguage.value ==
+                                          'English'
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onTap: () {
+                                lControl.selectedLanguage.value = 'English';
+                                lControl.changeLangauge();
+                              },
+                            ),
+                            SizedBox(width: 2),
+                            Text(
+                              '|',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
                               ),
                             ),
-                            Container(
-                              child: Form(
-                                key: loginFormKey,
-                                child: Column(
-                                  children: [
-                                    CustomTextField(
-                                      cLabelText: 'Enter ID/Mobile Number'.tr,
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Please input ID/Mobile number'
-                                              .tr;
-                                        }
-                                        return null;
-                                      },
-                                      onChanged: (String value) {
-                                        logInController.updateUserName(value);
-                                        // logInController.userControl.value = value;
-                                      },
-                                      onSaved: (value) {
-                                        logInController.userId.value = value;
-                                      },
+                            SizedBox(width: 2),
+                            GestureDetector(
+                              child: Text(
+                                'ગુજરાતી',
+                                style: TextStyle(
+                                  fontSize: lControl.selectedLanguage.value ==
+                                          'ગુજરાતી'
+                                      ? 18
+                                      : 14,
+                                  fontWeight: lControl.selectedLanguage.value ==
+                                          'ગુજરાતી'
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onTap: () {
+                                lControl.selectedLanguage.value = 'ગુજરાતી';
+                                lControl.changeLangauge();
+                              },
+                            ),
+                            SizedBox(width: 2),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
+                                        child: Text(
+                                          'Welcome to G-Shala'.tr,
+                                          textScaleFactor: 2,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Text(
+                                        'Learning Management System of Gujarat'
+                                            .tr,
+                                        textScaleFactor: 1,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  child: Form(
+                                    key: loginFormKey,
+                                    child: Column(
+                                      children: [
+                                        CustomTextField(
+                                          cLabelText:
+                                              'Enter ID/Mobile Number'.tr,
+                                          validator: (value) {
+                                            if (value.isEmpty) {
+                                              return 'Please input ID/Mobile number'
+                                                  .tr;
+                                            }
+                                            return null;
+                                          },
+                                          onChanged: (String value) {
+                                            logInController
+                                                .updateUserName(value);
+                                            // logInController.userControl.value = value;
+                                          },
+                                          onSaved: (value) {
+                                            logInController.userId.value =
+                                                value;
+                                          },
+                                        ),
+                                        CustomPasswordTextField(
+                                          onTTap: () {
+                                            FocusScope.of(context).unfocus();
+                                          },
+                                          cLabelText: 'Enter Password'.tr,
+                                          icon: IconButton(
+                                            onPressed: () {
+                                              passwordController
+                                                  .togglePassword();
+                                            },
+                                            icon: Obx(
+                                              () {
+                                                return passwordController
+                                                        .showPassword.value
+                                                    ? Icon(Icons.visibility_off)
+                                                    : Icon(Icons.visibility);
+                                              },
+                                            ),
+                                          ),
+                                          obscureText: passwordController
+                                              .showPassword.value,
+                                          validator: (value) {
+                                            if (value.isEmpty) {
+                                              return 'Please input password'.tr;
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            logInController.password.value =
+                                                value;
+                                          },
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: CustomDropDownField(
+                                            hinttext: 'Select Role'.tr,
+                                            dropList: dropList,
+                                            dropDownValue: logInController
+                                                        .dropValue.value !=
+                                                    ''
+                                                ? logInController
+                                                    .dropValue.value.tr
+                                                : null,
+                                            onChanged: (value) {
+                                              FocusScope.of(context)
+                                                  .requestFocus(FocusNode());
+                                            },
+                                            validator: (value) {
+                                              if (value == null) {
+                                                return 'Please select role'.tr;
+                                              }
+                                              if (logInController.userControl
+                                                          .value.length ==
+                                                      18 &&
+                                                  (value != 'Student' &&
+                                                      value != 'વિદ્યાર્થી')) {
+                                                return 'Please select Student role';
+                                              }
+                                              if (logInController.userControl
+                                                          .value.length ==
+                                                      8 &&
+                                                  (value != 'Teacher' &&
+                                                      value != 'શિક્ષક')) {
+                                                return 'Please select Teacher role';
+                                              }
+                                              return null;
+                                            },
+                                            onSaved: (value) {
+                                              if (value == 'વિદ્યાર્થી' ||
+                                                  value == 'Student') {
+                                                logInController.loginType
+                                                    .value = 'student';
+                                              } else if (value == 'શિક્ષક' ||
+                                                  value == 'Teacher') {
+                                                logInController.loginType
+                                                    .value = 'teacher';
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    CustomPasswordTextField(
-                                      onTTap: () {
-                                        FocusScope.of(context).unfocus();
-                                      },
-                                      cLabelText: 'Enter Password'.tr,
-                                      icon: IconButton(
-                                        onPressed: () {
-                                          passwordController.togglePassword();
-                                        },
-                                        icon: Obx(
-                                          () {
-                                            return passwordController
-                                                    .showPassword.value
-                                                ? Icon(Icons.visibility_off)
-                                                : Icon(Icons.visibility);
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 16.0, left: 16.0, right: 16.0),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: CElevatedButton(
+                                          buttonLabel: 'Login'.tr,
+                                          icon: Icons.arrow_forward,
+                                          avatorColor: Colors.white,
+                                          onPressed: () {
+                                            logInController.userLogginIn.value =
+                                                true;
+                                            if (validateAndSave()) {
+                                              final SecureStorage
+                                                  secureStorage =
+                                                  new SecureStorage();
+                                              secureStorage.writePassWord(
+                                                  logInController
+                                                      .password.value);
+                                              box.write('userName',
+                                                  logInController.userId.value);
+                                              box.write(
+                                                  'uType',
+                                                  logInController
+                                                      .loginType.value);
+                                              box.write(
+                                                  'password',
+                                                  logInController
+                                                      .password.value);
+                                              logInController.login().then(
+                                                (value) {
+                                                  if (logInController
+                                                          .isLoginSuccessful
+                                                          .value ==
+                                                      true) {
+                                                    logInController.userLogginIn
+                                                        .value = false;
+                                                    Get.offAndToNamed(
+                                                        '/webviewpage');
+                                                  } else {
+                                                    logInController.userLogginIn
+                                                        .value = false;
+                                                    box.remove('userName');
+                                                    box.remove('uType');
+                                                    box.remove('password');
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text(
+                                                            'Login failed. Incorrect User / Password'),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            }
                                           },
                                         ),
                                       ),
-                                      obscureText:
-                                          passwordController.showPassword.value,
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Please input password'.tr;
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (value) {
-                                        logInController.password.value = value;
-                                      },
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: CustomDropDownField(
-                                        hinttext: 'Select Role'.tr,
-                                        dropList: dropList,
-                                        dropDownValue: logInController
-                                                    .dropValue.value !=
-                                                ''
-                                            ? logInController.dropValue.value.tr
-                                            : null,
-                                        onChanged: (value) {
-                                          FocusScope.of(context)
-                                              .requestFocus(FocusNode());
-                                        },
-                                        validator: (value) {
-                                          if (value == null) {
-                                            return 'Please select role'.tr;
-                                          }
-                                          if (logInController.userControl.value
-                                                      .length ==
-                                                  18 &&
-                                              (value != 'Student' &&
-                                                  value != 'વિદ્યાર્થી')) {
-                                            return 'Please select Student role';
-                                          }
-                                          if (logInController.userControl.value
-                                                      .length ==
-                                                  8 &&
-                                              (value != 'Teacher' &&
-                                                  value != 'શિક્ષક')) {
-                                            return 'Please select Teacher role';
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (value) {
-                                          if (value == 'વિદ્યાર્થી' ||
-                                              value == 'Student') {
-                                            logInController.loginType.value =
-                                                'student';
-                                          } else if (value == 'શિક્ષક' ||
-                                              value == 'Teacher') {
-                                            logInController.loginType.value =
-                                                'teacher';
-                                          }
-                                        },
+                                      padding: const EdgeInsets.only(
+                                        right: 16.0,
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Get.offAndToNamed(
+                                                '/forgotpassword');
+                                          },
+                                          child: Text(
+                                            'Forgot Password?'.tr,
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      top: 16.0, left: 16.0, right: 16.0),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: CElevatedButton(
-                                      buttonLabel: 'Login'.tr,
-                                      icon: Icons.arrow_forward,
-                                      avatorColor: Colors.white,
-                                      onPressed: () {
-                                        logInController.userLogginIn.value =
-                                            true;
-                                        if (validateAndSave()) {
-                                          final SecureStorage secureStorage =
-                                              new SecureStorage();
-                                          secureStorage.writePassWord(
-                                              logInController.password.value);
-                                          box.write('userName',
-                                              logInController.userId.value);
-                                          box.write('uType',
-                                              logInController.loginType.value);
-                                          box.write('password',
-                                              logInController.password.value);
-                                          logInController.login().then(
-                                            (value) {
-                                              if (logInController
-                                                      .isLoginSuccessful
-                                                      .value ==
-                                                  true) {
-                                                logInController
-                                                    .userLogginIn.value = false;
-                                                Get.offAndToNamed(
-                                                    '/webviewpage');
-                                              } else {
-                                                logInController
-                                                    .userLogginIn.value = false;
-                                                box.remove('userName');
-                                                box.remove('uType');
-                                                box.remove('password');
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  const SnackBar(
-                                                    content: Text(
-                                                        'Login failed. Incorrect User / Password'),
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                          );
-                                        }
-                                      },
-                                    ),
+                                    bottom: 16.0,
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    right: 16.0,
-                                  ),
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: TextButton(
-                                      onPressed: () {
-                                        Get.offAndToNamed('/forgotpassword');
-                                      },
-                                      child: Text(
-                                        'Forgot Password?'.tr,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text(
+                                        'Dont have an account yet ?'.tr,
                                         style: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 12,
                                         ),
                                       ),
-                                    ),
+                                      CElevatedButton(
+                                        buttonLabel: 'Sign Up'.tr,
+                                        buttonColor: 0xffFBAA00,
+                                        onPressed: () {
+                                          Get.offAndToNamed('/signuppage');
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 16.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text(
-                                    'Dont have an account yet ?'.tr,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  CElevatedButton(
-                                    buttonLabel: 'Sign Up'.tr,
-                                    buttonColor: 0xffFBAA00,
-                                    onPressed: () {
-                                      Get.offAndToNamed('/signuppage');
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                    child: Container(
-                      height: 100,
-                      child: Image.asset(
-                        'assets/getlogo.png',
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                        child: Container(
+                          height: 100,
+                          child: Image.asset(
+                            'assets/getlogo.png',
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
+                  Obx(() {
+                    return logInController.userLogginIn.value
+                        ? Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          )
+                        : Container();
+                  }),
                 ],
               ),
             ),
