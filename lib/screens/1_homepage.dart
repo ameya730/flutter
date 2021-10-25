@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:gshala/const.dart';
 import 'package:gshala/controllers/1.0_language_controller.dart';
 import 'package:gshala/controllers/1.1_login_controller.dart';
 import 'package:gshala/controllers/1.2_password_controller.dart';
@@ -67,7 +68,7 @@ class HomePage extends StatelessWidget {
               child: Stack(
                 children: [
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
@@ -323,17 +324,16 @@ class HomePage extends StatelessWidget {
                                                     Get.offAndToNamed(
                                                         '/webviewpage');
                                                   } else {
-                                                    logInController.userLogginIn
-                                                        .value = false;
                                                     box.remove('userName');
                                                     box.remove('uType');
                                                     box.remove('password');
+                                                    updateLoginSuccess();
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(
                                                       const SnackBar(
                                                         content: Text(
-                                                            'Login failed. Incorrect User / Password'),
+                                                            'Login failed. Incorrect Username / Password'),
                                                       ),
                                                     );
                                                   }
@@ -368,7 +368,7 @@ class HomePage extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                    bottom: 16.0,
+                                    bottom: 8.0,
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
@@ -395,12 +395,38 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                       ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: TextButton.icon(
+                            onPressed: () {
+                              Get.toNamed('/attributepage');
+                            },
+                            icon: Icon(
+                              Icons.attribution_sharp,
+                              color: normalWhiteText,
+                            ),
+                            label: Text(
+                              'Attributions',
+                              style: TextStyle(
+                                color: normalWhiteText,
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                        child: Container(
-                          height: 100,
-                          child: Image.asset(
-                            'assets/getlogo.png',
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            height: 100,
+                            child: Image.asset(
+                              'assets/getlogo.png',
+                            ),
                           ),
                         ),
                       ),
@@ -422,12 +448,17 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  updateLoginSuccess() async {
+    logInController.userLogginIn.value = false;
+  }
+
   bool validateAndSave() {
     final form = loginFormKey.currentState;
     if (form!.validate()) {
       form.save();
       return true;
     }
+    updateLoginSuccess();
     return false;
   }
 }

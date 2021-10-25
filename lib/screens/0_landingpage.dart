@@ -16,20 +16,22 @@ class _LandingPageState extends State<LandingPage> {
   void _checkVersion() async {
     final newVersion = NewVersion();
     final status = await newVersion.getVersionStatus();
-    newVersion.showUpdateDialog(
-      context: context,
-      versionStatus: status!,
-      dialogTitle: "UPDATE!!!",
-      dismissButtonText: "Skip",
-      dialogText: "Please update the app from " +
-          "${status.localVersion}" +
-          " to " +
-          "${status.storeVersion}",
-      dismissAction: () {
-        Navigator.pop(context);
-      },
-      updateButtonText: "Lets update",
-    );
+    if (status != null) {
+      newVersion.showUpdateDialog(
+        context: context,
+        versionStatus: status,
+        dialogTitle: "UPDATE!!!",
+        dismissButtonText: "Skip",
+        dialogText: "Please update the app from " +
+            "${status.localVersion}" +
+            " to " +
+            "${status.storeVersion}",
+        dismissAction: () {
+          Navigator.pop(context);
+        },
+        updateButtonText: "Lets update",
+      );
+    }
   }
 
   @override
