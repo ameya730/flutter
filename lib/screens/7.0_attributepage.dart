@@ -28,7 +28,7 @@ class ImageAttributesPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Attributions'),
+          title: Text('Attributions'.tr),
           backgroundColor: backGroundColor,
           shadowColor: Colors.transparent,
         ),

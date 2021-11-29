@@ -4,20 +4,28 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gshala/const.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
+androidPlatform() async {
+  await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+}
+
 class _ForgotPasswordState extends State<ForgotPassword> {
   final GlobalKey<ScaffoldState> _signUpScaffoldKey =
       new GlobalKey<ScaffoldState>();
 
+  InAppWebViewController? controller;
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    if (Platform.isAndroid) {
+      androidPlatform();
+    }
   }
 
   final GetStorage box = new GetStorage();
@@ -38,21 +46,41 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               color: normalWhiteText,
             ),
           ),
-          body: Stack(
-            children: [
-              WebView(
-                initialUrl: forgotPassword,
-                javascriptMode: JavascriptMode.unrestricted,
-                javascriptChannels: Set.from(
-                  [
-                    JavascriptChannel(
-                      name: 'formSubmitted',
-                      onMessageReceived: (JavascriptMessage message) async {},
-                    ),
-                  ],
-                ),
+          body: InAppWebView(
+            initialUrlRequest: URLRequest(
+              url: Uri.parse(forgotPassword),
+            ),
+            initialOptions: InAppWebViewGroupOptions(
+              crossPlatform: InAppWebViewOptions(
+                mediaPlaybackRequiresUserGesture: false,
+                javaScriptEnabled: true,
+                allowFileAccessFromFileURLs: true,
+                javaScriptCanOpenWindowsAutomatically: true,
               ),
-            ],
+              android: AndroidInAppWebViewOptions(
+                useHybridComposition: true,
+              ),
+            ),
+            onWebViewCreated: (c) {
+              controller = c;
+              c.addJavaScriptHandler(
+                handlerName: 'redirecttologin',
+                callback: (args) {
+                  print(args);
+                  if (args[0] == 'true') {
+                    Get.offAndToNamed('/homepage');
+                  }
+                },
+              );
+            },
+            onConsoleMessage: (controller, consoleMessage) {
+              print(consoleMessage);
+            },
+            androidOnPermissionRequest: (controller, origin, resources) async {
+              return PermissionRequestResponse(
+                  resources: resources,
+                  action: PermissionRequestResponseAction.GRANT);
+            },
           ),
         ),
       ),

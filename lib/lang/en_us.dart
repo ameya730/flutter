@@ -53,4 +53,5 @@ const Map<String, String> enUs = {
       'Please note that any video downloaded in this app will be stored within the app directory and will not be applicable outside of the app. \nWhile downloading a video you are giving permission to the app to download it.',
   'This section mentions the source and artist names for the images used in this app':
       'This section mentions the source and artist names for the images used in this app',
+  'Attributions': 'Attributions',
 };

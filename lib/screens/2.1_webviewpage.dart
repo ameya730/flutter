@@ -204,7 +204,6 @@ class _WebViewPageState extends State<WebViewPage>
                   ),
                   android: AndroidInAppWebViewOptions(
                     useHybridComposition: true,
-                    hardwareAcceleration: false,
                   ),
                 ),
                 onWebViewCreated: (c) {
